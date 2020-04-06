@@ -21,17 +21,17 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 
 ##########################################################Functions##########################################################
 function ClassContent([string] $nameSpace, [string] $nameClass) {
-	$result = "using System;`n`nnamespace " + $nameSpace + "`n{`n    public class " + $nameClass + "`n    {`n    }`n}"
+	$result = "using System.Diagnostics.CodeAnalysis;`n`nnamespace " + $nameSpace + "`n{`n    [ExcludeFromCodeCoverage]`n    public class " + $nameClass + "`n    {`n    }`n}"
 	return $result
 }
 
 function ClassContentWithInterface([string] $nameSpace, [string] $nameClass, [string] $nameInterface) {
-	$result = "using System;`n`nnamespace " + $nameSpace + "`n{`n    public class " + $nameClass + " : " + $nameInterface + "`n    {`n    }`n}"
+	$result = "namespace " + $nameSpace + "`n{`n    public class " + $nameClass + " : " + $nameInterface + "`n    {`n    }`n}"
 	return $result
 }
 
 function InterfaceContent([string] $nameSpace, [string] $nameClass) {
-	$result = "using System;`n`nnamespace " + $nameSpace + "`n{`n    public interface " + $nameClass + "`n    {`n    }`n}"
+	$result = "namespace " + $nameSpace + "`n{`n    public interface " + $nameClass + "`n    {`n    }`n}"
 	return $result
 }
 
@@ -42,6 +42,11 @@ function LaunchSettingsContent([string] $applicationUrl){
 
 function AppSettingsDevelopmentContent([string] $database){
 	$result = "{`n  `"Logging`": {`n    `"LogLevel`": {`n      `"Default`": `"Information`",`n      `"Microsoft`": `"Warning`",`n      `"Microsoft.Hosting.Lifetime`": `"Information`"`n    }`n  },`n  `"ConnectionStrings`": {`n    `""+$database+"ConnectionString`": `"Server=localhost;User Id=root;Password=AnalisisAzi_2018;Database="+$database+"`"`n  }`n}"
+	return $result
+}
+
+function SettingsContent([string] $nameSpace, [string] $nameClass){
+	$result = "using System.Diagnostics.CodeAnalysis;`n`nnamespace  "+$nameSpace+"`n{`n    [ExcludeFromCodeCoverage]`n    public class "+$nameClass+"`n    {`n        private ConnectionStrings ConnectionStrings { get; set; }`n    }`n`n    [ExcludeFromCodeCoverage]`n    public class ConnectionStrings`n    {`n        public string ProjectMicroserviceConnectionString { get; set; }`n    }`n}"
 	return $result
 }
 
@@ -58,13 +63,36 @@ cd .\$projectName
 			cd .\$common
 				dotnet new classlib -f netcoreapp3.1
 				rm Class1.cs
-				mkdir .\Constants
-				cd .\Constants
-					$namespaceConstants = $common+".Constants"
-					$nameclassConstants = "Constants"
+				$folderConstants = "Constants"
+				mkdir .\$folderConstants
+				cd .\$folderConstants
+					$namespaceConstants = $common+"."+$folderConstants
+					$nameclassConstants = $folderConstants
 					$contentConstants = ClassContent $namespaceConstants $nameclassConstants
 					$nameFileConstants = $nameclassConstants+".cs"
 					echo $contentConstants > $nameFileConstants
+				cd..
+				$folderSettings = "Settings"
+				mkdir .\$folderSettings
+				cd .\$folderSettings
+					$namespaceSettings = $common+"."+$folderSettings
+					$nameclassSettings = $projectName+$folderSettings
+					$settingsContent = SettingsContent $namespaceSettings $nameclassSettings
+					$nameFileSettings = $nameclassSettings+".cs"
+					echo $settingsContent > $nameFileSettings
+				cd ..
+				$folderDtos = "Dtos"
+				mkdir .\$folderDtos
+				cd .\$folderDtos
+					$folderModelsDtos = "ModelsDtos"
+					mkdir .\$folderModelsDtos
+					cd .\$folderModelsDtos
+						$namespaceModelsDto = $common+"."+$folderDtos+"."+$folderModelsDtos
+						$nameclassModelsDto = "BaseModelDto"
+						$contentModelsDto = ClassContent $namespaceModelsDto $nameclassModelsDto
+						$nameFileModelsDto = $nameclassModelsDto+".cs"
+						echo $contentModelsDto > $nameFileModelsDto
+					cd ..
 				cd..
 			cd ..
 			mkdir .\$dal
@@ -72,25 +100,28 @@ cd .\$projectName
 				dotnet new classlib -f netcoreapp3.1
 				rm Class1.cs
 				dotnet add reference ..\$common\$common.csproj
-				mkdir .\Models
-				cd .\Models
-					$namespaceModels = $dal+".Models"
+				$folderModels = "Models"
+				mkdir .\$folderModels
+				cd .\$folderModels
+					$namespaceModels = $dal+"."+$folderModels
 					$nameclassModels = "BaseModel"
 					$contentModels = ClassContent $namespaceModels $nameclassModels
 					$nameFileModels = $nameclassModels+".cs"
 					echo $contentModels > $nameFileModels
 				cd..
-				mkdir .\Contexts
-				cd .\Contexts
-					$namespaceContexts = $dal+".Contexts"
-					$nameclassContexts = "BaseContext"
+				$folderContext = "Contexts"
+				mkdir .\$folderContext
+				cd .\$folderContext
+					$namespaceContexts = $dal+"."+$folderContext
+					$nameclassContexts = $projectName+"Context"
 					$contentContexts = ClassContent $namespaceContexts $nameclassContexts
 					$nameFileContexts = $nameclassContexts+".cs"
 					echo $contentContexts > $nameFileContexts
 				cd..
-				mkdir .\Repositories
-				cd .\Repositories
-					$namespaceRepositories = $dal+".Repositories"
+				$folderRepositories = "Repositories"
+				mkdir .\$folderRepositories
+				cd .\$folderRepositories
+					$namespaceRepositories = $dal+"."+$folderRepositories
 					$nameclassRepositories = "BaseRepository"
 					$nameinterfaceRepositories = "I"+$nameclassRepositories
 					$contentRepository = ClassContentWithInterface $namespaceRepositories $nameclassRepositories $nameinterfaceRepositories
@@ -107,9 +138,10 @@ cd .\$projectName
 				rm Class1.cs
 				dotnet add reference ..\$dal\$dal.csproj
 				dotnet add reference ..\$common\$common.csproj
-				mkdir .\BLLs
-				cd .\BLLs
-					$namespaceBLL = $bll+".BLLs"
+				$folderBLLs = "BLLs"
+				mkdir .\$folderBLLs
+				cd .\$folderBLLs
+					$namespaceBLL = $bll+"."+$folderBLLs
 					$nameclassBLL = $projectName+"BLL"
 					$nameinterfaceBLL = "I"+$projectName+"BLL"
 					$contentBLL = ClassContentWithInterface $namespaceBLL $nameclassBLL $nameinterfaceBLL
@@ -128,6 +160,7 @@ cd .\$projectName
 				dotnet add reference ..\$bll\$bll.csproj
 				dotnet add reference ..\$common\$common.csproj
 				dotnet add package Autofac
+				dotnet add package Autofac.Extensions.DependencyInjection
 				cd .\Properties
 					$portProject = Get-Content .\launchSettings.json | Select-String -Pattern "`"applicationUrl`": `"http://localhost:[0-9]+`""
 					$launchsettingscontent = LaunchSettingsContent $portProject
