@@ -46,7 +46,7 @@ function AppSettingsDevelopmentContent([string] $database){
 }
 
 function SettingsContent([string] $nameSpace, [string] $nameClass){
-	$result = "using System.Diagnostics.CodeAnalysis;`n`nnamespace  "+$nameSpace+"`n{`n    [ExcludeFromCodeCoverage]`n    public class "+$nameClass+"`n    {`n        private ConnectionStrings ConnectionStrings { get; set; }`n    }`n`n    [ExcludeFromCodeCoverage]`n    public class ConnectionStrings`n    {`n        public string ProjectMicroserviceConnectionString { get; set; }`n    }`n}"
+	$result = "using System.Diagnostics.CodeAnalysis;`n`nnamespace  "+$nameSpace+"`n{`n    [ExcludeFromCodeCoverage]`n    public class "+$nameClass+"`n    {`n        public ConnectionStrings ConnectionStrings { get; set; }`n    }`n`n    [ExcludeFromCodeCoverage]`n    public class ConnectionStrings`n    {`n        public string ProjectMicroserviceConnectionString { get; set; }`n    }`n}"
 	return $result
 }
 
