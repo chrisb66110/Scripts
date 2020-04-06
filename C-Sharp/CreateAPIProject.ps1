@@ -41,7 +41,7 @@ function LaunchSettingsContent([string] $applicationUrl){
 }
 
 function AppSettingsDevelopmentContent([string] $database){
-	$result = "{`n  `"Logging`": {`n    `"LogLevel`": {`n      `"Default`": `"Information`",`n      `"Microsoft`": `"Warning`",`n      `"Microsoft.Hosting.Lifetime`": `"Information`"`n    }`n  },`n  `"ConnectionStrings`": {`n    `""+$database+"ConnectionString`": `"Server=localhost;User Id=root;Password=AnalisisAzi_2018;Database="+$database+"`"`n  }`n}"
+	$result = "{`n  `"Logging`": {`n    `"LogLevel`": {`n      `"Default`": `"Information`",`n      `"Microsoft`": `"Warning`",`n      `"Microsoft.Hosting.Lifetime`": `"Information`"`n    }`n  },`n  `"ConnectionStrings`": {`n    `""+$database+"ConnectionString`": `"Server=localhost;UserId=userid;Password=password;Database="+$database+"`"`n  }`n}"
 	return $result
 }
 
