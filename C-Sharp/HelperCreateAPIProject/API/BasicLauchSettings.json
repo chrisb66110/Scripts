@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "ProjectNameLaunchVar": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      ApplicationUrlLineVar
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
