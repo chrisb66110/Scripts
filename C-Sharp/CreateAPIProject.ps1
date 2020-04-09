@@ -176,18 +176,22 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 
 	#This function is expected to run in the same folder where .sln is
 	function ControllerBllDalCreatePath([string] $ModelName){
+		Write-Host "`n`n"
 		#DTO
 			$nameclassModelsDto = $ModelName+"Dto"
+			Write-Host "Creating "$nameclassModelsDto -ForegroundColor Magenta
 			$contentModelsDto = ModelDtoContent $namespaceModelsDto $nameclassModelsDto
 			$nameFileModelsDto = $nameclassModelsDto+".cs"
 			echo $contentModelsDto > .\Source\$common\$folderDtos\$folderModelsDtos\$nameFileModelsDto
 		#Model
 			$nameclassModels = $ModelName
+			Write-Host "Creating "$nameclassModels -ForegroundColor Magenta
 			$contentModels = ModelContent $namespaceModels $nameclassModels
 			$nameFileModels = $nameclassModels+".cs"
 			echo $contentModels > .\Source\$dal\$folderModels\$nameFileModels
 		#Repository
 			$nameclassRepositories = $ModelName+"Repository"
+			Write-Host "Creating "$nameclassRepositories -ForegroundColor Magenta
 			$nameinterfaceRepositories = "I"+$nameclassRepositories
 			$contentRepository = RepositoryContent $namespaceModelsDto $namespaceContexts $namespaceRepositories $nameclassRepositories $nameinterfaceRepositories $nameclassContexts $nameclassModelsDto
 			$nameFileClassRepositories = $nameclassRepositories+".cs"
@@ -197,6 +201,7 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 			echo $contentIRepository > .\Source\$dal\$folderRepositories\$nameFileInterfaceRepositories
 		#BLL
 			$nameclassBLL = $ModelName+"BLL"
+			Write-Host "Creating "$nameclassBLL -ForegroundColor Magenta
 			$nameinterfaceBLL = "I"+$ModelName+"BLL"
 			$nameRepositoryProperty = $nameclassRepositories.subString(0,1)+$nameclassRepositories.subString(1,1).ToLower()+$nameclassRepositories.subString(2,$nameclassRepositories.Length-2)
 			$contentBLL = BLLContent $namespaceModelsDto $namespaceRepositories $namespaceBLL $nameclassBLL $nameinterfaceBLL $nameinterfaceRepositories $nameRepositoryProperty $nameclassModelsDto
@@ -227,6 +232,7 @@ cd .\$projectName
 	cd .\$projectName
 		mkdir .\Source
 		cd .\Source
+			Write-Host "`n`n`n`n`n`nCreating "$common -ForegroundColor Green
 			mkdir .\$common
 			cd .\$common
 				dotnet new classlib -f $dotnetVersion
@@ -234,6 +240,7 @@ cd .\$projectName
 				mkdir .\$folderConstants
 				cd .\$folderConstants
 					$nameclassConstants = $folderConstants
+					Write-Host "Creating "$nameclassConstants -ForegroundColor Magenta
 					$contentConstants = ConstantsContent $namespaceConstants $nameclassConstants
 					$nameFileConstants = $nameclassConstants+".cs"
 					echo $contentConstants > $nameFileConstants
@@ -241,6 +248,7 @@ cd .\$projectName
 				mkdir .\$folderSettings
 				cd .\$folderSettings
 					$nameclassSettings = $projectName+$folderSettings
+					Write-Host "Creating "$nameclassSettings -ForegroundColor Magenta
 					$settingsContent = SettingsContent $namespaceSettings $nameclassSettings $ProjectName
 					$nameFileSettings = $nameclassSettings+".cs"
 					echo $settingsContent > $nameFileSettings
@@ -250,6 +258,7 @@ cd .\$projectName
 					mkdir .\$folderModelsDtos
 				cd..
 			cd ..
+			Write-Host "`n`n`n`n`n`nCreating "$dal -ForegroundColor Green
 			mkdir .\$dal
 			cd .\$dal
 				dotnet new classlib -f $dotnetVersion
@@ -261,12 +270,14 @@ cd .\$projectName
 				mkdir .\$folderContext
 				cd .\$folderContext
 					$nameclassContexts = $projectName+"Context"
+					Write-Host "Creating "$nameclassContexts -ForegroundColor Magenta
 					$contentContexts = ContextContent $namespaceContexts $nameclassContexts
 					$nameFileContexts = $nameclassContexts+".cs"
 					echo $contentContexts > $nameFileContexts
 				cd..
 				mkdir .\$folderRepositories
 			cd ..
+			Write-Host "`n`n`n`n`n`nCreating "$bll -ForegroundColor Green
 			mkdir .\$bll
 			cd .\$bll
 				dotnet new classlib -f $dotnetVersion
@@ -275,6 +286,7 @@ cd .\$projectName
 				dotnet add reference ..\$common\$common.csproj
 				mkdir .\$folderBLLs
 			cd ..
+			Write-Host "`n`n`n`n`n`nCreating "$api -ForegroundColor Green
 			mkdir .\$api
 			cd .\$api
 				dotnet new webapi -f $dotnetVersion
@@ -287,19 +299,23 @@ cd .\$projectName
 				dotnet add package Autofac
 				dotnet add package Autofac.Extensions.DependencyInjection
 				cd .\Properties
+					Write-Host "Creating launchSettings" -ForegroundColor Magenta
 					$portProject = Get-Content .\launchSettings.json | Select-String -Pattern "`"applicationUrl`": `"http://localhost:[0-9]+`""
 					$launchsettingscontent = LaunchSettingsContent $api $portProject
 					rm launchSettings.json
 					echo $launchsettingscontent > launchSettings.json
 				cd ..
+				Write-Host "Creating appsettings.Development" -ForegroundColor Magenta
 				$appsettingsdevelopmentcontent =  AppSettingsDevelopmentContent $ProjectName
 				rm appsettings.Development.json
 				echo $appsettingsdevelopmentcontent > appsettings.Development.json
+				Write-Host "Creating Startup" -ForegroundColor Magenta
 				$nameClassBLL = $projectName+"BLL"
 				$nameclassRepositories = $projectName+"Repository"
 				$startUpContent = StartupContent $namespaceBLL $namespaceSettings $nameSpaceContexts $namespaceRepositories $api $nameclassSettings $nameClassBLL $projectName $nameclassContexts $nameclassRepositories
 				rm Startup.cs
 				echo $startUpContent > Startup.cs
+				Write-Host "Creating Program" -ForegroundColor Magenta
 				$programContent = ProgramContent $api
 				rm Program.cs
 				echo $programContent > Program.cs
@@ -308,15 +324,22 @@ cd .\$projectName
 
 		#Create a ControllerBllDalCreatePath
 		ControllerBllDalCreatePath($projectName)
+		
+		#Create a others ControllerBllDalCreatePath
+		For ($i=0; $i -lt $controllers.Length; $i++) {
+			ControllerBllDalCreatePath($controllers[$i])
+		}
 
 		#Unit Test
 		mkdir .\Test
 		cd  .\Test
+			Write-Host "`n`n`n`n`n`nCreating "$datatesthelper -ForegroundColor Green
 			mkdir .\$datatesthelper
 			cd .\$datatesthelper
 				dotnet new mstest -f $dotnetVersion
 				rm UnitTest1.cs
 			cd ..
+			Write-Host "`n`n`n`n`n`nCreating "$apiTest -ForegroundColor Green
 			mkdir .\$apiTest
 			cd .\$apiTest
 				dotnet new mstest -f $dotnetVersion
@@ -325,6 +348,7 @@ cd .\$projectName
 				dotnet add reference ..\..\Source\$common\$common.csproj
 				dotnet add reference ..\$datatesthelper\$datatesthelper.csproj
 			cd ..
+			Write-Host "`n`n`n`n`n`nCreating "$bllTest -ForegroundColor Green
 			mkdir .\$bllTest
 			cd .\$bllTest
 				dotnet new mstest -f $dotnetVersion
@@ -333,6 +357,7 @@ cd .\$projectName
 				dotnet add reference ..\..\Source\$common\$common.csproj
 				dotnet add reference ..\$datatesthelper\$datatesthelper.csproj
 			cd ..
+			Write-Host "`n`n`n`n`n`nCreating "$commonTest -ForegroundColor Green
 			mkdir .\$commonTest
 			cd .\$commonTest
 				dotnet new mstest -f $dotnetVersion
@@ -340,6 +365,7 @@ cd .\$projectName
 				dotnet add reference ..\..\Source\$common\$common.csproj
 				dotnet add reference ..\$datatesthelper\$datatesthelper.csproj
 			cd ..
+			Write-Host "`n`n`n`n`n`nCreating "$dalTest -ForegroundColor Green
 			mkdir .\$dalTest
 			cd .\$dalTest
 				dotnet new mstest -f $dotnetVersion
@@ -349,7 +375,8 @@ cd .\$projectName
 				dotnet add reference ..\$datatesthelper\$datatesthelper.csproj
 			cd ..
 		cd ..
-
+	
+	Write-Host "`n`n`n`n`n`nCreating "$projectName -ForegroundColor Cyan
 	dotnet new sln --name $projectName
 	dotnet sln add ".\Source\$api\$api.csproj"
 	dotnet sln add ".\Source\$bll\$bll.csproj"
