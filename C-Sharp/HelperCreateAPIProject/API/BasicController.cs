@@ -9,14 +9,14 @@ namespace NameSpaceVar
 {
     [ApiController]
     [Route("[controller]")]
-    public class NameClassVar
+    public class NameClassVar : Controller
     {
         private readonly ILogger<NameClassVar> _logger;
         private readonly InterfaceBLLVar _bll;
         
         public NameClassVar(
             ILogger<NameClassVar> logger,
-            InterfaceBLLVar bll
+            InterfaceBLLVar bll)
         {
             _logger = logger;
             _bll = bll;
