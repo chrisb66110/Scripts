@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +30,15 @@ namespace NameSpaceVar
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Configure Auto mapper
+            var assemblies = new List<Assembly>
+            {
+                Assembly.GetAssembly(typeof(NameClassRepositoryVar)),
+                Assembly.GetAssembly(typeof(NameClassBLLVar)),
+                Assembly.GetAssembly(typeof(Startup))
+            };
+            services.AddAutoMapper(assemblies);
+            
             //Disable Model State Valid Filter
             services.Configure<ApiBehaviorOptions>(options =>
             {

@@ -14,6 +14,8 @@ $dotnetVersion = "netcoreapp3.1"
 $pathScript = Convert-Path .\
 $pathHelperCreateAPIProject = $pathScript+"\HelperCreateAPIProject"
 
+$pathCommonFiles = $pathScript+"\CommonFiles"
+
 $common=$projectName + ".COMMON"
 	$folderConstants = "Constants"
 		$namespaceConstants = $common+"."+$folderConstants
@@ -32,6 +34,8 @@ $dal=$projectName + ".DAL"
 		$namespaceContexts = $dal+"."+$folderContext
 	$folderRepositories = "Repositories"
 		$namespaceRepositories = $dal+"."+$folderRepositories
+	$folderMappingsDal = "Mappings"
+		$namespaceMappingsDal = $dal+"."+$folderMappingsDal
 
 $dalTest=$projectName + ".DAL." + $test
 
@@ -44,6 +48,12 @@ $bllTest=$projectName + ".BLL." + $test
 $api=$projectName + ".API"
 	$folderController = "Controllers"
 		$namespaceController = $api+"."+$folderController
+	$folderMappingsApi = "Mappings"
+		$namespaceMappingsApi = $api+"."+$folderMappingsApi
+	$folderRequestsApi = "Requests"
+		$namespaceRequestsApi = $api+"."+$folderRequestsApi
+	$folderResponseApi = "Responses"
+		$namespaceResponseApi = $api+"."+$folderResponseApi
 
 $apiTest=$projectName + ".API." + $test
 
@@ -86,15 +96,28 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		return $result
 	}
 
-	function RepositoryContent([string] $modelsDtosNSpaceVar, [string] $contextsNSpaceVar, [string] $nameSpace, [string] $nameClass, [string] $nameInterfaceVar, [string] $nameContextVar, [string] $nameModelDtoVar) {
+	function RepositoryContent([string] $NSpaceModelsDtosVar,
+							   [string] $NSpaceContextsVar,
+							   [string] $NSpaceModelsVar,
+							   [string] $NameSpaceVar,
+							   [string] $NameClassVar,
+							   [string] $NameInterfaceVar,
+							   [string] $NameContextVar,
+							   [string] $NameModelDtoVar,
+							   [string] $NameModelVar) {
 		$result = Get-Content $pathHelperCreateAPIProject"\DAL\BasicRepository.cs"
-		$result = $result -replace "ModelsDtosNSpaceVar", $modelsDtosNSpaceVar
-		$result = $result -replace "ContextsNSpaceVar", $contextsNSpaceVar
-		$result = $result -replace "NameSpaceVar", $nameSpace
-		$result = $result -replace "NameClassVar", $nameClass
-		$result = $result -replace "NameInterfaceVar", $nameInterfaceVar
-		$result = $result -replace "NameContextVar", $nameContextVar
-		$result = $result -replace "NameModelDtoVar", $nameModelDtoVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceContextsVar", $NSpaceContextsVar
+		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "NameClassVar", $NameClassVar
+		$result = $result -replace "NameInterfaceVar", $NameInterfaceVar
+		$result = $result -replace "NameContextVar", $NameContextVar
+		$result = $result -replace "NameModelDtoVar", $NameModelDtoVar
+		$result = $result -replace "NameModelVar", $NameModelVar
+		$nModelVarVar = $NameModelVar.subString(0,1).ToLower()+$NameModelVar.subString(1,$NameModelVar.Length-1)
+		Write-Host "VAR nModelVarVar: "$nModelVarVar -ForegroundColor Red
+		$result = $result -replace "nModelVarVar", $nModelVarVar
 		return $result
 	}
 
@@ -104,10 +127,13 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameInterfaceVar", $nameInterfaceVar
 		$result = $result -replace "NameModelDtoVar", $nameModelDtoVar
+		$param = $nameModelDtoVar.subString(0,1).ToLower()+$nameModelDtoVar.subString(1,$nameModelDtoVar.Length-1)
+		Write-Host "VAR param: "$param -ForegroundColor Red
+		$result = $result -replace "nameModelDtoParamVar", $param
 		return $result
 	}
 
-	function BLLContent([string] $modelsDtosNSpaceVar, [string] $repositoriesNSpaceVar, [string] $nameSpace, [string] $nameClass, [string] $nameInterfaceVar, [string] $interfaceRepository, [string] $namePropertyRepo, [string] $nameModelDtoVar) {
+	function BLLContent([string] $modelsDtosNSpaceVar, [string] $repositoriesNSpaceVar, [string] $nameSpace, [string] $nameClass, [string] $nameInterfaceVar, [string] $interfaceRepository, [string] $nameModelDtoVar) {
 		$result = Get-Content $pathHelperCreateAPIProject"\BLL\BasicBLL.cs"
 		$result = $result -replace "ModelsDtosNSpaceVar", $modelsDtosNSpaceVar
 		$result = $result -replace "RepositoriesNSpaceVar", $repositoriesNSpaceVar
@@ -115,8 +141,13 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		$result = $result -replace "NameClassVar", $nameClass
 		$result = $result -replace "NameInterfaceVar", $nameInterfaceVar
 		$result = $result -replace "InterfaceRepository", $interfaceRepository
+		$namePropertyRepo = $interfaceRepository.subString(1,1).ToLower()+$interfaceRepository.subString(2,$interfaceRepository.Length-2)
+		Write-Host "VAR namePropertyRepo: "$namePropertyRepo -ForegroundColor Red
 		$result = $result -replace "nameRepostory", $namePropertyRepo
 		$result = $result -replace "NameModelDtoVar", $nameModelDtoVar
+		$param = $nameModelDtoVar.subString(0,1).ToLower()+$nameModelDtoVar.subString(1,$nameModelDtoVar.Length-1)
+		Write-Host "VAR param: "$param -ForegroundColor Red
+		$result = $result -replace "nameModelDtoParamVar", $param
 		return $result
 	}
 
@@ -126,6 +157,8 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		$result = $result -replace "NameSpaceVar", $nameSpaceVar
 		$result = $result -replace "NameClassVar", $nameClassVar
 		$result = $result -replace "NameModelDtoVar", $nameModelDtoVar
+		$param = $nameModelDtoVar.subString(0,1).ToLower()+$nameModelDtoVar.subString(1,$nameModelDtoVar.Length-1)
+		$result = $result -replace "nameModelDtoParamVar", $param
 		return $result
 	}
 
@@ -142,14 +175,33 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		return $result
 	}
 
-	function ControllerContent([string] $BLLsNSpaceVar, [string] $ModelsDtosNSpaceVar, [string] $NameSpaceVar, [string] $NameClassVar, [string] $InterfaceBLLVar, [string] $NameModelDtoVar){
+	function ControllerContent([string] $NSpaceRequestsVar, 
+							   [string] $NSpaceResponsesVar, 
+							   [string] $NSpaceBLLsVar, 
+							   [string] $NSpaceConstantsVar, 
+							   [string] $NSpaceModelsDtosVar, 
+							   [string] $NameSpaceVar, 
+							   [string] $NameClassVar, 
+							   [string] $InterfaceBLLVar,
+							   [string] $NameModelDtoVar,
+							   [string] $NameResponseVar,
+							   [string] $NameRequestVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicController.cs"
-		$result = $result -replace "BLLsNSpaceVar", $BLLsNSpaceVar
-		$result = $result -replace "ModelsDtosNSpaceVar", $ModelsDtosNSpaceVar
+		$result = $result -replace "NSpaceRequestsVar", $NSpaceRequestsVar
+		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
+		$result = $result -replace "NSpaceBLLsVar", $NSpaceBLLsVar
+		$result = $result -replace "NSpaceConstantsVar", $NSpaceConstantsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
 		$result = $result -replace "NameSpaceVar", $NameSpaceVar
 		$result = $result -replace "NameClassVar", $NameClassVar
 		$result = $result -replace "InterfaceBLLVar", $InterfaceBLLVar
 		$result = $result -replace "NameModelDtoVar", $NameModelDtoVar
+		$result = $result -replace "NameResponseVar", $NameResponseVar
+		$result = $result -replace "NameRequestVar", $NameRequestVar
+		$ModelDtoPropertyVar = $NameModelDtoVar.subString(0,1).ToLower()+$nameModelDtoVar.subString(1,$nameModelDtoVar.Length-1)
+		$result = $result -replace "ModelDtoPropertyVar", $ModelDtoPropertyVar
+		$NameBllProperty = $InterfaceBLLVar.subString(1,1).ToLower()+$InterfaceBLLVar.subString(2,$InterfaceBLLVar.Length-2)
+		$result = $result -replace "NameBllProperty", $NameBllProperty
 		return $result
 	}
 
@@ -174,26 +226,70 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		return $result
 	}
 
+	function ProfileDalContent([string] $NSpaceModelsDtosVar, [string] $NSpaceModelsVar, [string] $NameSpaceVar, [string] $NameClassVar, [string] $NameModelVar, [string] $NameModelDtoVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\DAL\BasicProfile.cs"
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "NameClassVar", $NameClassVar
+		$result = $result -replace "NameModelVar", $NameModelVar
+		$result = $result -replace "NameModelDtoVar", $NameModelDtoVar
+		return $result
+	}
+
+	function ProfileApiContent([string] $NSpaceRequestsVar, [string] $NSpaceResponsesVar, [string] $NSpaceModelsDtosVar, [string] $NameSpaceVar, [string] $NameClassVar, [string] $NameRequestVar, [string] $NameModelDtoVar, [string] $NameResponseVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicProfile.cs"
+		$result = $result -replace "NSpaceRequestsVar", $NSpaceRequestsVar
+		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "NameClassVar", $NameClassVar
+		$result = $result -replace "NameRequestVar", $NameRequestVar
+		$result = $result -replace "NameModelDtoVar", $NameModelDtoVar
+		$result = $result -replace "NameResponseVar", $NameResponseVar
+		return $result
+	}
+
+	function RequestContent ([string] $NameSpaceVar, [string] $NameClassVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicRequest.cs"
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "NameClassVar", $NameClassVar
+		return $result
+	}
+
+	function ResponseContent ([string] $NameSpaceVar, [string] $NameClassVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicResponse.cs"
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "NameClassVar", $NameClassVar
+		return $result
+	}
+
 	#This function is expected to run in the same folder where .sln is
 	function ControllerBllDalCreatePath([string] $ModelName){
 		Write-Host "`n`n"
 		#DTO
-			$nameclassModelsDto = $ModelName+"Dto"
+			$nameclassModelsDto = $ModelName+"ModelDto"
 			Write-Host "Creating "$nameclassModelsDto -ForegroundColor Magenta
 			$contentModelsDto = ModelDtoContent $namespaceModelsDto $nameclassModelsDto
 			$nameFileModelsDto = $nameclassModelsDto+".cs"
 			echo $contentModelsDto > .\Source\$common\$folderDtos\$folderModelsDtos\$nameFileModelsDto
 		#Model
-			$nameclassModels = $ModelName
+			$nameclassModels = $ModelName+"Model"
 			Write-Host "Creating "$nameclassModels -ForegroundColor Magenta
 			$contentModels = ModelContent $namespaceModels $nameclassModels
 			$nameFileModels = $nameclassModels+".cs"
 			echo $contentModels > .\Source\$dal\$folderModels\$nameFileModels
+		#ProfileDal
+			$nameclassProfileDal = $ModelName+"Profile"
+			Write-Host "Creating "$nameclassProfileDal -ForegroundColor Magenta
+			$contentProfileDal = ProfileDalContent $namespaceModelsDto $namespaceModels $namespaceMappingsDal $nameclassProfileDal $nameclassModels $nameclassModelsDto
+			$nameFileProfileDal = $nameclassProfileDal+".cs"
+			echo $contentProfileDal > .\Source\$dal\$folderMappingsDal\$nameFileProfileDal
 		#Repository
 			$nameclassRepositories = $ModelName+"Repository"
 			Write-Host "Creating "$nameclassRepositories -ForegroundColor Magenta
 			$nameinterfaceRepositories = "I"+$nameclassRepositories
-			$contentRepository = RepositoryContent $namespaceModelsDto $namespaceContexts $namespaceRepositories $nameclassRepositories $nameinterfaceRepositories $nameclassContexts $nameclassModelsDto
+			$contentRepository = RepositoryContent $namespaceModelsDto $namespaceContexts $namespaceModels $namespaceRepositories $nameclassRepositories $nameinterfaceRepositories $nameclassContexts $nameclassModelsDto $nameclassModels
 			$nameFileClassRepositories = $nameclassRepositories+".cs"
 			echo $contentRepository > .\Source\$dal\$folderRepositories\$nameFileClassRepositories
 			$contentIRepository = IRepositoryContent $namespaceModelsDto $namespaceRepositories $nameinterfaceRepositories $nameclassModelsDto
@@ -204,20 +300,56 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 			Write-Host "Creating "$nameclassBLL -ForegroundColor Magenta
 			$nameinterfaceBLL = "I"+$ModelName+"BLL"
 			$nameRepositoryProperty = $nameclassRepositories.subString(0,1)+$nameclassRepositories.subString(1,1).ToLower()+$nameclassRepositories.subString(2,$nameclassRepositories.Length-2)
-			$contentBLL = BLLContent $namespaceModelsDto $namespaceRepositories $namespaceBLL $nameclassBLL $nameinterfaceBLL $nameinterfaceRepositories $nameRepositoryProperty $nameclassModelsDto
+			$contentBLL = BLLContent $namespaceModelsDto $namespaceRepositories $namespaceBLL $nameclassBLL $nameinterfaceBLL $nameinterfaceRepositories $nameclassModelsDto
 			$nameFileClassBLL = $nameclassBLL+".cs"
 			echo $contentBLL > .\Source\$bll\$folderBLLs\$nameFileClassBLL
 			$contentIBLL = IBLLContent $namespaceModelsDto $namespaceBLL $nameinterfaceBLL $nameclassModelsDto
 			$nameFileInterfaceBLL = $nameinterfaceBLL+".cs"
 			echo $contentIBLL > .\Source\$bll\$folderBLLs\$nameFileInterfaceBLL
+		#Request
+			$nameclassRequest = $ModelName+"Request"
+			Write-Host "Creating "$nameclassRequest -ForegroundColor Magenta
+			$contentRequest = RequestContent $namespaceRequestsApi $nameclassRequest
+			$nameFileRequest = $nameclassRequest+".cs"
+			echo $contentRequest > .\Source\$api\$folderRequestsApi\$nameFileRequest
+		#Response
+			$nameclassResponse = $ModelName+"Response"
+			Write-Host "Creating "$nameclassResponse -ForegroundColor Magenta
+			$contentResponse = ResponseContent $namespaceResponseApi $nameclassResponse
+			$nameFileResponse = $nameclassResponse+".cs"
+			echo $contentResponse > .\Source\$api\$folderResponseApi\$nameFileResponse
 		#Controller
 			$nameclassController = $ModelName+"Controller"
-			$contentController = ControllerContent $namespaceBLL $namespaceModelsDto $namespaceController $nameclassController $nameinterfaceBLL $nameclassModelsDto
+			$contentController = ControllerContent $namespaceRequestsApi $namespaceResponseApi $namespaceBLL $namespaceConstants $namespaceModelsDto $namespaceController $nameclassController $nameinterfaceBLL $nameclassModelsDto $nameclassResponse $nameclassRequest
 			$nameFileClassController = $nameclassController+".cs"
 			echo $contentController > .\Source\$api\$folderController\$nameFileClassController
+		#ProfileApi
+			$nameclassProfileApi = $ModelName+"Profile"
+			Write-Host "Creating "$nameclassProfileApi -ForegroundColor Magenta
+			$contentProfileApi = ProfileApiContent $namespaceRequestsApi $namespaceResponseApi $namespaceModelsDto $namespaceMappingsApi $nameclassProfileApi $nameclassRequest $nameclassModelsDto $nameclassResponse
+			$nameFileProfileApi = $nameclassProfileApi+".cs"
+			echo $contentProfileApi > .\Source\$api\$folderMappingsApi\$nameFileProfileApi
 	}
 
-
+	#This function is expected to run in the same folder where .sln is
+	function AddBaseFiles([string] $NameSpaceConstants, [string] $NameSpaceController){
+		Write-Host "`n`n"
+		#BaseConstants
+			$nameclassBaseConstants = "BaseConstants"
+			$fileBaseConstants = $nameclassBaseConstants+".cs"
+			Write-Host "Creating "$nameclassBaseConstants -ForegroundColor Magenta
+			$baseConstantsContent = Get-Content $pathCommonFiles\$fileBaseConstants
+			$baseConstantsContent = $baseConstantsContent -replace "NameSpaceVar", $NameSpaceConstants
+			echo $baseConstantsContent > .\Source\$common\$folderConstants\$fileBaseConstants
+		#BaseController
+			$nameclassBaseController = "BaseController"
+			$fileBaseController = $nameclassBaseController+".cs"
+			Write-Host "Creating "$nameclassBaseController -ForegroundColor Magenta
+			$baseControllerContent = Get-Content $pathCommonFiles\$fileBaseController
+			$baseControllerContent = $baseControllerContent -replace "NameSpaceVar", $NameSpaceController
+			$baseControllerContent = $baseControllerContent -replace "NSpaceConstants", $NameSpaceConstants
+			echo $baseControllerContent > .\Source\$api\$folderController\$fileBaseController
+	}
 
 
 
@@ -236,6 +368,7 @@ cd .\$projectName
 			mkdir .\$common
 			cd .\$common
 				dotnet new classlib -f $dotnetVersion
+				dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection
 				rm Class1.cs
 				mkdir .\$folderConstants
 				cd .\$folderConstants
@@ -276,6 +409,7 @@ cd .\$projectName
 					echo $contentContexts > $nameFileContexts
 				cd..
 				mkdir .\$folderRepositories
+				mkdir .\$folderMappingsDal
 			cd ..
 			Write-Host "`n`n`n`n`n`nCreating "$bll -ForegroundColor Green
 			mkdir .\$bll
@@ -319,6 +453,9 @@ cd .\$projectName
 				$programContent = ProgramContent $api
 				rm Program.cs
 				echo $programContent > Program.cs
+				mkdir .\$folderMappingsApi
+				mkdir .\$folderRequestsApi
+				mkdir .\$folderResponseApi
 			cd ..
 		cd ..
 
@@ -329,6 +466,9 @@ cd .\$projectName
 		For ($i=0; $i -lt $controllers.Length; $i++) {
 			ControllerBllDalCreatePath($controllers[$i])
 		}
+
+		#Create a BaseFiles
+		AddBaseFiles $namespaceConstants $namespaceController
 
 		#Unit Test
 		mkdir .\Test

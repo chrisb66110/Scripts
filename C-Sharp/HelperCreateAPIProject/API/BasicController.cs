@@ -1,59 +1,175 @@
-using System.Net;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using BLLsNSpaceVar;
-using ModelsDtosNSpaceVar;
+using NSpaceRequestsVar;
+using NSpaceResponsesVar;
+using NSpaceBLLsVar;
+using NSpaceConstantsVar;
+using NSpaceModelsDtosVar;
 
 namespace NameSpaceVar
 {
     [ApiController]
     [Route("[controller]")]
-    public class NameClassVar : Controller
+    public class NameClassVar : BaseController
     {
         private readonly ILogger<NameClassVar> _logger;
-        private readonly InterfaceBLLVar _bll;
+        private readonly IMapper _mapper;
+        private readonly InterfaceBLLVar _NameBllProperty;
         
         public NameClassVar(
             ILogger<NameClassVar> logger,
-            InterfaceBLLVar bll)
+            IMapper mapper,
+            InterfaceBLLVar NameBllProperty)
         {
             _logger = logger;
-            _bll = bll;
+            _mapper = mapper;
+            _NameBllProperty = NameBllProperty;
         }
 
         [HttpGet]
-        public async Task<ObjectResult> Get()
+        [Route("GetAll")]
+        public async Task<ObjectResult> GetAllAsync()
         {
-            var resultBll = await _bll.Get();
-            var response = CreateOkResponse(resultBll);
-            _logger.LogInformation("Logger Testing in NameClassVar");
-            return response;
-        }
+            ObjectResult response;
 
-        [HttpPost]
-        public async Task<ObjectResult> Post(NameModelDtoVar request)
-        {
-            var response = CreateInvalidDataResponse();
-            if (ModelState.IsValid)
+            try
             {
-                response = CreateOkResponse(request);
+                var resultBll = await _NameBllProperty.GetAllAsync();
+
+                var resultResponse = _mapper.Map<List<NameModelDtoVar>, List<NameResponseVar>>(resultBll);
+                
+                response = CreateOkResponse(resultResponse);
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"{Constants.ERROR_MESSAGE} Exception = {ex}";
+                _logger.LogError(errorMessage);
+
+                response = CreateInternalServerErrorResponse(Constants.ERROR_MESSAGE);
             }
 
             return response;
         }
 
-        public ObjectResult CreateOkResponse(object content = null)
+        [HttpGet]
+        [Route("GetById")]
+        public async Task<ObjectResult> GetByIdAsync([FromQuery] string id)
         {
-            var response = new ObjectResult(content ?? string.Empty );
-            response.StatusCode = (int)HttpStatusCode.OK;
+            var response = CreateInvalidDataResponse();
+
+            try
+            {
+                if (id != null)
+                {
+                    var resultBll = await _NameBllProperty.GetByIdAsync(id);
+
+                    var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
+
+                    response = CreateOkResponse(resultResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"{Constants.ERROR_MESSAGE} Exception = {ex}";
+                _logger.LogError(errorMessage);
+
+                response = CreateInternalServerErrorResponse(Constants.ERROR_MESSAGE);
+            }
+
             return response;
         }
 
-        public ObjectResult CreateInvalidDataResponse()
+        [HttpPost]
+        [Route("Add")]
+        public async Task<ObjectResult> AddAsync([FromBody] NameRequestVar request)
         {
-            var response = new ObjectResult("Invalid Data");
-            response.StatusCode = (int)HttpStatusCode.BadRequest;
+            var response = CreateInvalidDataResponse();
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var ModelDtoPropertyVar = _mapper.Map<NameRequestVar, NameModelDtoVar>(request);
+
+                    var resultBll = await _NameBllProperty.AddAsync(ModelDtoPropertyVar);
+
+                    var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
+
+                    response = CreateOkResponse(resultResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"{Constants.ERROR_MESSAGE} Exception = {ex}";
+                _logger.LogError(errorMessage);
+
+                response = CreateInternalServerErrorResponse(Constants.ERROR_MESSAGE);
+            }
+
+            return response;
+        }
+
+        [HttpPut]
+        [Route("Update")]
+        public async Task<ObjectResult> UpdateAsync([FromBody] NameRequestVar request)
+        {
+            var response = CreateInvalidDataResponse();
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var ModelDtoPropertyVar = _mapper.Map<NameRequestVar, NameModelDtoVar>(request);
+
+                    var resultBll = await _NameBllProperty.UpdateAsync(ModelDtoPropertyVar);
+
+                    var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
+
+                    response = CreateOkResponse(resultResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"{Constants.ERROR_MESSAGE} Exception = {ex}";
+                _logger.LogError(errorMessage);
+
+                response = CreateInternalServerErrorResponse(Constants.ERROR_MESSAGE);
+            }
+
+            return response;
+        }
+
+        [HttpDelete]
+        [Route("Delete")]
+        public async Task<ObjectResult> DeleteAsync([FromBody] NameRequestVar request)
+        {
+            var response = CreateInvalidDataResponse();
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var ModelDtoPropertyVar = _mapper.Map<NameRequestVar, NameModelDtoVar>(request);
+
+                    var resultBll = await _NameBllProperty.DeleteAsync(ModelDtoPropertyVar);
+
+                    var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
+
+                    response = CreateOkResponse(resultResponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"{Constants.ERROR_MESSAGE} Exception = {ex}";
+                _logger.LogError(errorMessage);
+
+                response = CreateInternalServerErrorResponse(Constants.ERROR_MESSAGE);
+            }
+
             return response;
         }
     }

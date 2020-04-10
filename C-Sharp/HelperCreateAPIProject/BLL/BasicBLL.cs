@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ModelsDtosNSpaceVar;
 using RepositoriesNSpaceVar;
@@ -13,9 +14,37 @@ namespace NameSpaceVar
             _nameRepostory = nameRepostory;
         }
 
-        public async Task<NameModelDtoVar> Get()
+        public async Task<List<NameModelDtoVar>> GetAllAsync()
         {
-            var response = await _nameRepostory.Get();
+            var response = await _nameRepostory.GetAllAsync();
+
+            return response;
+        }
+
+        public async Task<NameModelDtoVar> GetByIdAsync(string id)
+        {
+            var response = await _nameRepostory.GetByIdAsync(id);
+
+            return response;
+        }
+
+        public async Task<NameModelDtoVar> AddAsync(NameModelDtoVar nameModelDtoParamVar)
+        {
+            var response = await _nameRepostory.AddAsync(nameModelDtoParamVar);
+
+            return response;
+        }
+
+        public async Task<NameModelDtoVar> UpdateAsync(NameModelDtoVar nameModelDtoParamVar)
+        {
+            var response = await _nameRepostory.UpdateAsync(nameModelDtoParamVar);
+
+            return response;
+        }
+
+        public async Task<NameModelDtoVar> DeleteAsync(NameModelDtoVar nameModelDtoParamVar)
+        {
+            var response = await _nameRepostory.DeleteAsync(nameModelDtoParamVar);
 
             return response;
         }
