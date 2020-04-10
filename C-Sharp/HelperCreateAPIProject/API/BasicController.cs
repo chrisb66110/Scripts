@@ -30,8 +30,7 @@ namespace NameSpaceVar
             _NameBllProperty = NameBllProperty;
         }
 
-        [HttpGet]
-        [Route("GetAll")]
+        [HttpGet("GetAll")]
         public async Task<ObjectResult> GetAllAsync()
         {
             ObjectResult response;
@@ -55,9 +54,8 @@ namespace NameSpaceVar
             return response;
         }
 
-        [HttpGet]
-        [Route("GetById")]
-        public async Task<ObjectResult> GetByIdAsync([FromQuery] string id)
+        [HttpGet("GetById/{id}")]
+        public async Task<ObjectResult> GetByIdAsync(string id)
         {
             var response = CreateInvalidDataResponse();
 
@@ -83,8 +81,7 @@ namespace NameSpaceVar
             return response;
         }
 
-        [HttpPost]
-        [Route("Add")]
+        [HttpPost("Add")]
         public async Task<ObjectResult> AddAsync([FromBody] NameRequestVar request)
         {
             var response = CreateInvalidDataResponse();
@@ -113,8 +110,7 @@ namespace NameSpaceVar
             return response;
         }
 
-        [HttpPut]
-        [Route("Update")]
+        [HttpPut("Update")]
         public async Task<ObjectResult> UpdateAsync([FromBody] NameRequestVar request)
         {
             var response = CreateInvalidDataResponse();
@@ -143,8 +139,7 @@ namespace NameSpaceVar
             return response;
         }
 
-        [HttpDelete]
-        [Route("Delete")]
+        [HttpDelete("Delete")]
         public async Task<ObjectResult> DeleteAsync([FromBody] NameRequestVar request)
         {
             var response = CreateInvalidDataResponse();
