@@ -4,8 +4,6 @@ $projectName=$args[0]
 
 $controllers = $args[1]
 
-echo $controllers
-
 $test="TEST"
 
 $dotnetVersion = "netcoreapp3.1"
@@ -59,15 +57,20 @@ $apiTest=$projectName + ".API." + $test
 
 $datatesthelper = $projectName + ".DATATESTHELPER"
 
+$folderPostmanFiles = $projectName+".postman"
+
 ##########################################################Functions##########################################################
-	function ConstantsContent([string] $nameSpace, [string] $nameClass) {
+	function ConstantsContent([string] $nameSpace, 
+							  [string] $nameClass) {
 		$result = Get-Content $pathHelperCreateAPIProject"\COMMON\BasicConstants.cs"
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameClassVar", $nameClass
 		return $result
 	}
 
-	function SettingsContent([string] $nameSpace, [string] $nameClass, [string] $dataBaseVar) {
+	function SettingsContent([string] $nameSpace, 
+							 [string] $nameClass, 
+							 [string] $dataBaseVar) {
 		$result = Get-Content $pathHelperCreateAPIProject"\COMMON\BasicSettings.cs"
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameClassVar", $nameClass
@@ -75,21 +78,24 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		return $result
 	}
 
-	function ModelDtoContent([string] $nameSpace, [string] $nameClass) {
+	function ModelDtoContent([string] $nameSpace, 
+							 [string] $nameClass) {
 		$result = Get-Content $pathHelperCreateAPIProject"\COMMON\BasicModelDto.cs"
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameClassVar", $nameClass
 		return $result
 	}
 
-	function ModelContent([string] $nameSpace, [string] $nameClass) {
+	function ModelContent([string] $nameSpace, 
+						  [string] $nameClass) {
 		$result = Get-Content $pathHelperCreateAPIProject"\DAL\BasicModel.cs"
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameClassVar", $nameClass
 		return $result
 	}
 
-	function ContextContent([string] $nameSpace, [string] $nameClass) {
+	function ContextContent([string] $nameSpace, 
+							[string] $nameClass) {
 		$result = Get-Content $pathHelperCreateAPIProject"\DAL\BasicContext.cs"
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameClassVar", $nameClass
@@ -116,24 +122,31 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		$result = $result -replace "NameModelDtoVar", $NameModelDtoVar
 		$result = $result -replace "NameModelVar", $NameModelVar
 		$nModelVarVar = $NameModelVar.subString(0,1).ToLower()+$NameModelVar.subString(1,$NameModelVar.Length-1)
-		Write-Host "VAR nModelVarVar: "$nModelVarVar -ForegroundColor Red
 		$result = $result -replace "nModelVarVar", $nModelVarVar
 		return $result
 	}
 
-	function IRepositoryContent([string] $modelsDtosNSpaceVar, [string] $nameSpace, [string] $nameInterfaceVar, [string] $nameModelDtoVar) {
+	function IRepositoryContent([string] $modelsDtosNSpaceVar, 
+								[string] $nameSpace, 
+								[string] $nameInterfaceVar, 
+								[string] $nameModelDtoVar) {
 		$result = Get-Content $pathHelperCreateAPIProject"\DAL\IBasicRepository.cs"
 		$result = $result -replace "ModelsDtosNSpaceVar", $modelsDtosNSpaceVar
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameInterfaceVar", $nameInterfaceVar
 		$result = $result -replace "NameModelDtoVar", $nameModelDtoVar
 		$param = $nameModelDtoVar.subString(0,1).ToLower()+$nameModelDtoVar.subString(1,$nameModelDtoVar.Length-1)
-		Write-Host "VAR param: "$param -ForegroundColor Red
 		$result = $result -replace "nameModelDtoParamVar", $param
 		return $result
 	}
 
-	function BLLContent([string] $modelsDtosNSpaceVar, [string] $repositoriesNSpaceVar, [string] $nameSpace, [string] $nameClass, [string] $nameInterfaceVar, [string] $interfaceRepository, [string] $nameModelDtoVar) {
+	function BLLContent([string] $modelsDtosNSpaceVar, 
+						[string] $repositoriesNSpaceVar, 
+						[string] $nameSpace, 
+						[string] $nameClass, 
+						[string] $nameInterfaceVar, 
+						[string] $interfaceRepository, 
+						[string] $nameModelDtoVar) {
 		$result = Get-Content $pathHelperCreateAPIProject"\BLL\BasicBLL.cs"
 		$result = $result -replace "ModelsDtosNSpaceVar", $modelsDtosNSpaceVar
 		$result = $result -replace "RepositoriesNSpaceVar", $repositoriesNSpaceVar
@@ -142,16 +155,17 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		$result = $result -replace "NameInterfaceVar", $nameInterfaceVar
 		$result = $result -replace "InterfaceRepository", $interfaceRepository
 		$namePropertyRepo = $interfaceRepository.subString(1,1).ToLower()+$interfaceRepository.subString(2,$interfaceRepository.Length-2)
-		Write-Host "VAR namePropertyRepo: "$namePropertyRepo -ForegroundColor Red
 		$result = $result -replace "nameRepostory", $namePropertyRepo
 		$result = $result -replace "NameModelDtoVar", $nameModelDtoVar
 		$param = $nameModelDtoVar.subString(0,1).ToLower()+$nameModelDtoVar.subString(1,$nameModelDtoVar.Length-1)
-		Write-Host "VAR param: "$param -ForegroundColor Red
 		$result = $result -replace "nameModelDtoParamVar", $param
 		return $result
 	}
 
-	function IBLLContent([string] $modelsDtosNSpaceVar, [string] $nameSpaceVar, [string] $nameClassVar, [string] $nameModelDtoVar) {
+	function IBLLContent([string] $modelsDtosNSpaceVar, 
+						 [string] $nameSpaceVar, 
+						 [string] $nameClassVar, 
+						 [string] $nameModelDtoVar) {
 		$result = Get-Content $pathHelperCreateAPIProject"\BLL\IBasicBLL.cs"
 		$result = $result -replace "ModelsDtosNSpaceVar", $modelsDtosNSpaceVar
 		$result = $result -replace "NameSpaceVar", $nameSpaceVar
@@ -162,7 +176,8 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		return $result
 	}
 
-	function LaunchSettingsContent([string] $projectNameLaunch, [string] $applicationUrl){
+	function LaunchSettingsContent([string] $projectNameLaunch, 
+								   [string] $applicationUrl){
 		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicLauchSettings.json"
 		$result = $result -replace "ProjectNameLaunchVar", $projectNameLaunch
 		$result = $result -replace "ApplicationUrlLineVar", $applicationUrl
@@ -205,7 +220,16 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		return $result
 	}
 
-	function StartupContent([string] $NSpaceBLLsVar, [string] $NSpaceSettingsVar, [string] $NSpaceContextsVar, [string] $NSpaceRepositoriesVar, [string] $NameSpaceVar, [string] $NameClassSettingsVar,[string] $NameClassBLLVar,[string] $DataBaseVar,[string] $NameClassContextVar,[string] $NameClassRepositoryVar){
+	function StartupContent([string] $NSpaceBLLsVar, 
+							[string] $NSpaceSettingsVar, 
+							[string] $NSpaceContextsVar, 
+							[string] $NSpaceRepositoriesVar, 
+							[string] $NameSpaceVar, 
+							[string] $NameClassSettingsVar,
+							[string] $NameClassBLLVar,
+							[string] $DataBaseVar,
+							[string] $NameClassContextVar,
+							[string] $NameClassRepositoryVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicStartup.cs"
 		$result = $result -replace "NSpaceBLLsVar", $NSpaceBLLsVar
 		$result = $result -replace "NSpaceSettingsVar", $NSpaceSettingsVar
@@ -226,7 +250,12 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		return $result
 	}
 
-	function ProfileDalContent([string] $NSpaceModelsDtosVar, [string] $NSpaceModelsVar, [string] $NameSpaceVar, [string] $NameClassVar, [string] $NameModelVar, [string] $NameModelDtoVar){
+	function ProfileDalContent([string] $NSpaceModelsDtosVar, 
+							   [string] $NSpaceModelsVar, 
+							   [string] $NameSpaceVar, 
+							   [string] $NameClassVar, 
+							   [string] $NameModelVar, 
+							   [string] $NameModelDtoVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\DAL\BasicProfile.cs"
 		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
 		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
@@ -237,7 +266,14 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		return $result
 	}
 
-	function ProfileApiContent([string] $NSpaceRequestsVar, [string] $NSpaceResponsesVar, [string] $NSpaceModelsDtosVar, [string] $NameSpaceVar, [string] $NameClassVar, [string] $NameRequestVar, [string] $NameModelDtoVar, [string] $NameResponseVar){
+	function ProfileApiContent([string] $NSpaceRequestsVar, 
+							   [string] $NSpaceResponsesVar, 
+							   [string] $NSpaceModelsDtosVar, 
+							   [string] $NameSpaceVar, 
+							   [string] $NameClassVar, 
+							   [string] $NameRequestVar, 
+							   [string] $NameModelDtoVar, 
+							   [string] $NameResponseVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicProfile.cs"
 		$result = $result -replace "NSpaceRequestsVar", $NSpaceRequestsVar
 		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
@@ -250,14 +286,16 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 		return $result
 	}
 
-	function RequestContent ([string] $NameSpaceVar, [string] $NameClassVar){
+	function RequestContent ([string] $NameSpaceVar, 
+							 [string] $NameClassVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicRequest.cs"
 		$result = $result -replace "NameSpaceVar", $NameSpaceVar
 		$result = $result -replace "NameClassVar", $NameClassVar
 		return $result
 	}
 
-	function ResponseContent ([string] $NameSpaceVar, [string] $NameClassVar){
+	function ResponseContent ([string] $NameSpaceVar, 
+							  [string] $NameClassVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicResponse.cs"
 		$result = $result -replace "NameSpaceVar", $NameSpaceVar
 		$result = $result -replace "NameClassVar", $NameClassVar
@@ -332,7 +370,8 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 	}
 
 	#This function is expected to run in the same folder where .sln is
-	function AddBaseFiles([string] $NameSpaceConstants, [string] $NameSpaceController){
+	function AddBaseFiles([string] $NameSpaceConstants, 
+						  [string] $NameSpaceController){
 		Write-Host "`n`n"
 		#BaseConstants
 			$nameclassBaseConstants = "BaseConstants"
@@ -349,6 +388,51 @@ $datatesthelper = $projectName + ".DATATESTHELPER"
 			$baseControllerContent = $baseControllerContent -replace "NameSpaceVar", $NameSpaceController
 			$baseControllerContent = $baseControllerContent -replace "NSpaceConstants", $NameSpaceConstants
 			echo $baseControllerContent > .\Source\$api\$folderController\$fileBaseController
+	}
+
+	function PostmanEnvironmentContent([string] $ProjectNameVar,
+									  [string] $ProjectUrlValueVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\POSTMAN\BasicPostmanEnviroment.postman_environment.json"
+		$result = $result -replace "ProjectNameVar", $ProjectNameVar
+		$result = $result -replace "ProjectUrlValueVar", $ProjectUrlValueVar
+		$DateTimeVar = [DateTime]::UtcNow.ToString('u').Replace(' ','T')
+		$result = $result -replace "DateTimeVar", $DateTimeVar
+		$GuidVar = New-Guid  | Select-String -Pattern "[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}"
+		$result = $result -replace "GuidVar", $GuidVar
+		return $result
+	}
+
+	function PostmanControllerContent([string] $NameController,
+									  [string] $NameProjectVar){
+		$NameFolderControllerVar = $NameController+"Controller"
+		$NameControllerPathVar = $NameController
+		$result = Get-Content $pathHelperCreateAPIProject"\POSTMAN\BasicControllerConfigPostman.json"
+		$result = $result -replace "NameFolderControllerVar", $NameFolderControllerVar
+		$result = $result -replace "NameControllerPathVar", $NameControllerPathVar
+		$result = $result -replace "NameProjectVar", $NameProjectVar
+		return $result
+	}
+
+	function PostmanCollectionContent([string] $ProjectNameVar,
+									  [string[]] $Controllers){
+		$result = Get-Content $pathHelperCreateAPIProject"\POSTMAN\BasicPostmanCollection.postman_collection.json"
+		$result = $result -replace "ProjectNameVar", $ProjectNameVar
+		$GuidVar = New-Guid  | Select-String -Pattern "[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}"
+		$result = $result -replace "GuidVar", $GuidVar
+
+		#Controllers Postman
+		$ItemsControllerVar = PostmanControllerContent $projectName $projectName
+		$ItemsControllerVar = $ItemsControllerVar + ",`n"
+		For ($i=0; $i -lt $controllers.Length; $i++) {
+			$itemController = PostmanControllerContent $controllers[$i] $projectName
+			$ItemsControllerVar = $ItemsControllerVar + $itemController
+			if($i+1 -ne $controllers.Length){
+				$ItemsControllerVar = $ItemsControllerVar + ",`n"
+			}
+		}
+
+		$result = $result -replace "ItemsControllerVar", $ItemsControllerVar
+		return $result
 	}
 
 
@@ -435,6 +519,9 @@ cd .\$projectName
 				cd .\Properties
 					Write-Host "Creating launchSettings" -ForegroundColor Magenta
 					$portProject = Get-Content .\launchSettings.json | Select-String -Pattern "`"applicationUrl`": `"http://localhost:[0-9]+`""
+					$ProjectUrl = $portProject | Select-String -Pattern "http`:`/`/localhost`:`[0`-9`]`+" -AllMatches | foreach {$_.matches.value}
+					#I dont have idea, why i need this line twice? If I dont have second, the result is incorrect
+					$ProjectUrl = $ProjectUrl | Select-String -Pattern "http`:`/`/localhost`:`[0`-9`]`+" -AllMatches | foreach {$_.matches.value}
 					$launchsettingscontent = LaunchSettingsContent $api $portProject
 					rm launchSettings.json
 					echo $launchsettingscontent > launchSettings.json
@@ -533,6 +620,17 @@ cd .\$projectName
 
 	cd ..
 
-	mkdir .\$projectName.postman
+	Write-Host "`n`n`n`n`n`nCreating "$folderPostmanFiles -ForegroundColor Green
+	mkdir .\$folderPostmanFiles
+	cd .\$folderPostmanFiles
+		$nameFilePostmanCollection = $projectName+".postman_collection.json"
+		Write-Host "Creating "$nameFilePostmanCollection -ForegroundColor Magenta
+		$postmanCollectionContent = PostmanCollectionContent $projectName $controllers
+		echo $postmanCollectionContent > .\$nameFilePostmanCollection
+		$nameFilePostmanEnvironment = $projectName+".postman_environment.json"
+		Write-Host "Creating "$nameFilePostmanEnvironment -ForegroundColor Magenta
+		$postmanEnvironmentContent = PostmanEnvironmentContent $projectName $ProjectUrl
+		echo $postmanEnvironmentContent > .\$nameFilePostmanEnvironment
+	cd..
 
 cd ..

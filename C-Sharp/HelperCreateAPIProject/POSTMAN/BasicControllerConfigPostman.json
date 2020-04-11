@@ -1,0 +1,124 @@
+		{
+			"name": "NameFolderControllerVar",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{NameProjectVarUrl}}/NameControllerPathVar/GetAll",
+							"host": [
+								"{{NameProjectVarUrl}}"
+							],
+							"path": [
+								"NameControllerPathVar",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{NameProjectVarUrl}}/NameControllerPathVar/GetById/1",
+							"host": [
+								"{{NameProjectVarUrl}}"
+							],
+							"path": [
+								"NameControllerPathVar",
+								"GetById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"Id\",\r\n    \"property\": \"Property\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NameProjectVarUrl}}/NameControllerPathVar/Add",
+							"host": [
+								"{{NameProjectVarUrl}}"
+							],
+							"path": [
+								"NameControllerPathVar",
+								"Add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"Id\",\r\n    \"property\": \"Property\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NameProjectVarUrl}}/NameControllerPathVar/Update",
+							"host": [
+								"{{NameProjectVarUrl}}"
+							],
+							"path": [
+								"NameControllerPathVar",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"Id\",\r\n    \"property\": \"Property\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{NameProjectVarUrl}}/NameControllerPathVar/Delete",
+							"host": [
+								"{{NameProjectVarUrl}}"
+							],
+							"path": [
+								"NameControllerPathVar",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
