@@ -7,6 +7,6 @@
     }
   },
   "ConnectionStrings": {
-    "DataBaseVarConnectionString": "Server=localhost;UserId=userid;Password=password;Database=DataBaseVar"
+    "DataBaseVarConnectionString": "Server=localhost;Username=postgres;Password=1234;Database=DataBaseVar"
   }
 }

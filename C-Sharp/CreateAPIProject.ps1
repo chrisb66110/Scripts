@@ -94,11 +94,28 @@ $folderPostmanFiles = $projectName+".postman"
 		return $result
 	}
 
-	function ContextContent([string] $nameSpace, 
-							[string] $nameClass) {
+	function TablesContext([string[]] $OtherTables){
+		$BaseTable = "        public DbSet<NameModelVar> NameTableVar { get; set; }"
+		$result = ""
+		For ($i=0; $i -lt $OtherTables.Length; $i++) {
+			$result = $result+$BaseTable
+			$result = $result -replace "NameModelVar", $OtherTables[$i]
+			$nameTable = $OtherTables[$i]+"s"
+			$result = $result -replace "NameTableVar", $nameTable
+			$result = $result+"`n"
+		}
+		return $result
+	}
+
+	function ContextContent([string] $NSpaceModelsVar, 
+							[string] $nameSpace,
+							[string] $nameClass,
+							[string] $TablesPropertyVar) {
 		$result = Get-Content $pathHelperCreateAPIProject"\DAL\BasicContext.cs"
+		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameClassVar", $nameClass
+		$result = $result -replace "TablesPropertyVar", $TablesPropertyVar
 		return $result
 	}
 
@@ -244,9 +261,13 @@ $folderPostmanFiles = $projectName+".postman"
 		return $result
 	}
 
-	function ProgramContent([string] $NameSpaceVar){
+	function ProgramContent([string] $NSpaceContextsVar,
+							[string] $NameSpaceVar,
+							[string] $NameClassContextVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicProgram.cs"
+		$result = $result -replace "NSpaceContextsVar", $NSpaceContextsVar
 		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "NameClassContextVar", $NameClassContextVar
 		return $result
 	}
 
@@ -306,13 +327,13 @@ $folderPostmanFiles = $projectName+".postman"
 	function ControllerBllDalCreatePath([string] $ModelName){
 		Write-Host "`n`n"
 		#DTO
-			$nameclassModelsDto = $ModelName+"ModelDto"
+			$nameclassModelsDto = $ModelName+"Dto"
 			Write-Host "Creating "$nameclassModelsDto -ForegroundColor Magenta
 			$contentModelsDto = ModelDtoContent $namespaceModelsDto $nameclassModelsDto
 			$nameFileModelsDto = $nameclassModelsDto+".cs"
 			echo $contentModelsDto > .\Source\$common\$folderDtos\$folderModelsDtos\$nameFileModelsDto
 		#Model
-			$nameclassModels = $ModelName+"Model"
+			$nameclassModels = $ModelName
 			Write-Host "Creating "$nameclassModels -ForegroundColor Magenta
 			$contentModels = ModelContent $namespaceModels $nameclassModels
 			$nameFileModels = $nameclassModels+".cs"
@@ -414,19 +435,19 @@ $folderPostmanFiles = $projectName+".postman"
 	}
 
 	function PostmanCollectionContent([string] $ProjectNameVar,
-									  [string[]] $Controllers){
+									  [string[]] $ControllersVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\POSTMAN\BasicPostmanCollection.postman_collection.json"
 		$result = $result -replace "ProjectNameVar", $ProjectNameVar
 		$GuidVar = New-Guid  | Select-String -Pattern "[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}"
 		$result = $result -replace "GuidVar", $GuidVar
 
 		#Controllers Postman
-		$ItemsControllerVar = PostmanControllerContent $projectName $projectName
-		$ItemsControllerVar = $ItemsControllerVar + ",`n"
-		For ($i=0; $i -lt $controllers.Length; $i++) {
-			$itemController = PostmanControllerContent $controllers[$i] $projectName
+		$ItemsControllerVar = ""#PostmanControllerContent $projectName $projectName
+		#$ItemsControllerVar = $ItemsControllerVar + ",`n"
+		For ($i=0; $i -lt $ControllersVar.Length; $i++) {
+			$itemController = PostmanControllerContent $ControllersVar[$i] $projectName
 			$ItemsControllerVar = $ItemsControllerVar + $itemController
-			if($i+1 -ne $controllers.Length){
+			if($i+1 -ne $ControllersVar.Length){
 				$ItemsControllerVar = $ItemsControllerVar + ",`n"
 			}
 		}
@@ -435,7 +456,18 @@ $folderPostmanFiles = $projectName+".postman"
 		return $result
 	}
 
-
+	function MigrationsScriptContent([string] $NameProjectVar,
+									 [string] $NameDALVar,
+								 	 [string] $NameContextVar,
+									 [string] $NameAPIVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\DAL\BaseMigrationScript.ps1"
+		$result = $result -replace "NameProjectVar", $NameProjectVar
+		$result = $result -replace "NameDALVar", $NameDALVar
+		$result = $result -replace "NameNewMigrationVar", "InitialMigration"
+		$result = $result -replace "NameContextVar", $NameContextVar
+		$result = $result -replace "NameAPIVar", $NameAPIVar
+		return $result
+	}
 
 
 
@@ -481,6 +513,7 @@ cd .\$projectName
 				dotnet new classlib -f $dotnetVersion
 				dotnet add package Microsoft.EntityFrameworkCore
 				dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+				dotnet add package Microsoft.EntityFrameworkCore.Design
 				rm Class1.cs
 				dotnet add reference ..\$common\$common.csproj
 				mkdir .\$folderModels
@@ -488,7 +521,8 @@ cd .\$projectName
 				cd .\$folderContext
 					$nameclassContexts = $projectName+"Context"
 					Write-Host "Creating "$nameclassContexts -ForegroundColor Magenta
-					$contentContexts = ContextContent $namespaceContexts $nameclassContexts
+					$tables = TablesContext $controllers
+					$contentContexts = ContextContent $namespaceModels $namespaceContexts $nameclassContexts $tables
 					$nameFileContexts = $nameclassContexts+".cs"
 					echo $contentContexts > $nameFileContexts
 				cd..
@@ -516,6 +550,7 @@ cd .\$projectName
 				dotnet add reference ..\$common\$common.csproj
 				dotnet add package Autofac
 				dotnet add package Autofac.Extensions.DependencyInjection
+				dotnet add package Microsoft.EntityFrameworkCore.Design
 				cd .\Properties
 					Write-Host "Creating launchSettings" -ForegroundColor Magenta
 					$portProject = Get-Content .\launchSettings.json | Select-String -Pattern "`"applicationUrl`": `"http://localhost:[0-9]+`""
@@ -531,13 +566,13 @@ cd .\$projectName
 				rm appsettings.Development.json
 				echo $appsettingsdevelopmentcontent > appsettings.Development.json
 				Write-Host "Creating Startup" -ForegroundColor Magenta
-				$nameClassBLL = $projectName+"BLL"
-				$nameclassRepositories = $projectName+"Repository"
+				$nameClassBLL = $controllers[0]+"BLL"
+				$nameclassRepositories = $controllers[0]+"Repository"
 				$startUpContent = StartupContent $namespaceBLL $namespaceSettings $nameSpaceContexts $namespaceRepositories $api $nameclassSettings $nameClassBLL $projectName $nameclassContexts $nameclassRepositories
 				rm Startup.cs
 				echo $startUpContent > Startup.cs
 				Write-Host "Creating Program" -ForegroundColor Magenta
-				$programContent = ProgramContent $api
+				$programContent = ProgramContent $nameSpaceContexts $api $nameclassContexts
 				rm Program.cs
 				echo $programContent > Program.cs
 				mkdir .\$folderMappingsApi
@@ -547,7 +582,7 @@ cd .\$projectName
 		cd ..
 
 		#Create a ControllerBllDalCreatePath
-		ControllerBllDalCreatePath($projectName)
+		#ControllerBllDalCreatePath($projectName)
 		
 		#Create a others ControllerBllDalCreatePath
 		For ($i=0; $i -lt $controllers.Length; $i++) {
@@ -617,6 +652,11 @@ cd .\$projectName
 	dotnet sln add ".\Test\$datatesthelper\$datatesthelper.csproj"
 
 	##Add migrations file
+	$nameFileMigration = $projectName+"MigrationScript.ps1"
+	Write-Host "`n`n`n`n`n`nCreating "$nameFileMigration -ForegroundColor Green
+	$migrationsContent = MigrationsScriptContent $projectName $dal $nameclassContexts $api
+	echo $migrationsContent > .\$nameFileMigration
+
 
 	cd ..
 

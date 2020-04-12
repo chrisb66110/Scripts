@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
@@ -30,6 +31,16 @@ namespace NameSpaceVar
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //DbContext to Migrations
+            var connectionString = Configuration.GetConnectionString("DataBaseVarConnectionString");
+            services.AddDbContextPool<NameClassContextVar>(options =>
+            {
+                options.UseNpgsql(connectionString, opt =>
+                {
+                    opt.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+                });
+            });
+
             //Configure Auto mapper
             var assemblies = new List<Assembly>
             {
