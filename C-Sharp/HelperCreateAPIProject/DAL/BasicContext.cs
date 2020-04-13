@@ -20,7 +20,7 @@ TablesPropertyVar
 
         public async Task MigrationsAsync()
         {
-            if (Database.GetPendingMigrations().Any())
+            if (Database.GetPendingMigrations().AsQueryable().Any())
             {
                 await Database.MigrateAsync();
             }
