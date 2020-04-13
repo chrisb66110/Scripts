@@ -1,158 +1,70 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Project.BLL.BLLs;
-using Project.COMMON.Dtos.ModelsDtos;
-using Project.COMMON.Settings;
+using Microsoft.EntityFrameworkCore;
 
-namespace Project.API.Controllers
+namespace NameSpaceVar
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public abstract class BaseRepository<TEntity, TTypeId> where TEntity : class
     {
-        private readonly ILogger<WeatherForecastController> _logger;
-        private readonly IProjectBLL _bll;
-        private readonly ProjectSettings _setting;
+        private readonly DbContext _context;
 
-        public WeatherForecastController(
-            ILogger<WeatherForecastController> logger,
-            IProjectBLL bll,
-            ProjectSettings setting)
+        protected BaseRepository(DbContext context)
         {
-            _logger = logger;
-            _bll = bll;
-            _setting = setting;
+            _context = context;
         }
 
-        //[HttpGet]
-        //public IEnumerable<WeatherForecast> Get()
-        //{
-        //    var rng = new Random();
-        //    return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //    {
-        //        Date = DateTime.Now.AddDays(index),
-        //        TemperatureC = rng.Next(-20, 55),
-        //        Summary = Summaries[rng.Next(Summaries.Length)]
-        //    })
-        //    .ToArray();
-        //}
-
-        [HttpGet]
-        public async Task<ObjectResult> Get()
+        protected async Task<List<TEntity>> _GetAllAsync()
         {
-            var resultBll = await _bll.DataExist();
-            resultBll.Username = _setting.ConnectionStrings.ProjectMicroserviceConnectionString;
-            var response = CreateOkResponse(resultBll);
+            var response = await _context.Set<TEntity>().ToListAsync();
             return response;
         }
 
-        [HttpPost]
-        public async Task<ObjectResult> Post(BaseModelDto request)
+        protected async Task<TEntity> _GetByIdAsync(TTypeId id)
         {
-            var response = CreateInvalidDataResponse();
-            if (ModelState.IsValid)
-            {
-                response = CreateOkResponse(request);
-            }
-
+            var response = await _context.Set<TEntity>().FindAsync(id);
             return response;
         }
 
-        public ObjectResult CreateOkResponse(object content = null)
+        protected async Task<TEntity> _AddAsync(TEntity entity)
         {
-            var response = new ObjectResult(content ?? string.Empty );
-            response.StatusCode = (int)HttpStatusCode.OK;
-            return response;
+            var response = await _context.Set<TEntity>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return response.Entity;
         }
 
-        public ObjectResult CreateCreatedResponse(object content = null)
+        protected async Task<List<TEntity>> _AddRangeAsync(List<TEntity> entities)
         {
-            var response = new ObjectResult(content ?? string.Empty);
-            response.StatusCode = (int)HttpStatusCode.Created;
-            return response;
+            await _context.Set<TEntity>().AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
+            return entities;
         }
 
-        public ObjectResult CreateAcceptedResponse(object content = null)
+        protected async Task<TEntity> _UpdateAsync(TEntity entity)
         {
-            var response = new ObjectResult(content ?? string.Empty);
-            response.StatusCode = (int)HttpStatusCode.Accepted;
-            return response;
+            var response = _context.Set<TEntity>().Update(entity);
+            await _context.SaveChangesAsync();
+            return response.Entity;
         }
 
-        public ObjectResult CreateBadRequestResponse(object content = null)
+        protected async Task<List<TEntity>> _UpdateAsync(List<TEntity> entities)
         {
-            var response = new ObjectResult(content ?? string.Empty);
-            response.StatusCode = (int)HttpStatusCode.BadRequest;
-            return response;
+            _context.Set<TEntity>().UpdateRange(entities);
+            await _context.SaveChangesAsync();
+            return entities;
         }
 
-        public ObjectResult CreateInvalidDataResponse()
+        protected async Task<TEntity> _RemoveAsync(TEntity entity)
         {
-            var response = new ObjectResult("Invalid Data");
-            response.StatusCode = (int)HttpStatusCode.BadRequest;
-            return response;
+            var response = _context.Set<TEntity>().Remove(entity);
+            await _context.SaveChangesAsync();
+            return response.Entity;
         }
 
-        public ObjectResult CreateUnauthorizedResponse(object content = null)
+        protected async Task<List<TEntity>> _RemoveRangeAsync(List<TEntity> entities)
         {
-            var response = new ObjectResult(content ?? string.Empty);
-            response.StatusCode = (int)HttpStatusCode.Unauthorized;
-            return response;
-        }
-
-        public ObjectResult CreateForbiddenResponse(object content = null)
-        {
-            var response = new ObjectResult(content ?? string.Empty);
-            response.StatusCode = (int)HttpStatusCode.Forbidden;
-            return response;
-        }
-
-        public ObjectResult CreateNotFoundResponse(object content = null)
-        {
-            var response = new ObjectResult(content ?? string.Empty);
-            response.StatusCode = (int)HttpStatusCode.NotFound;
-            return response;
-        }
-
-        public ObjectResult CreateMethodNotAllowedResponse(object content = null)
-        {
-            var response = new ObjectResult(content ?? string.Empty);
-            response.StatusCode = (int)HttpStatusCode.MethodNotAllowed;
-            return response;
-        }
-
-        public ObjectResult CreateRequestTimeoutResponse(object content = null)
-        {
-            var response = new ObjectResult(content ?? string.Empty);
-            response.StatusCode = (int)HttpStatusCode.RequestTimeout;
-            return response;
-        }
-
-        public ObjectResult CreateConflictResponse(object content = null)
-        {
-            var response = new ObjectResult(content ?? string.Empty);
-            response.StatusCode = (int)HttpStatusCode.Conflict;
-            return response;
-        }
-
-        public ObjectResult CreateBadGatewayResponse(object content = null)
-        {
-            var response = new ObjectResult(content ?? string.Empty);
-            response.StatusCode = (int)HttpStatusCode.BadGateway;
-            return response;
-        }
-
-        public ObjectResult CreateGatewayTimeoutResponse(object content = null)
-        {
-            var response = new ObjectResult(content ?? string.Empty);
-            response.StatusCode = (int)HttpStatusCode.GatewayTimeout;
-            return response;
+            _context.Set<TEntity>().RemoveRange(entities);
+            await _context.SaveChangesAsync();
+            return entities;
         }
     }
 }
