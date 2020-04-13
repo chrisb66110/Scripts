@@ -7,45 +7,26 @@ using NSpaceModelsVar;
 
 namespace NameSpaceVar
 {
-    public class NameClassVar : NameInterfaceVar
+    public class NameClassVar : BaseRepository<NameModelVar, string>, NameInterfaceVar
     {
-        private readonly NameContextVar _context;
         private readonly IMapper _mapper;
 
-        public NameClassVar(NameContextVar context, IMapper mapper)
+        public NameClassVar(NameContextVar context, IMapper mapper) : base(context)
         {
-            _context = context;
             _mapper = mapper;
         }
 
         public async Task<List<NameModelDtoVar>> GetAllAsync()
         {
-            var nModelVarVar = new NameModelVar
-            {
-                Id = "NameModelDtoVar",
-                Property = "Property"
-            };
-
-            var listNameModelVar = new List<NameModelVar>()
-            {
-                nModelVarVar
-            };
-
-            //Get data from DB
-
+            var listNameModelVar = await _GetAllAsync();
+            
             var response = _mapper.Map<List<NameModelVar>, List<NameModelDtoVar>>(listNameModelVar);
             return response;
         }
 
         public async Task<NameModelDtoVar> GetByIdAsync(string id)
         {
-            var nModelVarVar = new NameModelVar
-            {
-                Id = "NameModelDtoVar",
-                Property = "Property"
-            };
-
-            //Get data from DB
+            var nModelVarVar = await _GetByIdAsync(id);
 
             var response = _mapper.Map<NameModelVar, NameModelDtoVar>(nModelVarVar);
             return response;
@@ -55,9 +36,9 @@ namespace NameSpaceVar
         {
             var nModelVarVar = _mapper.Map<NameModelDtoVar, NameModelVar>(nameModelDtoParamVar);
 
-            //Add data from DB
+            var result = await _AddAsync(nModelVarVar);
 
-            var response = _mapper.Map<NameModelVar, NameModelDtoVar>(nModelVarVar);
+            var response = _mapper.Map<NameModelVar, NameModelDtoVar>(result);
             return response;
         }
 
@@ -65,9 +46,9 @@ namespace NameSpaceVar
         {
             var nModelVarVar = _mapper.Map<NameModelDtoVar, NameModelVar>(nameModelDtoParamVar);
 
-            //Update data from DB
+            var result = await _UpdateAsync(nModelVarVar);
 
-            var response = _mapper.Map<NameModelVar, NameModelDtoVar>(nModelVarVar);
+            var response = _mapper.Map<NameModelVar, NameModelDtoVar>(result);
             return response;
         }
 
@@ -75,9 +56,9 @@ namespace NameSpaceVar
         {
             var nModelVarVar = _mapper.Map<NameModelDtoVar, NameModelVar>(nameModelDtoParamVar);
 
-            //Update data from DB
+            var result = await _RemoveAsync(nModelVarVar);
 
-            var response = _mapper.Map<NameModelVar, NameModelDtoVar>(nModelVarVar);
+            var response = _mapper.Map<NameModelVar, NameModelDtoVar>(result);
             return response;
         }
     }
