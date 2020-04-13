@@ -119,6 +119,12 @@ $folderPostmanFiles = $projectName+".postman"
 		return $result
 	}
 
+	function BaseRepositoryContent([string] $NameSpaceVar) {
+		$result = Get-Content $pathCommonFiles"\BaseRepository.cs"
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		return $result
+	}
+
 	function RepositoryContent([string] $NSpaceModelsDtosVar,
 							   [string] $NSpaceContextsVar,
 							   [string] $NSpaceModelsVar,
@@ -140,6 +146,8 @@ $folderPostmanFiles = $projectName+".postman"
 		$result = $result -replace "NameModelVar", $NameModelVar
 		$nModelVarVar = $NameModelVar.subString(0,1).ToLower()+$NameModelVar.subString(1,$NameModelVar.Length-1)
 		$result = $result -replace "nModelVarVar", $nModelVarVar
+		$nameModelDtoParamVar = $NameModelDtoVar.subString(0,1).ToLower()+$NameModelDtoVar.subString(1,$NameModelDtoVar.Length-1)
+		$result = $result -replace "nameModelDtoParamVar", $nameModelDtoParamVar
 		return $result
 	}
 
@@ -527,6 +535,11 @@ cd .\$projectName
 					echo $contentContexts > $nameFileContexts
 				cd..
 				mkdir .\$folderRepositories
+				cd .\$folderRepositories
+					$baseRepositoryContent = BaseRepositoryContent $namespaceRepositories
+					$nameFileBaseRepository = "BaseRepository.cs"
+					echo $baseRepositoryContent > $nameFileBaseRepository
+				cd..
 				mkdir .\$folderMappingsDal
 			cd ..
 			Write-Host "`n`n`n`n`n`nCreating "$bll -ForegroundColor Green
