@@ -61,7 +61,7 @@ namespace NameSpaceVar
 
             try
             {
-                if (id != null)
+                if (!string.IsNullOrEmpty(id))
                 {
                     var resultBll = await _NameBllProperty.GetByIdAsync(id);
 

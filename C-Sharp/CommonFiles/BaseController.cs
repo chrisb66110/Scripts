@@ -13,6 +13,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int) HttpStatusCode.OK
             };
+
             return response;
         }
 
@@ -22,6 +23,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.InternalServerError
             };
+
             return response;
         }
 
@@ -31,6 +33,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.Created
             };
+
             return response;
         }
 
@@ -40,6 +43,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.Accepted
             };
+
             return response;
         }
 
@@ -49,6 +53,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.BadRequest
             };
+
             return response;
         }
 
@@ -58,6 +63,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.BadRequest
             };
+
             return response;
         }
 
@@ -67,6 +73,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.Unauthorized
             };
+
             return response;
         }
 
@@ -76,6 +83,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.Forbidden
             };
+
             return response;
         }
 
@@ -85,6 +93,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.NotFound
             };
+
             return response;
         }
 
@@ -94,6 +103,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.MethodNotAllowed
             };
+
             return response;
         }
 
@@ -103,6 +113,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.RequestTimeout
             };
+
             return response;
         }
 
@@ -112,6 +123,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.Conflict
             };
+
             return response;
         }
 
@@ -121,6 +133,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.BadGateway
             };
+
             return response;
         }
 
@@ -130,6 +143,7 @@ namespace NameSpaceVar
             {
                 StatusCode = (int)HttpStatusCode.GatewayTimeout
             };
+
             return response;
         }
     }

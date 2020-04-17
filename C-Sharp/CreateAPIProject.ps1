@@ -4,7 +4,31 @@ $projectName=$args[0]
 
 $controllers = $args[1]
 
-$test="TEST"
+$nameSource = "Source"
+	$nameCommon = "Common"
+		$nameDto = "Dto"
+		$nameConstant = "Constants"
+		$nameSettings = "Settings"
+	$nameDal = "Dal"
+		$nameRepository = "Repository"
+		$nameRepositories = "Repositories"
+		$nameContext = "Context"
+		$nameModel = "Model"
+	$nameBll = "Bll"
+		$nameMapping = "Mapping"
+		$nameProfile = "Profile"
+	$nameApi = "Api"
+		$nameRequest = "Request"
+		$nameResponse = "Response"
+		$nameController = "Controller"
+$nameTest = "Test"
+	$nameDataTestHelper = "DataTestHelper"
+
+$nameBaseConstants = "BaseConstants"
+$nameBaseController = "BaseController"
+$nameBaseRepository = "BaseRepository"
+
+$namePostman = "postman"
 
 $dotnetVersion = "netcoreapp3.1"
 
@@ -14,50 +38,50 @@ $pathHelperCreateAPIProject = $pathScript+"\HelperCreateAPIProject"
 
 $pathCommonFiles = $pathScript+"\CommonFiles"
 
-$common=$projectName + ".COMMON"
-	$folderConstants = "Constants"
+$common=$projectName + "." + $nameCommon
+	$folderConstants = $nameConstant
 		$namespaceConstants = $common+"."+$folderConstants
-	$folderSettings = "Settings"
+	$folderSettings = $nameSettings
 		$namespaceSettings = $common+"."+$folderSettings
-	$folderDtos = "Dtos"
-		$folderModelsDtos = "ModelsDtos"
+	$folderDtos = $nameDto + "s"
+		$folderModelsDtos = $nameModel + "s" + $nameDto + "s"
 			$namespaceModelsDto = $common+"."+$folderDtos+"."+$folderModelsDtos
 
-$commonTest=$projectName + ".COMMON." + $test
+$commonTest=$projectName + "." + $nameCommon + "." + $nameTest
 
-$dal=$projectName + ".DAL"
-	$folderModels = "Models"
+$dal=$projectName + "." + $nameDal
+	$folderModels = $nameModel + "s"
 		$namespaceModels = $dal+"."+$folderModels
-	$folderContext = "Contexts"
+	$folderContext = $nameContext + "s"
 		$namespaceContexts = $dal+"."+$folderContext
-	$folderRepositories = "Repositories"
+	$folderRepositories = $nameRepositories
 		$namespaceRepositories = $dal+"."+$folderRepositories
-	$folderMappingsDal = "Mappings"
+	$folderMappingsDal = $nameMapping + "s"
 		$namespaceMappingsDal = $dal+"."+$folderMappingsDal
 
-$dalTest=$projectName + ".DAL." + $test
+$dalTest=$projectName + "." + $nameDal + "." + $nameTest
 
-$bll=$projectName + ".BLL"
-	$folderBLLs = "BLLs"
+$bll=$projectName + "." + $nameBll
+	$folderBLLs = $nameBll + "s"
 		$namespaceBLL = $bll+"."+$folderBLLs
 
-$bllTest=$projectName + ".BLL." + $test
+$bllTest=$projectName + "." + $nameBll + "." + $nameTest
 
-$api=$projectName + ".API"
-	$folderController = "Controllers"
+$api=$projectName + "." + $nameApi
+	$folderController = $nameController + "s"
 		$namespaceController = $api+"."+$folderController
-	$folderMappingsApi = "Mappings"
+	$folderMappingsApi = $nameMapping + "s"
 		$namespaceMappingsApi = $api+"."+$folderMappingsApi
-	$folderRequestsApi = "Requests"
+	$folderRequestsApi = $nameRequest + "s"
 		$namespaceRequestsApi = $api+"."+$folderRequestsApi
-	$folderResponseApi = "Responses"
+	$folderResponseApi = $nameResponse + "s"
 		$namespaceResponseApi = $api+"."+$folderResponseApi
 
-$apiTest=$projectName + ".API." + $test
+$apiTest=$projectName + "." + $nameApi + "." + $nameTest
 
-$datatesthelper = $projectName + ".DATATESTHELPER"
+$datatesthelper = $projectName + "." + $nameDataTestHelper
 
-$folderPostmanFiles = $projectName+".postman"
+$folderPostmanFiles = $projectName + "." + $namePostman
 
 ##########################################################Functions##########################################################
 	function ConstantsContent([string] $nameSpace, 
@@ -116,12 +140,6 @@ $folderPostmanFiles = $projectName+".postman"
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameClassVar", $nameClass
 		$result = $result -replace "TablesPropertyVar", $TablesPropertyVar
-		return $result
-	}
-
-	function BaseRepositoryContent([string] $NameSpaceVar) {
-		$result = Get-Content $pathCommonFiles"\BaseRepository.cs"
-		$result = $result -replace "NameSpaceVar", $NameSpaceVar
 		return $result
 	}
 
@@ -335,88 +353,96 @@ $folderPostmanFiles = $projectName+".postman"
 	function ControllerBllDalCreatePath([string] $ModelName){
 		Write-Host "`n`n"
 		#DTO
-			$nameclassModelsDto = $ModelName+"Dto"
+			$nameclassModelsDto = $ModelName+$nameDto
 			Write-Host "Creating "$nameclassModelsDto -ForegroundColor Magenta
 			$contentModelsDto = ModelDtoContent $namespaceModelsDto $nameclassModelsDto
 			$nameFileModelsDto = $nameclassModelsDto+".cs"
-			echo $contentModelsDto > .\Source\$common\$folderDtos\$folderModelsDtos\$nameFileModelsDto
+			echo $contentModelsDto > .\$nameSource\$common\$folderDtos\$folderModelsDtos\$nameFileModelsDto
 		#Model
 			$nameclassModels = $ModelName
 			Write-Host "Creating "$nameclassModels -ForegroundColor Magenta
 			$contentModels = ModelContent $namespaceModels $nameclassModels
 			$nameFileModels = $nameclassModels+".cs"
-			echo $contentModels > .\Source\$dal\$folderModels\$nameFileModels
+			echo $contentModels > .\$nameSource\$dal\$folderModels\$nameFileModels
 		#ProfileDal
-			$nameclassProfileDal = $ModelName+"Profile"
+			$nameclassProfileDal = $ModelName+$nameProfile
 			Write-Host "Creating "$nameclassProfileDal -ForegroundColor Magenta
 			$contentProfileDal = ProfileDalContent $namespaceModelsDto $namespaceModels $namespaceMappingsDal $nameclassProfileDal $nameclassModels $nameclassModelsDto
 			$nameFileProfileDal = $nameclassProfileDal+".cs"
-			echo $contentProfileDal > .\Source\$dal\$folderMappingsDal\$nameFileProfileDal
+			echo $contentProfileDal > .\$nameSource\$dal\$folderMappingsDal\$nameFileProfileDal
 		#Repository
-			$nameclassRepositories = $ModelName+"Repository"
+			$nameclassRepositories = $ModelName+$nameRepository
 			Write-Host "Creating "$nameclassRepositories -ForegroundColor Magenta
 			$nameinterfaceRepositories = "I"+$nameclassRepositories
 			$contentRepository = RepositoryContent $namespaceModelsDto $namespaceContexts $namespaceModels $namespaceRepositories $nameclassRepositories $nameinterfaceRepositories $nameclassContexts $nameclassModelsDto $nameclassModels
 			$nameFileClassRepositories = $nameclassRepositories+".cs"
-			echo $contentRepository > .\Source\$dal\$folderRepositories\$nameFileClassRepositories
+			echo $contentRepository > .\$nameSource\$dal\$folderRepositories\$nameFileClassRepositories
 			$contentIRepository = IRepositoryContent $namespaceModelsDto $namespaceRepositories $nameinterfaceRepositories $nameclassModelsDto
 			$nameFileInterfaceRepositories = $nameinterfaceRepositories+".cs"
-			echo $contentIRepository > .\Source\$dal\$folderRepositories\$nameFileInterfaceRepositories
+			echo $contentIRepository > .\$nameSource\$dal\$folderRepositories\$nameFileInterfaceRepositories
 		#BLL
-			$nameclassBLL = $ModelName+"BLL"
+			$nameclassBLL = $ModelName+$nameBll
 			Write-Host "Creating "$nameclassBLL -ForegroundColor Magenta
-			$nameinterfaceBLL = "I"+$ModelName+"BLL"
+			$nameinterfaceBLL = "I"+$ModelName+$nameBll
 			$nameRepositoryProperty = $nameclassRepositories.subString(0,1)+$nameclassRepositories.subString(1,1).ToLower()+$nameclassRepositories.subString(2,$nameclassRepositories.Length-2)
 			$contentBLL = BLLContent $namespaceModelsDto $namespaceRepositories $namespaceBLL $nameclassBLL $nameinterfaceBLL $nameinterfaceRepositories $nameclassModelsDto
 			$nameFileClassBLL = $nameclassBLL+".cs"
-			echo $contentBLL > .\Source\$bll\$folderBLLs\$nameFileClassBLL
+			echo $contentBLL > .\$nameSource\$bll\$folderBLLs\$nameFileClassBLL
 			$contentIBLL = IBLLContent $namespaceModelsDto $namespaceBLL $nameinterfaceBLL $nameclassModelsDto
 			$nameFileInterfaceBLL = $nameinterfaceBLL+".cs"
-			echo $contentIBLL > .\Source\$bll\$folderBLLs\$nameFileInterfaceBLL
+			echo $contentIBLL > .\$nameSource\$bll\$folderBLLs\$nameFileInterfaceBLL
 		#Request
-			$nameclassRequest = $ModelName+"Request"
+			$nameclassRequest = $ModelName+$nameRequest
 			Write-Host "Creating "$nameclassRequest -ForegroundColor Magenta
 			$contentRequest = RequestContent $namespaceRequestsApi $nameclassRequest
 			$nameFileRequest = $nameclassRequest+".cs"
-			echo $contentRequest > .\Source\$api\$folderRequestsApi\$nameFileRequest
+			echo $contentRequest > .\$nameSource\$api\$folderRequestsApi\$nameFileRequest
 		#Response
-			$nameclassResponse = $ModelName+"Response"
+			$nameclassResponse = $ModelName+$nameResponse
 			Write-Host "Creating "$nameclassResponse -ForegroundColor Magenta
 			$contentResponse = ResponseContent $namespaceResponseApi $nameclassResponse
 			$nameFileResponse = $nameclassResponse+".cs"
-			echo $contentResponse > .\Source\$api\$folderResponseApi\$nameFileResponse
+			echo $contentResponse > .\$nameSource\$api\$folderResponseApi\$nameFileResponse
 		#Controller
-			$nameclassController = $ModelName+"Controller"
+			$nameclassController = $ModelName+$nameController
 			$contentController = ControllerContent $namespaceRequestsApi $namespaceResponseApi $namespaceBLL $namespaceConstants $namespaceModelsDto $namespaceController $nameclassController $nameinterfaceBLL $nameclassModelsDto $nameclassResponse $nameclassRequest
 			$nameFileClassController = $nameclassController+".cs"
-			echo $contentController > .\Source\$api\$folderController\$nameFileClassController
+			echo $contentController > .\$nameSource\$api\$folderController\$nameFileClassController
 		#ProfileApi
-			$nameclassProfileApi = $ModelName+"Profile"
+			$nameclassProfileApi = $ModelName+$nameProfile
 			Write-Host "Creating "$nameclassProfileApi -ForegroundColor Magenta
 			$contentProfileApi = ProfileApiContent $namespaceRequestsApi $namespaceResponseApi $namespaceModelsDto $namespaceMappingsApi $nameclassProfileApi $nameclassRequest $nameclassModelsDto $nameclassResponse
 			$nameFileProfileApi = $nameclassProfileApi+".cs"
-			echo $contentProfileApi > .\Source\$api\$folderMappingsApi\$nameFileProfileApi
+			echo $contentProfileApi > .\$nameSource\$api\$folderMappingsApi\$nameFileProfileApi
 	}
 
 	#This function is expected to run in the same folder where .sln is
 	function AddBaseFiles([string] $NameSpaceConstants, 
-						  [string] $NameSpaceController){
+						  [string] $NameSpaceController,
+						  [string] $NameSpaceRepository){
 		Write-Host "`n`n"
 		#BaseConstants
-			$nameclassBaseConstants = "BaseConstants"
+			$nameclassBaseConstants = $nameBaseConstants
 			$fileBaseConstants = $nameclassBaseConstants+".cs"
 			Write-Host "Creating "$nameclassBaseConstants -ForegroundColor Magenta
 			$baseConstantsContent = Get-Content $pathCommonFiles\$fileBaseConstants
 			$baseConstantsContent = $baseConstantsContent -replace "NameSpaceVar", $NameSpaceConstants
-			echo $baseConstantsContent > .\Source\$common\$folderConstants\$fileBaseConstants
+			echo $baseConstantsContent > .\$nameSource\$common\$folderConstants\$fileBaseConstants
 		#BaseController
-			$nameclassBaseController = "BaseController"
+			$nameclassBaseController = $nameBaseController
 			$fileBaseController = $nameclassBaseController+".cs"
 			Write-Host "Creating "$nameclassBaseController -ForegroundColor Magenta
 			$baseControllerContent = Get-Content $pathCommonFiles\$fileBaseController
 			$baseControllerContent = $baseControllerContent -replace "NameSpaceVar", $NameSpaceController
 			$baseControllerContent = $baseControllerContent -replace "NSpaceConstants", $NameSpaceConstants
-			echo $baseControllerContent > .\Source\$api\$folderController\$fileBaseController
+			echo $baseControllerContent > .\$nameSource\$api\$folderController\$fileBaseController
+		#BaseRepository
+			$nameclassBaseRepository = $nameBaseRepository
+			$fileBaseRepository = $nameclassBaseRepository+".cs"
+			Write-Host "Creating "$nameclassBaseRepository -ForegroundColor Magenta
+			$baseRepositoryContent = Get-Content $pathCommonFiles"\BaseRepository.cs"
+			$baseRepositoryContent = $baseRepositoryContent -replace "NameSpaceVar", $NameSpaceRepository
+			echo $baseRepositoryContent > .\$nameSource\$dal\$folderRepositories\$fileBaseRepository
 	}
 
 	function PostmanEnvironmentContent([string] $ProjectNameVar,
@@ -431,10 +457,10 @@ $folderPostmanFiles = $projectName+".postman"
 		return $result
 	}
 
-	function PostmanControllerContent([string] $NameController,
+	function PostmanControllerContent([string] $NameControllerParam,
 									  [string] $NameProjectVar){
-		$NameFolderControllerVar = $NameController+"Controller"
-		$NameControllerPathVar = $NameController
+		$NameFolderControllerVar = $NameControllerParam+$nameController
+		$NameControllerPathVar = $NameControllerParam
 		$result = Get-Content $pathHelperCreateAPIProject"\POSTMAN\BasicControllerConfigPostman.json"
 		$result = $result -replace "NameFolderControllerVar", $NameFolderControllerVar
 		$result = $result -replace "NameControllerPathVar", $NameControllerPathVar
@@ -486,8 +512,8 @@ cd .\$projectName
 	
 	mkdir .\$projectName
 	cd .\$projectName
-		mkdir .\Source
-		cd .\Source
+		mkdir .\$nameSource
+		cd .\$nameSource
 			Write-Host "`n`n`n`n`n`nCreating "$common -ForegroundColor Green
 			mkdir .\$common
 			cd .\$common
@@ -527,7 +553,7 @@ cd .\$projectName
 				mkdir .\$folderModels
 				mkdir .\$folderContext
 				cd .\$folderContext
-					$nameclassContexts = $projectName+"Context"
+					$nameclassContexts = $projectName+$nameContext
 					Write-Host "Creating "$nameclassContexts -ForegroundColor Magenta
 					$tables = TablesContext $controllers
 					$contentContexts = ContextContent $namespaceModels $namespaceContexts $nameclassContexts $tables
@@ -535,11 +561,6 @@ cd .\$projectName
 					echo $contentContexts > $nameFileContexts
 				cd..
 				mkdir .\$folderRepositories
-				cd .\$folderRepositories
-					$baseRepositoryContent = BaseRepositoryContent $namespaceRepositories
-					$nameFileBaseRepository = "BaseRepository.cs"
-					echo $baseRepositoryContent > $nameFileBaseRepository
-				cd..
 				mkdir .\$folderMappingsDal
 			cd ..
 			Write-Host "`n`n`n`n`n`nCreating "$bll -ForegroundColor Green
@@ -579,8 +600,8 @@ cd .\$projectName
 				rm appsettings.Development.json
 				echo $appsettingsdevelopmentcontent > appsettings.Development.json
 				Write-Host "Creating Startup" -ForegroundColor Magenta
-				$nameClassBLL = $controllers[0]+"BLL"
-				$nameclassRepositories = $controllers[0]+"Repository"
+				$nameClassBLL = $controllers[0]+$nameBll
+				$nameclassRepositories = $controllers[0]+$nameRepository
 				$startUpContent = StartupContent $namespaceBLL $namespaceSettings $nameSpaceContexts $namespaceRepositories $api $nameclassSettings $nameClassBLL $projectName $nameclassContexts $nameclassRepositories
 				rm Startup.cs
 				echo $startUpContent > Startup.cs
@@ -603,7 +624,7 @@ cd .\$projectName
 		}
 
 		#Create a BaseFiles
-		AddBaseFiles $namespaceConstants $namespaceController
+		AddBaseFiles $namespaceConstants $namespaceController $namespaceRepositories
 
 		#Unit Test
 		mkdir .\Test
@@ -612,6 +633,10 @@ cd .\$projectName
 			mkdir .\$datatesthelper
 			cd .\$datatesthelper
 				dotnet new mstest -f $dotnetVersion
+				dotnet add reference ..\..\$nameSource\$api\$api.csproj
+				dotnet add reference ..\..\$nameSource\$bll\$bll.csproj
+				dotnet add reference ..\..\$nameSource\$common\$common.csproj
+				dotnet add reference ..\..\$nameSource\$dal\$dal.csproj
 				rm UnitTest1.cs
 			cd ..
 			Write-Host "`n`n`n`n`n`nCreating "$apiTest -ForegroundColor Green
@@ -619,8 +644,8 @@ cd .\$projectName
 			cd .\$apiTest
 				dotnet new mstest -f $dotnetVersion
 				rm UnitTest1.cs
-				dotnet add reference ..\..\Source\$api\$api.csproj
-				dotnet add reference ..\..\Source\$common\$common.csproj
+				dotnet add reference ..\..\$nameSource\$api\$api.csproj
+				dotnet add reference ..\..\$nameSource\$common\$common.csproj
 				dotnet add reference ..\$datatesthelper\$datatesthelper.csproj
 			cd ..
 			Write-Host "`n`n`n`n`n`nCreating "$bllTest -ForegroundColor Green
@@ -628,8 +653,8 @@ cd .\$projectName
 			cd .\$bllTest
 				dotnet new mstest -f $dotnetVersion
 				rm UnitTest1.cs
-				dotnet add reference ..\..\Source\$bll\$bll.csproj
-				dotnet add reference ..\..\Source\$common\$common.csproj
+				dotnet add reference ..\..\$nameSource\$bll\$bll.csproj
+				dotnet add reference ..\..\$nameSource\$common\$common.csproj
 				dotnet add reference ..\$datatesthelper\$datatesthelper.csproj
 			cd ..
 			Write-Host "`n`n`n`n`n`nCreating "$commonTest -ForegroundColor Green
@@ -637,7 +662,7 @@ cd .\$projectName
 			cd .\$commonTest
 				dotnet new mstest -f $dotnetVersion
 				rm UnitTest1.cs
-				dotnet add reference ..\..\Source\$common\$common.csproj
+				dotnet add reference ..\..\$nameSource\$common\$common.csproj
 				dotnet add reference ..\$datatesthelper\$datatesthelper.csproj
 			cd ..
 			Write-Host "`n`n`n`n`n`nCreating "$dalTest -ForegroundColor Green
@@ -645,24 +670,24 @@ cd .\$projectName
 			cd .\$dalTest
 				dotnet new mstest -f $dotnetVersion
 				rm UnitTest1.cs
-				dotnet add reference ..\..\Source\$dal\$dal.csproj
-				dotnet add reference ..\..\Source\$common\$common.csproj
+				dotnet add reference ..\..\$nameSource\$dal\$dal.csproj
+				dotnet add reference ..\..\$nameSource\$common\$common.csproj
 				dotnet add reference ..\$datatesthelper\$datatesthelper.csproj
 			cd ..
 		cd ..
 	
 	Write-Host "`n`n`n`n`n`nCreating "$projectName -ForegroundColor Cyan
 	dotnet new sln --name $projectName
-	dotnet sln add ".\Source\$api\$api.csproj"
-	dotnet sln add ".\Source\$bll\$bll.csproj"
-	dotnet sln add ".\Source\$common\$common.csproj"
-	dotnet sln add ".\Source\$dal\$dal.csproj"
+	dotnet sln add ".\$nameSource\$api\$api.csproj"
+	dotnet sln add ".\$nameSource\$bll\$bll.csproj"
+	dotnet sln add ".\$nameSource\$common\$common.csproj"
+	dotnet sln add ".\$nameSource\$dal\$dal.csproj"
 
-	dotnet sln add ".\Test\$apiTest\$apiTest.csproj"
-	dotnet sln add ".\Test\$bllTest\$bllTest.csproj"
-	dotnet sln add ".\Test\$commonTest\$commonTest.csproj"
-	dotnet sln add ".\Test\$dalTest\$dalTest.csproj"
-	dotnet sln add ".\Test\$datatesthelper\$datatesthelper.csproj"
+	dotnet sln add ".\$nameTest\$apiTest\$apiTest.csproj"
+	dotnet sln add ".\$nameTest\$bllTest\$bllTest.csproj"
+	dotnet sln add ".\$nameTest\$commonTest\$commonTest.csproj"
+	dotnet sln add ".\$nameTest\$dalTest\$dalTest.csproj"
+	dotnet sln add ".\$nameTest\$datatesthelper\$datatesthelper.csproj"
 
 	##Add migrations file
 	$nameFileMigration = $projectName+"MigrationScript.ps1"
