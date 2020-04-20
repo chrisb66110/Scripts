@@ -57,9 +57,9 @@ namespace NameSpaceVar
             return response;
         }
 
-        protected ObjectResult CreateInvalidDataResponse()
+        protected ObjectResult CreateInvalidDataResponse(string message = null)
         {
-            var response = new ObjectResult(BaseConstants.INVALID_DATA)
+            var response = new ObjectResult($"{BaseConstants.INVALID_DATA} {message}")
             {
                 StatusCode = (int)HttpStatusCode.BadRequest
             };

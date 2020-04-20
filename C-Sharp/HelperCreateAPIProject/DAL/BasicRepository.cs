@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using APIBase.Dal.Repositories;
 using AutoMapper;
 using NSpaceModelsDtosVar;
 using NSpaceContextsVar;

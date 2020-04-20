@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -19,6 +20,7 @@ using NSpaceRepositoriesVar;
 
 namespace NameSpaceVar
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -79,19 +81,19 @@ namespace NameSpaceVar
 
         public void AddAutoFacRegistration(ContainerBuilder builder)
         {
-            #region API
+            #region Api
 
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).AsImplementedInterfaces();
 
             #endregion
             
-            #region BLL
+            #region Bll
 
             builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(NameClassBLLVar))).AsImplementedInterfaces();
 
             #endregion
 
-            #region DAL
+            #region Dal
 
             //Register Context
             builder.Register(ctx =>
@@ -105,7 +107,7 @@ namespace NameSpaceVar
 
             #endregion
 
-            #region COMMON
+            #region Common
 
             //Register settings from appsettings
             builder.Register(ctx =>

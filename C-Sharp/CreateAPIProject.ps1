@@ -22,7 +22,7 @@ $nameSource = "Source"
 		$nameResponse = "Response"
 		$nameController = "Controller"
 $nameTest = "Test"
-	$nameDataTestHelper = "DataTestHelper"
+	$nameTestHelper = "TestHelper"
 
 $nameBaseConstants = "BaseConstants"
 $nameBaseController = "BaseController"
@@ -31,6 +31,12 @@ $nameBaseRepository = "BaseRepository"
 $namePostman = "postman"
 
 $dotnetVersion = "netcoreapp3.1"
+
+$nameAPIBase = "APIBase"
+$versionAPIBase = "0.0.1"
+
+$nameAPIBaseTest = "APIBaseTest"
+$versionAPIBaseTest = "0.0.1"
 
 ##########################################################Paths And NameSpaces##########################################################
 $pathScript = Convert-Path .\
@@ -79,7 +85,7 @@ $api=$projectName + "." + $nameApi
 
 $apiTest=$projectName + "." + $nameApi + "." + $nameTest
 
-$datatesthelper = $projectName + "." + $nameDataTestHelper
+$datatesthelper = $projectName + "." + $nameTestHelper
 
 $folderPostmanFiles = $projectName + "." + $namePostman
 
@@ -248,7 +254,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		$result = $result -replace "NSpaceRequestsVar", $NSpaceRequestsVar
 		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
 		$result = $result -replace "NSpaceBLLsVar", $NSpaceBLLsVar
-		$result = $result -replace "NSpaceConstantsVar", $NSpaceConstantsVar
+		#$result = $result -replace "NSpaceConstantsVar", $NSpaceConstantsVar
 		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
 		$result = $result -replace "NameSpaceVar", $NameSpaceVar
 		$result = $result -replace "NameClassVar", $NameClassVar
@@ -518,7 +524,6 @@ cd .\$projectName
 			mkdir .\$common
 			cd .\$common
 				dotnet new classlib -f $dotnetVersion
-				dotnet add package AutoMapper.Extensions.Microsoft.DependencyInjection
 				rm Class1.cs
 				mkdir .\$folderConstants
 				cd .\$folderConstants
@@ -545,9 +550,6 @@ cd .\$projectName
 			mkdir .\$dal
 			cd .\$dal
 				dotnet new classlib -f $dotnetVersion
-				dotnet add package Microsoft.EntityFrameworkCore
-				dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
-				dotnet add package Microsoft.EntityFrameworkCore.Design
 				rm Class1.cs
 				dotnet add reference ..\$common\$common.csproj
 				mkdir .\$folderModels
@@ -582,9 +584,6 @@ cd .\$projectName
 				cd ..
 				dotnet add reference ..\$bll\$bll.csproj
 				dotnet add reference ..\$common\$common.csproj
-				dotnet add package Autofac
-				dotnet add package Autofac.Extensions.DependencyInjection
-				dotnet add package Microsoft.EntityFrameworkCore.Design
 				cd .\Properties
 					Write-Host "Creating launchSettings" -ForegroundColor Magenta
 					$portProject = Get-Content .\launchSettings.json | Select-String -Pattern "`"applicationUrl`": `"http://localhost:[0-9]+`""
@@ -624,7 +623,7 @@ cd .\$projectName
 		}
 
 		#Create a BaseFiles
-		AddBaseFiles $namespaceConstants $namespaceController $namespaceRepositories
+		#AddBaseFiles $namespaceConstants $namespaceController $namespaceRepositories
 
 		#Unit Test
 		mkdir .\Test
@@ -688,6 +687,37 @@ cd .\$projectName
 	dotnet sln add ".\$nameTest\$commonTest\$commonTest.csproj"
 	dotnet sln add ".\$nameTest\$dalTest\$dalTest.csproj"
 	dotnet sln add ".\$nameTest\$datatesthelper\$datatesthelper.csproj"
+
+	Copy-Item "..\..\HelperCreateAPIProject\NuGet.Config" -Destination ".\"
+
+	#Instalation nugets
+	Write-Host "Instalation nugets in "$api -ForegroundColor Green
+	dotnet add .\$nameSource\$api package Autofac
+	dotnet add .\$nameSource\$api package Autofac.Extensions.DependencyInjection
+	dotnet add .\$nameSource\$api package Microsoft.EntityFrameworkCore.Design
+
+	Write-Host "Instalation nugets in "$bll -ForegroundColor Green
+	
+	Write-Host "Instalation nugets in "$common -ForegroundColor Green
+	dotnet add .\$nameSource\$common package $nameAPIBase --version $versionAPIBase
+	dotnet add .\$nameSource\$common package AutoMapper.Extensions.Microsoft.DependencyInjection
+	
+	Write-Host "Instalation nugets in "$dal -ForegroundColor Green
+	dotnet add .\$nameSource\$dal package Microsoft.EntityFrameworkCore
+	dotnet add .\$nameSource\$dal package Npgsql.EntityFrameworkCore.PostgreSQL
+	dotnet add .\$nameSource\$dal package Microsoft.EntityFrameworkCore.Design
+
+	Write-Host "Instalation nugets in "$apiTest -ForegroundColor Green
+	
+	Write-Host "Instalation nugets in "$bllTest -ForegroundColor Green
+	
+	Write-Host "Instalation nugets in "$commonTest -ForegroundColor Green
+	
+	Write-Host "Instalation nugets in "$dalTest -ForegroundColor Green
+
+	Write-Host "Instalation nugets in "$datatesthelper -ForegroundColor Green
+	dotnet add .\$nameTest\$datatesthelper package $nameAPIBaseTest --version $versionAPIBaseTest
+
 
 	##Add migrations file
 	$nameFileMigration = $projectName+"MigrationScript.ps1"

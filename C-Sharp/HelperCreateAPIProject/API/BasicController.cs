@@ -1,13 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using APIBase.Api.Controllers;
+using APIBase.Common.Constants;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSpaceRequestsVar;
 using NSpaceResponsesVar;
 using NSpaceBLLsVar;
-using NSpaceConstantsVar;
 using NSpaceModelsDtosVar;
 
 namespace NameSpaceVar
@@ -16,7 +18,6 @@ namespace NameSpaceVar
     [Route("[controller]")]
     public class NameClassVar : BaseController
     {
-        private readonly ILogger<NameClassVar> _logger;
         private readonly IMapper _mapper;
         private readonly InterfaceBLLVar _NameBllProperty;
         
@@ -24,8 +25,8 @@ namespace NameSpaceVar
             ILogger<NameClassVar> logger,
             IMapper mapper,
             InterfaceBLLVar NameBllProperty)
+        :base(logger)
         {
-            _logger = logger;
             _mapper = mapper;
             _NameBllProperty = NameBllProperty;
         }
@@ -45,10 +46,10 @@ namespace NameSpaceVar
             }
             catch (Exception ex)
             {
-                var errorMessage = $"{Constants.ERROR_MESSAGE} Exception = {ex}";
+                var errorMessage = $"{BaseConstants.ERROR_MESSAGE} Exception = {ex}";
                 _logger.LogError(errorMessage);
 
-                response = CreateInternalServerErrorResponse(Constants.ERROR_MESSAGE);
+                response = CreateInternalServerErrorResponse(BaseConstants.ERROR_MESSAGE);
             }
 
             return response;
@@ -57,7 +58,7 @@ namespace NameSpaceVar
         [HttpGet("GetById/{id}")]
         public async Task<ObjectResult> GetByIdAsync(string id)
         {
-            var response = CreateInvalidDataResponse();
+            ObjectResult response;
 
             try
             {
@@ -69,13 +70,19 @@ namespace NameSpaceVar
 
                     response = CreateOkResponse(resultResponse);
                 }
+                else
+                {
+                    var messageErrors = BaseConstants.INVALID_ID;
+
+                    response = CreateInvalidDataResponse(messageErrors);
+                }
             }
             catch (Exception ex)
             {
-                var errorMessage = $"{Constants.ERROR_MESSAGE} Exception = {ex}";
+                var errorMessage = $"{BaseConstants.ERROR_MESSAGE} Exception = {ex}";
                 _logger.LogError(errorMessage);
 
-                response = CreateInternalServerErrorResponse(Constants.ERROR_MESSAGE);
+                response = CreateInternalServerErrorResponse(BaseConstants.ERROR_MESSAGE);
             }
 
             return response;
@@ -84,7 +91,7 @@ namespace NameSpaceVar
         [HttpPost("Add")]
         public async Task<ObjectResult> AddAsync([FromBody] NameRequestVar request)
         {
-            var response = CreateInvalidDataResponse();
+            ObjectResult response;
 
             try
             {
@@ -98,13 +105,22 @@ namespace NameSpaceVar
 
                     response = CreateOkResponse(resultResponse);
                 }
+                else
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage);
+
+                    var messageErrors = string.Join("\n", errors);
+
+                    response = CreateInvalidDataResponse(messageErrors);
+                }
             }
             catch (Exception ex)
             {
-                var errorMessage = $"{Constants.ERROR_MESSAGE} Exception = {ex}";
+                var errorMessage = $"{BaseConstants.ERROR_MESSAGE} Exception = {ex}";
                 _logger.LogError(errorMessage);
 
-                response = CreateInternalServerErrorResponse(Constants.ERROR_MESSAGE);
+                response = CreateInternalServerErrorResponse(BaseConstants.ERROR_MESSAGE);
             }
 
             return response;
@@ -113,7 +129,7 @@ namespace NameSpaceVar
         [HttpPut("Update")]
         public async Task<ObjectResult> UpdateAsync([FromBody] NameRequestVar request)
         {
-            var response = CreateInvalidDataResponse();
+            ObjectResult response;
 
             try
             {
@@ -127,13 +143,22 @@ namespace NameSpaceVar
 
                     response = CreateOkResponse(resultResponse);
                 }
+                else
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage);
+
+                    var messageErrors = string.Join("\n", errors);
+
+                    response = CreateInvalidDataResponse(messageErrors);
+                }
             }
             catch (Exception ex)
             {
-                var errorMessage = $"{Constants.ERROR_MESSAGE} Exception = {ex}";
+                var errorMessage = $"{BaseConstants.ERROR_MESSAGE} Exception = {ex}";
                 _logger.LogError(errorMessage);
 
-                response = CreateInternalServerErrorResponse(Constants.ERROR_MESSAGE);
+                response = CreateInternalServerErrorResponse(BaseConstants.ERROR_MESSAGE);
             }
 
             return response;
@@ -142,7 +167,7 @@ namespace NameSpaceVar
         [HttpDelete("Delete")]
         public async Task<ObjectResult> DeleteAsync([FromBody] NameRequestVar request)
         {
-            var response = CreateInvalidDataResponse();
+            ObjectResult response;
 
             try
             {
@@ -156,13 +181,22 @@ namespace NameSpaceVar
 
                     response = CreateOkResponse(resultResponse);
                 }
+                else
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage);
+
+                    var messageErrors = string.Join("\n", errors);
+
+                    response = CreateInvalidDataResponse(messageErrors);
+                }
             }
             catch (Exception ex)
             {
-                var errorMessage = $"{Constants.ERROR_MESSAGE} Exception = {ex}";
+                var errorMessage = $"{BaseConstants.ERROR_MESSAGE} Exception = {ex}";
                 _logger.LogError(errorMessage);
 
-                response = CreateInternalServerErrorResponse(Constants.ERROR_MESSAGE);
+                response = CreateInternalServerErrorResponse(BaseConstants.ERROR_MESSAGE);
             }
 
             return response;
