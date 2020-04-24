@@ -22,7 +22,7 @@ $nameSource = "Source"
 		$nameResponse = "Response"
 		$nameController = "Controller"
 $nameTest = "Test"
-	$nameTestHelper = "TestHelper"
+	$nameTestHelper = "Test.Helpers"
 
 $nameBaseConstants = "BaseConstants"
 $nameBaseController = "BaseController"
@@ -53,8 +53,6 @@ $common=$projectName + "." + $nameCommon
 		$folderModelsDtos = $nameModel + "s" + $nameDto + "s"
 			$namespaceModelsDto = $common+"."+$folderDtos+"."+$folderModelsDtos
 
-$commonTest=$projectName + "." + $nameCommon + "." + $nameTest
-
 $dal=$projectName + "." + $nameDal
 	$folderModels = $nameModel + "s"
 		$namespaceModels = $dal+"."+$folderModels
@@ -65,13 +63,9 @@ $dal=$projectName + "." + $nameDal
 	$folderMappingsDal = $nameMapping + "s"
 		$namespaceMappingsDal = $dal+"."+$folderMappingsDal
 
-$dalTest=$projectName + "." + $nameDal + "." + $nameTest
-
 $bll=$projectName + "." + $nameBll
 	$folderBLLs = $nameBll + "s"
 		$namespaceBLL = $bll+"."+$folderBLLs
-
-$bllTest=$projectName + "." + $nameBll + "." + $nameTest
 
 $api=$projectName + "." + $nameApi
 	$folderController = $nameController + "s"
@@ -83,16 +77,33 @@ $api=$projectName + "." + $nameApi
 	$folderResponseApi = $nameResponse + "s"
 		$namespaceResponseApi = $api+"."+$folderResponseApi
 
-$apiTest=$projectName + "." + $nameApi + "." + $nameTest
-
 $datatesthelper = $projectName + "." + $nameTestHelper
+	$namespaceTestHelper = $datatesthelper
+
+$commonTest=$projectName + "." + $nameCommon + "." + $nameTest
+
+$dalTest=$projectName + "." + $nameDal + "." + $nameTest
+	$folderMappingsTestDal = $nameMapping + "s" + $nameTest
+		$namespaceMappingsTestDal = $dalTest + "." + $folderMappingsTestDal
+	$folderRepositoriesTest = $nameRepositories + $nameTest
+		$namespaceRepositoriesTest = $dalTest + "." + $folderRepositoriesTest
+
+$bllTest=$projectName + "." + $nameBll + "." + $nameTest
+	$folderBllsTest = $nameBll + "s" + $nameTest
+		$namespaceBLLTest = $bllTest + "." + $folderBllsTest
+
+$apiTest=$projectName + "." + $nameApi + "." + $nameTest
+	$folderMappingsTestApi = $nameMapping + "s" + $nameTest
+		$namespaceMappingsTestDal = $apiTest + "." + $folderMappingsTestApi
+	$folderControllersTest = $nameController + "s" + $nameTest
+		$namespaceControllerTest = $apiTest + "." + $folderControllersTest
 
 $folderPostmanFiles = $projectName + "." + $namePostman
 
 ##########################################################Functions##########################################################
 	function ConstantsContent([string] $nameSpace, 
 							  [string] $nameClass) {
-		$result = Get-Content $pathHelperCreateAPIProject"\COMMON\BasicConstants.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Common\BasicConstants.cs"
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameClassVar", $nameClass
 		return $result
@@ -101,7 +112,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 	function SettingsContent([string] $nameSpace, 
 							 [string] $nameClass, 
 							 [string] $dataBaseVar) {
-		$result = Get-Content $pathHelperCreateAPIProject"\COMMON\BasicSettings.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Common\BasicSettings.cs"
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameClassVar", $nameClass
 		$result = $result -replace "DataBaseVar", $dataBaseVar
@@ -110,7 +121,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 
 	function ModelDtoContent([string] $nameSpace, 
 							 [string] $nameClass) {
-		$result = Get-Content $pathHelperCreateAPIProject"\COMMON\BasicModelDto.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Common\BasicModelDto.cs"
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameClassVar", $nameClass
 		return $result
@@ -118,7 +129,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 
 	function ModelContent([string] $nameSpace, 
 						  [string] $nameClass) {
-		$result = Get-Content $pathHelperCreateAPIProject"\DAL\BasicModel.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Dal\BasicModel.cs"
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameClassVar", $nameClass
 		return $result
@@ -141,7 +152,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 							[string] $nameSpace,
 							[string] $nameClass,
 							[string] $TablesPropertyVar) {
-		$result = Get-Content $pathHelperCreateAPIProject"\DAL\BasicContext.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Dal\BasicContext.cs"
 		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameClassVar", $nameClass
@@ -158,7 +169,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 							   [string] $NameContextVar,
 							   [string] $NameModelDtoVar,
 							   [string] $NameModelVar) {
-		$result = Get-Content $pathHelperCreateAPIProject"\DAL\BasicRepository.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Dal\BasicRepository.cs"
 		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
 		$result = $result -replace "NSpaceContextsVar", $NSpaceContextsVar
 		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
@@ -179,7 +190,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 								[string] $nameSpace, 
 								[string] $nameInterfaceVar, 
 								[string] $nameModelDtoVar) {
-		$result = Get-Content $pathHelperCreateAPIProject"\DAL\IBasicRepository.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Dal\IBasicRepository.cs"
 		$result = $result -replace "ModelsDtosNSpaceVar", $modelsDtosNSpaceVar
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameInterfaceVar", $nameInterfaceVar
@@ -196,7 +207,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 						[string] $nameInterfaceVar, 
 						[string] $interfaceRepository, 
 						[string] $nameModelDtoVar) {
-		$result = Get-Content $pathHelperCreateAPIProject"\BLL\BasicBLL.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Bll\BasicBLL.cs"
 		$result = $result -replace "ModelsDtosNSpaceVar", $modelsDtosNSpaceVar
 		$result = $result -replace "RepositoriesNSpaceVar", $repositoriesNSpaceVar
 		$result = $result -replace "NameSpaceVar", $nameSpace
@@ -215,7 +226,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 						 [string] $nameSpaceVar, 
 						 [string] $nameClassVar, 
 						 [string] $nameModelDtoVar) {
-		$result = Get-Content $pathHelperCreateAPIProject"\BLL\IBasicBLL.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Bll\IBasicBLL.cs"
 		$result = $result -replace "ModelsDtosNSpaceVar", $modelsDtosNSpaceVar
 		$result = $result -replace "NameSpaceVar", $nameSpaceVar
 		$result = $result -replace "NameClassVar", $nameClassVar
@@ -227,14 +238,14 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 
 	function LaunchSettingsContent([string] $projectNameLaunch, 
 								   [string] $applicationUrl){
-		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicLauchSettings.json"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicLauchSettings.json"
 		$result = $result -replace "ProjectNameLaunchVar", $projectNameLaunch
 		$result = $result -replace "ApplicationUrlLineVar", $applicationUrl
 		return $result
 	}
 
 	function AppSettingsDevelopmentContent([string] $database){
-		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicAppSettings.development.json"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicAppSettings.development.json"
 		$result = $result -replace "DataBaseVar", $database
 		return $result
 	}
@@ -250,7 +261,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 							   [string] $NameModelDtoVar,
 							   [string] $NameResponseVar,
 							   [string] $NameRequestVar){
-		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicController.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicController.cs"
 		$result = $result -replace "NSpaceRequestsVar", $NSpaceRequestsVar
 		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
 		$result = $result -replace "NSpaceBLLsVar", $NSpaceBLLsVar
@@ -279,7 +290,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 							[string] $DataBaseVar,
 							[string] $NameClassContextVar,
 							[string] $NameClassRepositoryVar){
-		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicStartup.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicStartup.cs"
 		$result = $result -replace "NSpaceBLLsVar", $NSpaceBLLsVar
 		$result = $result -replace "NSpaceSettingsVar", $NSpaceSettingsVar
 		$result = $result -replace "NSpaceContextsVar", $NSpaceContextsVar
@@ -296,7 +307,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 	function ProgramContent([string] $NSpaceContextsVar,
 							[string] $NameSpaceVar,
 							[string] $NameClassContextVar){
-		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicProgram.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicProgram.cs"
 		$result = $result -replace "NSpaceContextsVar", $NSpaceContextsVar
 		$result = $result -replace "NameSpaceVar", $NameSpaceVar
 		$result = $result -replace "NameClassContextVar", $NameClassContextVar
@@ -309,7 +320,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 							   [string] $NameClassVar, 
 							   [string] $NameModelVar, 
 							   [string] $NameModelDtoVar){
-		$result = Get-Content $pathHelperCreateAPIProject"\DAL\BasicProfile.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Dal\BasicProfile.cs"
 		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
 		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
 		$result = $result -replace "NameSpaceVar", $NameSpaceVar
@@ -327,7 +338,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 							   [string] $NameRequestVar, 
 							   [string] $NameModelDtoVar, 
 							   [string] $NameResponseVar){
-		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicProfile.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicProfile.cs"
 		$result = $result -replace "NSpaceRequestsVar", $NSpaceRequestsVar
 		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
 		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
@@ -341,7 +352,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 
 	function RequestContent ([string] $NameSpaceVar, 
 							 [string] $NameClassVar){
-		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicRequest.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicRequest.cs"
 		$result = $result -replace "NameSpaceVar", $NameSpaceVar
 		$result = $result -replace "NameClassVar", $NameClassVar
 		return $result
@@ -349,7 +360,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 
 	function ResponseContent ([string] $NameSpaceVar, 
 							  [string] $NameClassVar){
-		$result = Get-Content $pathHelperCreateAPIProject"\API\BasicResponse.cs"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicResponse.cs"
 		$result = $result -replace "NameSpaceVar", $NameSpaceVar
 		$result = $result -replace "NameClassVar", $NameClassVar
 		return $result
@@ -453,7 +464,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 
 	function PostmanEnvironmentContent([string] $ProjectNameVar,
 									  [string] $ProjectUrlValueVar){
-		$result = Get-Content $pathHelperCreateAPIProject"\POSTMAN\BasicPostmanEnviroment.postman_environment.json"
+		$result = Get-Content $pathHelperCreateAPIProject"\Postman\BasicPostmanEnviroment.postman_environment.json"
 		$result = $result -replace "ProjectNameVar", $ProjectNameVar
 		$result = $result -replace "ProjectUrlValueVar", $ProjectUrlValueVar
 		$DateTimeVar = [DateTime]::UtcNow.ToString('u').Replace(' ','T')
@@ -467,7 +478,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 									  [string] $NameProjectVar){
 		$NameFolderControllerVar = $NameControllerParam+$nameController
 		$NameControllerPathVar = $NameControllerParam
-		$result = Get-Content $pathHelperCreateAPIProject"\POSTMAN\BasicControllerConfigPostman.json"
+		$result = Get-Content $pathHelperCreateAPIProject"\Postman\BasicControllerConfigPostman.json"
 		$result = $result -replace "NameFolderControllerVar", $NameFolderControllerVar
 		$result = $result -replace "NameControllerPathVar", $NameControllerPathVar
 		$result = $result -replace "NameProjectVar", $NameProjectVar
@@ -476,7 +487,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 
 	function PostmanCollectionContent([string] $ProjectNameVar,
 									  [string[]] $ControllersVar){
-		$result = Get-Content $pathHelperCreateAPIProject"\POSTMAN\BasicPostmanCollection.postman_collection.json"
+		$result = Get-Content $pathHelperCreateAPIProject"\Postman\BasicPostmanCollection.postman_collection.json"
 		$result = $result -replace "ProjectNameVar", $ProjectNameVar
 		$GuidVar = New-Guid  | Select-String -Pattern "[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}"
 		$result = $result -replace "GuidVar", $GuidVar
@@ -500,7 +511,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 									 [string] $NameDALVar,
 								 	 [string] $NameContextVar,
 									 [string] $NameAPIVar){
-		$result = Get-Content $pathHelperCreateAPIProject"\DAL\BaseMigrationScript.ps1"
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Dal\BaseMigrationScript.ps1"
 		$result = $result -replace "NameProjectVar", $NameProjectVar
 		$result = $result -replace "NameDALVar", $NameDALVar
 		$result = $result -replace "NameNewMigrationVar", "InitialMigration"
