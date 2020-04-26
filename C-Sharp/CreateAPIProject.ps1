@@ -22,7 +22,7 @@ $nameSource = "Source"
 		$nameResponse = "Response"
 		$nameController = "Controller"
 $nameTest = "Test"
-	$nameTestHelper = "Test.Helpers"
+	$nameTestHelper = "Helpers." + $nameTest
 
 $nameBaseConstants = "BaseConstants"
 $nameBaseController = "BaseController"
@@ -625,17 +625,6 @@ cd .\$projectName
 			cd ..
 		cd ..
 
-		#Create a ControllerBllDalCreatePath
-		#ControllerBllDalCreatePath($projectName)
-		
-		#Create a others ControllerBllDalCreatePath
-		For ($i=0; $i -lt $controllers.Length; $i++) {
-			ControllerBllDalCreatePath($controllers[$i])
-		}
-
-		#Create a BaseFiles
-		#AddBaseFiles $namespaceConstants $namespaceController $namespaceRepositories
-
 		#Unit Test
 		mkdir .\Test
 		cd  .\Test
@@ -657,6 +646,14 @@ cd .\$projectName
 				dotnet add reference ..\..\$nameSource\$api\$api.csproj
 				dotnet add reference ..\..\$nameSource\$common\$common.csproj
 				dotnet add reference ..\$datatesthelper\$datatesthelper.csproj
+				mkdir .\$folderControllersTest
+				cd .\$folderControllersTest
+					For ($i=0; $i -lt $controllers.Length; $i++) {
+						$nameControllerTest = $controllers[$i] + $nameController + $nameTest
+						mkdir .\$nameControllerTest
+					}
+				cd..
+				mkdir .\$folderMappingsTestApi
 			cd ..
 			Write-Host "`n`n`n`n`n`nCreating "$bllTest -ForegroundColor Green
 			mkdir .\$bllTest
@@ -666,6 +663,13 @@ cd .\$projectName
 				dotnet add reference ..\..\$nameSource\$bll\$bll.csproj
 				dotnet add reference ..\..\$nameSource\$common\$common.csproj
 				dotnet add reference ..\$datatesthelper\$datatesthelper.csproj
+				mkdir .\$folderBllsTest
+				cd .\$folderBllsTest
+					For ($i=0; $i -lt $controllers.Length; $i++) {
+						$nameBllTest = $controllers[$i] + $nameBll + $nameTest
+						mkdir .\$nameBllTest
+					}
+				cd..
 			cd ..
 			Write-Host "`n`n`n`n`n`nCreating "$commonTest -ForegroundColor Green
 			mkdir .\$commonTest
@@ -683,8 +687,27 @@ cd .\$projectName
 				dotnet add reference ..\..\$nameSource\$dal\$dal.csproj
 				dotnet add reference ..\..\$nameSource\$common\$common.csproj
 				dotnet add reference ..\$datatesthelper\$datatesthelper.csproj
+				mkdir .\$folderRepositoriesTest
+				cd .\$folderRepositoriesTest
+					For ($i=0; $i -lt $controllers.Length; $i++) {
+						$nameRepositoryTest = $controllers[$i] + $nameRepository + $nameTest
+						mkdir .\$nameRepositoryTest
+					}
+				cd..
+				mkdir .\$folderMappingsTestDal
 			cd ..
 		cd ..
+
+		#Create a ControllerBllDalCreatePath
+		#ControllerBllDalCreatePath($projectName)
+		
+		#Create a others ControllerBllDalCreatePath
+		For ($i=0; $i -lt $controllers.Length; $i++) {
+			ControllerBllDalCreatePath($controllers[$i])
+		}
+
+		#Create a BaseFiles
+		#AddBaseFiles $namespaceConstants $namespaceController $namespaceRepositories
 	
 	Write-Host "`n`n`n`n`n`nCreating "$projectName -ForegroundColor Cyan
 	dotnet new sln --name $projectName
