@@ -1,3 +1,5 @@
+// ReSharper disable ConvertToUsingDeclaration
+
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;

@@ -1,3 +1,5 @@
+// ReSharper disable ConvertToUsingDeclaration
+
 using System.Diagnostics.CodeAnalysis;
 using APIBaseTest;
 using Autofac.Extras.Moq;
