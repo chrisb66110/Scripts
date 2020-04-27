@@ -36,7 +36,7 @@ $nameAPIBase = "APIBase"
 $versionAPIBase = "0.0.1"
 
 $nameAPIBaseTest = "APIBaseTest"
-$versionAPIBaseTest = "0.0.1"
+$versionAPIBaseTest = "0.0.6"
 
 ##########################################################Paths And NameSpaces##########################################################
 $pathScript = Convert-Path .\
@@ -47,8 +47,10 @@ $pathCommonFiles = $pathScript+"\CommonFiles"
 $common=$projectName + "." + $nameCommon
 	$folderConstants = $nameConstant
 		$namespaceConstants = $common+"."+$folderConstants
+		$nameclassConstants = $folderConstants
 	$folderSettings = $nameSettings
 		$namespaceSettings = $common+"."+$folderSettings
+		$nameclassSettings = $projectName+$folderSettings
 	$folderDtos = $nameDto + "s"
 		$folderModelsDtos = $nameModel + "s" + $nameDto + "s"
 			$namespaceModelsDto = $common+"."+$folderDtos+"."+$folderModelsDtos
@@ -58,6 +60,7 @@ $dal=$projectName + "." + $nameDal
 		$namespaceModels = $dal+"."+$folderModels
 	$folderContext = $nameContext + "s"
 		$namespaceContexts = $dal+"."+$folderContext
+		$nameclassContexts = $projectName+$nameContext
 	$folderRepositories = $nameRepositories
 		$namespaceRepositories = $dal+"."+$folderRepositories
 	$folderMappingsDal = $nameMapping + "s"
@@ -79,6 +82,7 @@ $api=$projectName + "." + $nameApi
 
 $datatesthelper = $projectName + "." + $nameTestHelper
 	$namespaceTestHelper = $datatesthelper
+	$nameclassHelpersTest = "DataTestHelper"
 
 $commonTest=$projectName + "." + $nameCommon + "." + $nameTest
 
@@ -94,7 +98,7 @@ $bllTest=$projectName + "." + $nameBll + "." + $nameTest
 
 $apiTest=$projectName + "." + $nameApi + "." + $nameTest
 	$folderMappingsTestApi = $nameMapping + "s" + $nameTest
-		$namespaceMappingsTestDal = $apiTest + "." + $folderMappingsTestApi
+		$namespaceMappingsTestApi = $apiTest + "." + $folderMappingsTestApi
 	$folderControllersTest = $nameController + "s" + $nameTest
 		$namespaceControllerTest = $apiTest + "." + $folderControllersTest
 
@@ -366,8 +370,429 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		return $result
 	}
 
+	function ControllerAddAsyncTestContent ([string] $NSpaceControllersVar, 
+											[string] $NSpaceResponsesVar, 
+											[string] $NSpaceBllsVar, 
+											[string] $NSpaceModelsDtosVar, 
+											[string] $NSpaceTestHelperVar, 
+											[string] $NameSpaceVar, 
+											[string] $ClassToTestVar, 
+											[string] $MoRequestVar, 
+											[string] $MoDtoVar, 
+											[string] $IBLLVar, 
+							  				[string] $MoResponse){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\ApiTest\ControllersTest\BasicAddAsyncTest.cs"
+		$result = $result -replace "NSpaceControllersVar", $NSpaceControllersVar
+		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
+		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoRequestVar", $MoRequestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "IBLLVar", $IBLLVar
+		$result = $result -replace "MoResponse", $MoResponse
+		return $result
+	}
+
+	function ControllerDeleteAsyncTestContent ([string] $NSpaceControllersVar, 
+											[string] $NSpaceResponsesVar, 
+											[string] $NSpaceBllsVar, 
+											[string] $NSpaceModelsDtosVar, 
+											[string] $NSpaceTestHelperVar, 
+											[string] $NameSpaceVar, 
+											[string] $ClassToTestVar, 
+											[string] $MoRequestVar, 
+											[string] $MoDtoVar, 
+											[string] $IBLLVar, 
+							  				[string] $MoResponse){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\ApiTest\ControllersTest\BasicDeleteAsyncTest.cs"
+		$result = $result -replace "NSpaceControllersVar", $NSpaceControllersVar
+		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
+		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoRequestVar", $MoRequestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "IBLLVar", $IBLLVar
+		$result = $result -replace "MoResponse", $MoResponse
+		return $result
+	}
+
+	function ControllerGetAllAsyncTestContent ([string] $NSpaceControllersVar, 
+											   [string] $NSpaceResponsesVar, 
+											   [string] $NSpaceBllsVar, 
+											   [string] $NSpaceModelsDtosVar, 
+											   [string] $NSpaceTestHelperVar, 
+											   [string] $NameSpaceVar, 
+											   [string] $ClassToTestVar,
+											   [string] $MoDtoVar, 
+											   [string] $IBLLVar, 
+											   [string] $MoResponse){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\ApiTest\ControllersTest\BasicGetAllAsyncTest.cs"
+		$result = $result -replace "NSpaceControllersVar", $NSpaceControllersVar
+		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
+		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "IBLLVar", $IBLLVar
+		$result = $result -replace "MoResponse", $MoResponse
+		return $result
+	}
+
+	function ControllerGetByIdAsyncTestContent ([string] $NSpaceControllersVar, 
+											   [string] $NSpaceResponsesVar, 
+											   [string] $NSpaceBllsVar, 
+											   [string] $NSpaceModelsDtosVar, 
+											   [string] $NSpaceTestHelperVar, 
+											   [string] $NameSpaceVar, 
+											   [string] $ClassToTestVar,
+											   [string] $MoDtoVar, 
+											   [string] $IBLLVar, 
+											   [string] $MoResponse){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\ApiTest\ControllersTest\BasicGetByIdAsyncTest.cs"
+		$result = $result -replace "NSpaceControllersVar", $NSpaceControllersVar
+		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
+		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "IBLLVar", $IBLLVar
+		$result = $result -replace "MoResponse", $MoResponse
+		return $result
+	}
+
+	function ControllerUpdateAsyncTestContent ([string] $NSpaceControllersVar, 
+											   [string] $NSpaceResponsesVar, 
+											   [string] $NSpaceBllsVar, 
+											   [string] $NSpaceModelsDtosVar, 
+											   [string] $NSpaceTestHelperVar, 
+											   [string] $NameSpaceVar, 
+											   [string] $ClassToTestVar, 
+											   [string] $MoRequestVar, 
+											   [string] $MoDtoVar, 
+											   [string] $IBLLVar, 
+											   [string] $MoResponse){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\ApiTest\ControllersTest\BasicUpdateAsyncTest.cs"
+		$result = $result -replace "NSpaceControllersVar", $NSpaceControllersVar
+		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
+		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoRequestVar", $MoRequestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "IBLLVar", $IBLLVar
+		$result = $result -replace "MoResponse", $MoResponse
+		return $result
+	}
+
+	function MappingProfileApiTestContent ([string] $NSpaceMappingsVar, 
+					  				       [string] $NSpaceRequestsVar, 
+					  				       [string] $NSpaceResponsesVar, 
+					  				       [string] $NSpaceModelsDtosVar, 
+					  				       [string] $NSpaceTestHelperVar, 
+					  				       [string] $NameSpaceVar, 
+					  				       [string] $ClassToTestVar, 
+					  				       [string] $MoRequestVar, 
+					  				       [string] $MoDtoVar, 
+					  				       [string] $MoResponse){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\ApiTest\MappingsTest\BasicProfileTest.cs"
+		$result = $result -replace "NSpaceMappingsVar", $NSpaceMappingsVar
+		$result = $result -replace "NSpaceRequestsVar", $NSpaceRequestsVar
+		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoRequestVar", $MoRequestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "MoResponse", $MoResponse
+		return $result
+	}
+
+	function HelpersPerPathContent ([string] $MoDtoVar, 
+					  			    [string] $MoResponseVar, 
+					  			    [string] $MoRequestVar,
+								    [string] $MoModelVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\TestHelpers\BasicFunctionsTestHelpers.cs"
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "MoResponseVar", $MoResponseVar
+		$result = $result -replace "MoRequestVar", $MoRequestVar
+		$result = $result -replace "MoModelVar", $MoModelVar
+		$result = $result -replace "`n", "`r`n"
+		return $result
+	}
+
+	function HelpersTestContent ([string] $NSpaceRequestsVar, 
+					  			 [string] $NSpaceResponsesVar, 
+					  			 [string] $NSpaceModelsDtosVar, 
+					  			 [string] $NSpaceModelsVar, 
+					  			 [string] $NameSpaceVar,
+								 [string[]] $PathName){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\TestHelpers\BasicDataTestHelper.cs" | Out-String
+		$result = $result -replace "NSpaceRequestsVar", $NSpaceRequestsVar
+		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+
+		$FunctionsContent = ""
+		For ($i=0; $i -lt $PathName.Length; $i++) {
+			$MoDtoVar = $PathName[$i] + $nameDto
+			$MoResponseVar = $PathName[$i] + $nameResponse
+			$MoRequestVar = $PathName[$i] + $nameRequest
+			$MoModelVar = $PathName[$i]
+			$functionsOnePath = HelpersPerPathContent $MoDtoVar $MoResponseVar $MoRequestVar $MoModelVar
+			$FunctionsContent = $FunctionsContent + $functionsOnePath
+			if($i+1 -ne $PathName.Length){
+				$FunctionsContent = $FunctionsContent + "`n"
+			}
+		}
+
+		$result = $result -replace "FunctionsVar", $FunctionsContent
+		return $result
+	}
+
+	function BllAddAsyncTestContent ([string] $NSpaceBllsVar, 
+									 [string] $NSpaceModelsDtosVar, 
+									 [string] $NSpaceRepositoriesVar,
+									 [string] $NSpaceTestHelperVar, 
+									 [string] $NameSpaceVar, 
+									 [string] $ClassToTestVar,
+									 [string] $MoDtoVar, 
+									 [string] $IRepositoryVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\BllTest\BllsTest\BasicAddAsyncTest.cs"
+		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "IRepositoryVar", $IRepositoryVar
+		return $result
+	}
+
+	function BllDeleteAsyncTestContent ([string] $NSpaceBllsVar, 
+									 	[string] $NSpaceModelsDtosVar, 
+									 	[string] $NSpaceRepositoriesVar,
+									 	[string] $NSpaceTestHelperVar, 
+									 	[string] $NameSpaceVar, 
+									 	[string] $ClassToTestVar,
+									 	[string] $MoDtoVar, 
+									 	[string] $IRepositoryVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\BllTest\BllsTest\BasicDeleteAsyncTest.cs"
+		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "IRepositoryVar", $IRepositoryVar
+		return $result
+	}
+
+	function BllGetAllTestContent ([string] $NSpaceBllsVar, 
+								   [string] $NSpaceModelsDtosVar, 
+								   [string] $NSpaceRepositoriesVar,
+								   [string] $NSpaceTestHelperVar, 
+								   [string] $NameSpaceVar, 
+								   [string] $ClassToTestVar,
+								   [string] $MoDtoVar, 
+								   [string] $IRepositoryVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\BllTest\BllsTest\BasicGetAllAsyncTest.cs"
+		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "IRepositoryVar", $IRepositoryVar
+		return $result
+	}
+
+	function BllGetByIdAsyncTestContent ([string] $NSpaceBllsVar, 
+									 	 [string] $NSpaceModelsDtosVar, 
+									 	 [string] $NSpaceRepositoriesVar,
+									 	 [string] $NSpaceTestHelperVar, 
+									 	 [string] $NameSpaceVar, 
+									 	 [string] $ClassToTestVar,
+									 	 [string] $MoDtoVar, 
+									 	 [string] $IRepositoryVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\BllTest\BllsTest\BasicGetByIdAsyncTest.cs"
+		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "IRepositoryVar", $IRepositoryVar
+		return $result
+	}
+
+	function BllUpdateAsyncTestContent ([string] $NSpaceBllsVar, 
+									 	[string] $NSpaceModelsDtosVar, 
+									 	[string] $NSpaceRepositoriesVar,
+									 	[string] $NSpaceTestHelperVar, 
+									 	[string] $NameSpaceVar, 
+									 	[string] $ClassToTestVar,
+									 	[string] $MoDtoVar, 
+									 	[string] $IRepositoryVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\BllTest\BllsTest\BasicUpdateAsyncTest.cs"
+		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "IRepositoryVar", $IRepositoryVar
+		return $result
+	}
+
+	function RepositoryAddAsyncTestContent ([string] $NSpaceContextsVar, 
+									 		[string] $NSpaceModelsVar, 
+									 		[string] $NSpaceRepositoriesVar,
+									 		[string] $NSpaceTestHelperVar, 
+									 		[string] $NameSpaceVar, 
+									 		[string] $ClassToTestVar,
+									 		[string] $ContextToUse,
+									 		[string] $MoModelVar, 
+									 		[string] $MoDtoVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\DalTest\RepositoriesTest\BasicAddAsyncTest.cs"
+		$result = $result -replace "NSpaceContextsVar", $NSpaceContextsVar
+		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
+		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "ContextToUse", $ContextToUse
+		$result = $result -replace "MoModelVar", $MoModelVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		return $result
+	}
+
+	function RepositoryDeleteAsyncTestContent ([string] $NSpaceContextsVar, 
+									 		   [string] $NSpaceModelsVar, 
+									 		   [string] $NSpaceRepositoriesVar,
+									 		   [string] $NSpaceTestHelperVar, 
+									 		   [string] $NameSpaceVar, 
+									 		   [string] $ClassToTestVar,
+									 		   [string] $ContextToUse,
+									 		   [string] $MoModelVar, 
+									 		   [string] $MoDtoVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\DalTest\RepositoriesTest\BasicDeleteAsyncTest.cs"
+		$result = $result -replace "NSpaceContextsVar", $NSpaceContextsVar
+		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
+		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "ContextToUse", $ContextToUse
+		$result = $result -replace "MoModelVar", $MoModelVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		return $result
+	}
+
+	function RepositoryGetAllAsyncTestContent ([string] $NSpaceContextsVar, 
+									 		   [string] $NSpaceModelsVar, 
+									 		   [string] $NSpaceRepositoriesVar,
+									 		   [string] $NSpaceTestHelperVar, 
+									 		   [string] $NameSpaceVar, 
+									 		   [string] $ClassToTestVar,
+									 		   [string] $ContextToUse,
+									 		   [string] $MoModelVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\DalTest\RepositoriesTest\BasicGetAllAsyncTest.cs"
+		$result = $result -replace "NSpaceContextsVar", $NSpaceContextsVar
+		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
+		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "ContextToUse", $ContextToUse
+		$result = $result -replace "MoModelVar", $MoModelVar
+		return $result
+	}
+
+	function RepositoryGetByIdAsyncTestContent ([string] $NSpaceContextsVar, 
+									 			[string] $NSpaceModelsVar, 
+									 			[string] $NSpaceRepositoriesVar,
+									 			[string] $NSpaceTestHelperVar, 
+									 			[string] $NameSpaceVar, 
+									 			[string] $ClassToTestVar,
+									 			[string] $ContextToUse,
+									 			[string] $MoModelVar, 
+									 			[string] $MoDtoVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\DalTest\RepositoriesTest\BasicGetByIdAsyncTest.cs"
+		$result = $result -replace "NSpaceContextsVar", $NSpaceContextsVar
+		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
+		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "ContextToUse", $ContextToUse
+		$result = $result -replace "MoModelVar", $MoModelVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		return $result
+	}
+
+	function RepositoryUpdateAsyncTestContent ([string] $NSpaceContextsVar, 
+									 		   [string] $NSpaceModelsVar, 
+									 		   [string] $NSpaceRepositoriesVar,
+									 		   [string] $NSpaceTestHelperVar, 
+									 		   [string] $NameSpaceVar, 
+									 		   [string] $ClassToTestVar,
+									 		   [string] $ContextToUse,
+									 		   [string] $MoModelVar, 
+									 		   [string] $MoDtoVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\DalTest\RepositoriesTest\BasicUpdateAsyncTest.cs"
+		$result = $result -replace "NSpaceContextsVar", $NSpaceContextsVar
+		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
+		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "ContextToUse", $ContextToUse
+		$result = $result -replace "MoModelVar", $MoModelVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		return $result
+	}
+
+	function MappingProfileDalTestContent ([string] $NSpaceModelsDtosVar, 
+					  				       [string] $NSpaceMappingsVar, 
+					  				       [string] $NSpaceModelsVar, 
+					  				       [string] $NSpaceTestHelperVar,
+					  				       [string] $NameSpaceVar, 
+					  				       [string] $ClassToTestVar, 
+					  				       [string] $MoDtoVar, 
+					  				       [string] $MoModelVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\DalTest\MappingsTest\BasicProfileTest.cs"
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceMappingsVar", $NSpaceMappingsVar
+		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "MoModelVar", $MoModelVar
+		return $result
+	}
+
 	#This function is expected to run in the same folder where .sln is
-	function ControllerBllDalCreatePath([string] $ModelName){
+	function ControllerBllDalAndTestCreatePath([string] $ModelName){
 		Write-Host "`n`n"
 		#DTO
 			$nameclassModelsDto = $ModelName+$nameDto
@@ -388,11 +813,11 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$nameFileProfileDal = $nameclassProfileDal+".cs"
 			echo $contentProfileDal > .\$nameSource\$dal\$folderMappingsDal\$nameFileProfileDal
 		#Repository
-			$nameclassRepositories = $ModelName+$nameRepository
-			Write-Host "Creating "$nameclassRepositories -ForegroundColor Magenta
-			$nameinterfaceRepositories = "I"+$nameclassRepositories
-			$contentRepository = RepositoryContent $namespaceModelsDto $namespaceContexts $namespaceModels $namespaceRepositories $nameclassRepositories $nameinterfaceRepositories $nameclassContexts $nameclassModelsDto $nameclassModels
-			$nameFileClassRepositories = $nameclassRepositories+".cs"
+			$nameclassRepository = $ModelName+$nameRepository
+			Write-Host "Creating "$nameclassRepository -ForegroundColor Magenta
+			$nameinterfaceRepositories = "I"+$nameclassRepository
+			$contentRepository = RepositoryContent $namespaceModelsDto $namespaceContexts $namespaceModels $namespaceRepositories $nameclassRepository $nameinterfaceRepositories $nameclassContexts $nameclassModelsDto $nameclassModels
+			$nameFileClassRepositories = $nameclassRepository+".cs"
 			echo $contentRepository > .\$nameSource\$dal\$folderRepositories\$nameFileClassRepositories
 			$contentIRepository = IRepositoryContent $namespaceModelsDto $namespaceRepositories $nameinterfaceRepositories $nameclassModelsDto
 			$nameFileInterfaceRepositories = $nameinterfaceRepositories+".cs"
@@ -401,7 +826,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$nameclassBLL = $ModelName+$nameBll
 			Write-Host "Creating "$nameclassBLL -ForegroundColor Magenta
 			$nameinterfaceBLL = "I"+$ModelName+$nameBll
-			$nameRepositoryProperty = $nameclassRepositories.subString(0,1)+$nameclassRepositories.subString(1,1).ToLower()+$nameclassRepositories.subString(2,$nameclassRepositories.Length-2)
+			$nameRepositoryProperty = $nameclassRepository.subString(0,1)+$nameclassRepository.subString(1,1).ToLower()+$nameclassRepository.subString(2,$nameclassRepository.Length-2)
 			$contentBLL = BLLContent $namespaceModelsDto $namespaceRepositories $namespaceBLL $nameclassBLL $nameinterfaceBLL $nameinterfaceRepositories $nameclassModelsDto
 			$nameFileClassBLL = $nameclassBLL+".cs"
 			echo $contentBLL > .\$nameSource\$bll\$folderBLLs\$nameFileClassBLL
@@ -431,6 +856,134 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$contentProfileApi = ProfileApiContent $namespaceRequestsApi $namespaceResponseApi $namespaceModelsDto $namespaceMappingsApi $nameclassProfileApi $nameclassRequest $nameclassModelsDto $nameclassResponse
 			$nameFileProfileApi = $nameclassProfileApi+".cs"
 			echo $contentProfileApi > .\$nameSource\$api\$folderMappingsApi\$nameFileProfileApi
+		
+		#ControllerTest
+			$folderOneControllerTest = $nameclassController + $nameTest
+
+			$nameclassAddAsyncTest = "AddAsyncTest"
+			Write-Host "Creating "$nameclassAddAsyncTest -ForegroundColor Magenta
+			$namespaceControllerTestAddAsync = $namespaceControllerTest + "." + $folderOneControllerTest
+			$contentAddAsyncTest = ControllerAddAsyncTestContent $namespaceController $namespaceResponseApi $namespaceBLL $namespaceModelsDto $namespaceTestHelper $namespaceControllerTestAddAsync $nameclassController $nameclassRequest $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
+			$nameFileAddAsyncTest = $nameclassAddAsyncTest+".cs"
+			echo $contentAddAsyncTest > .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileAddAsyncTest
+			
+			$nameclassDeleteAsync = "DeleteAsync"
+			Write-Host "Creating "$nameclassDeleteAsync -ForegroundColor Magenta
+			$namespaceControllerTestDeleteAsync = $namespaceControllerTest + "." + $folderOneControllerTest
+			$contentDeleteAsync = ControllerDeleteAsyncTestContent $namespaceController $namespaceResponseApi $namespaceBLL $namespaceModelsDto $namespaceTestHelper $namespaceControllerTestDeleteAsync $nameclassController $nameclassRequest $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
+			$nameFileDeleteAsync = $nameclassDeleteAsync+".cs"
+			echo $contentDeleteAsync > .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileDeleteAsync
+			
+			$nameclassGetAllAsyncTest = "GetAllAsyncTest"
+			Write-Host "Creating "$nameclassGetAllAsyncTest -ForegroundColor Magenta
+			$namespaceControllerTestGetAllAsync = $namespaceControllerTest + "." + $folderOneControllerTest
+			$contentGetAllAsyncTest = ControllerGetAllAsyncTestContent $namespaceController $namespaceResponseApi $namespaceBLL $namespaceModelsDto $namespaceTestHelper $namespaceControllerTestGetAllAsync $nameclassController $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
+			$nameFileGetAllAsyncTest = $nameclassGetAllAsyncTest+".cs"
+			echo $contentGetAllAsyncTest > .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileGetAllAsyncTest
+			
+			$nameclassGetByIdAsyncTest = "GetByIdAsyncTest"
+			Write-Host "Creating "$nameclassGetByIdAsyncTest -ForegroundColor Magenta
+			$namespaceControllerTestGetByIdAsync = $namespaceControllerTest + "." + $folderOneControllerTest
+			$contentGetByIdAsyncTest = ControllerGetByIdAsyncTestContent $namespaceController $namespaceResponseApi $namespaceBLL $namespaceModelsDto $namespaceTestHelper $namespaceControllerTestGetByIdAsync $nameclassController $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
+			$nameFileGetByIdAsyncTest = $nameclassGetByIdAsyncTest+".cs"
+			echo $contentGetByIdAsyncTest > .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileGetByIdAsyncTest
+			
+			$nameclassUpdateAsyncTest = "UpdateAsyncTest"
+			Write-Host "Creating "$nameclassUpdateAsyncTest -ForegroundColor Magenta
+			$namespaceControllerTestUpdateAsync = $namespaceControllerTest + "." + $folderOneControllerTest
+			$contentUpdateAsyncTest = ControllerUpdateAsyncTestContent $namespaceController $namespaceResponseApi $namespaceBLL $namespaceModelsDto $namespaceTestHelper $namespaceControllerTestUpdateAsync $nameclassController $nameclassRequest $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
+			$nameFileUpdateAsyncTest = $nameclassUpdateAsyncTest+".cs"
+			echo $contentUpdateAsyncTest > .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileUpdateAsyncTest
+
+		#ProfileApiTest
+			$nameclassProfileApiTest = $nameclassProfileApi + $Test
+			Write-Host "Creating "$nameclassProfileApiTest -ForegroundColor Magenta
+			$contentProfileApiTest = MappingProfileApiTestContent $namespaceMappingsApi $namespaceRequestsApi $namespaceResponseApi $namespaceModelsDto $namespaceTestHelper $namespaceMappingsTestApi $nameclassProfileApi $nameclassRequest $nameclassModelsDto $nameclassResponse
+			$nameFileProfileApiTest = $nameclassProfileApiTest+".cs"
+			echo $contentProfileApiTest > .\$nameTest\$apiTest\$folderMappingsTestApi\$nameFileProfileApiTest
+
+		#BllTest
+			$folderOneBllTest = $nameclassBLL + $nameTest
+
+			$nameclassAddAsyncTest = "AddAsyncTest"
+			Write-Host "Creating "$nameclassAddAsyncTest -ForegroundColor Magenta
+			$namespaceBllTestAddAsync = $namespaceBLLTest + "." + $folderOneBllTest
+			$contentAddAsyncTest = BllAddAsyncTestContent $namespaceBLL $namespaceModelsDto $namespaceRepositories $namespaceTestHelper $namespaceBllTestAddAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
+			$nameFileAddAsyncTest = $nameclassAddAsyncTest+".cs"
+			echo $contentAddAsyncTest > .\$nameTest\$bllTest\$folderBllsTest\$folderOneBllTest\$nameFileAddAsyncTest
+			
+			$nameclassDeleteAsync = "DeleteAsync"
+			Write-Host "Creating "$nameclassDeleteAsync -ForegroundColor Magenta
+			$namespaceBllTestDeleteAsync = $namespaceBLLTest + "." + $folderOneBllTest
+			$contentDeleteAsync = BllDeleteAsyncTestContent $namespaceBLL $namespaceModelsDto $namespaceRepositories $namespaceTestHelper $namespaceBllTestDeleteAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
+			$nameFileDeleteAsync = $nameclassDeleteAsync+".cs"
+			echo $contentDeleteAsync > .\$nameTest\$bllTest\$folderBllsTest\$folderOneBllTest\$nameFileDeleteAsync
+			
+			$nameclassGetAllAsyncTest = "GetAllAsyncTest"
+			Write-Host "Creating "$nameclassGetAllAsyncTest -ForegroundColor Magenta
+			$namespaceBllTestGetAllAsync = $namespaceBLLTest + "." + $folderOneBllTest
+			$contentGetAllAsyncTest = BllGetAllTestContent $namespaceBLL $namespaceModelsDto $namespaceRepositories $namespaceTestHelper $namespaceBllTestGetAllAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
+			$nameFileGetAllAsyncTest = $nameclassGetAllAsyncTest+".cs"
+			echo $contentGetAllAsyncTest > .\$nameTest\$bllTest\$folderBllsTest\$folderOneBllTest\$nameFileGetAllAsyncTest
+			
+			$nameclassGetByIdAsyncTest = "GetByIdAsyncTest"
+			Write-Host "Creating "$nameclassGetByIdAsyncTest -ForegroundColor Magenta
+			$namespaceBllTestGetByIdAsync = $namespaceBLLTest + "." + $folderOneBllTest
+			$contentGetByIdAsyncTest = BllGetByIdAsyncTestContent $namespaceBLL $namespaceModelsDto $namespaceRepositories $namespaceTestHelper $namespaceBllTestGetByIdAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
+			$nameFileGetByIdAsyncTest = $nameclassGetByIdAsyncTest+".cs"
+			echo $contentGetByIdAsyncTest > .\$nameTest\$bllTest\$folderBllsTest\$folderOneBllTest\$nameFileGetByIdAsyncTest
+			
+			$nameclassUpdateAsyncTest = "UpdateAsyncTest"
+			Write-Host "Creating "$nameclassUpdateAsyncTest -ForegroundColor Magenta
+			$namespaceBllTestUpdateAsync = $namespaceBLLTest + "." + $folderOneBllTest
+			$contentUpdateAsyncTest = BllUpdateAsyncTestContent $namespaceBLL $namespaceModelsDto $namespaceRepositories $namespaceTestHelper $namespaceBllTestUpdateAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
+			$nameFileUpdateAsyncTest = $nameclassUpdateAsyncTest+".cs"
+			echo $contentUpdateAsyncTest > .\$nameTest\$bllTest\$folderBllsTest\$folderOneBllTest\$nameFileUpdateAsyncTest
+		
+		#RepositoryTest
+			$folderOneRepositoryTest = $nameclassRepository + $nameTest
+
+			$nameclassAddAsyncTest = "AddAsyncTest"
+			Write-Host "Creating "$nameclassAddAsyncTest -ForegroundColor Magenta
+			$namespaceRepositoryTestAddAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
+			$contentAddAsyncTest = RepositoryAddAsyncTestContent $namespaceContexts $namespaceModels $namespaceRepositories $namespaceTestHelper $namespaceRepositoryTestAddAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
+			$nameFileAddAsyncTest = $nameclassAddAsyncTest+".cs"
+			echo $contentAddAsyncTest > .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileAddAsyncTest
+
+			$nameclassDeleteAsyncTest = "DeleteAsyncTest"
+			Write-Host "Creating "$nameclassDeleteAsyncTest -ForegroundColor Magenta
+			$namespaceRepositoryTestDeleteAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
+			$contentDeleteAsyncTest = RepositoryDeleteAsyncTestContent $namespaceContexts $namespaceModels $namespaceRepositories $namespaceTestHelper $namespaceRepositoryTestDeleteAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
+			$nameFileDeleteAsyncTest = $nameclassDeleteAsyncTest+".cs"
+			echo $contentDeleteAsyncTest > .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileDeleteAsyncTest
+
+			$nameclassGetAllAsyncTest = "GetAllAsyncTest"
+			Write-Host "Creating "$nameclassGetAllAsyncTest -ForegroundColor Magenta
+			$namespaceRepositoryTestGetAllAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
+			$contentGetAllAsyncTest = RepositoryGetAllAsyncTestContent $namespaceContexts $namespaceModels $namespaceRepositories $namespaceTestHelper $namespaceRepositoryTestGetAllAsync $nameclassRepository $nameclassContexts $nameclassModels
+			$nameFileGetAllAsyncTest = $nameclassGetAllAsyncTest+".cs"
+			echo $contentGetAllAsyncTest > .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileGetAllAsyncTest
+
+			$nameclassGetByIdAsyncTest = "GetByIdAsyncTest"
+			Write-Host "Creating "$nameclassGetByIdAsyncTest -ForegroundColor Magenta
+			$namespaceRepositoryTestGetByIdAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
+			$contentGetByIdAsyncTest = RepositoryGetByIdAsyncTestContent $namespaceContexts $namespaceModels $namespaceRepositories $namespaceTestHelper $namespaceRepositoryTestGetByIdAsync $nameclassRepository $nameclassContexts $nameclassModels
+			$nameFileGetByIdAsyncTest = $nameclassGetByIdAsyncTest+".cs"
+			echo $contentGetByIdAsyncTest > .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileGetByIdAsyncTest
+
+			$nameclassUpdateAsyncTest = "UpdateAsyncTest"
+			Write-Host "Creating "$nameclassUpdateAsyncTest -ForegroundColor Magenta
+			$namespaceRepositoryTestUpdateAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
+			$contentUpdateAsyncTest = RepositoryUpdateAsyncTestContent $namespaceContexts $namespaceModels $namespaceRepositories $namespaceTestHelper $namespaceRepositoryTestUpdateAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
+			$nameFileUpdateAsyncTest = $nameclassUpdateAsyncTest+".cs"
+			echo $contentUpdateAsyncTest > .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileUpdateAsyncTest
+		
+		#ProfileDalTest
+			$nameclassProfileDalTest = $nameclassProfileDal + $Test
+			Write-Host "Creating "$nameclassProfileDalTest -ForegroundColor Magenta
+			$contentProfileDalTest = MappingProfileDalTestContent $namespaceModelsDto $namespaceMappingsDal $namespaceModels $namespaceTestHelper $namespaceMappingsTestDal $nameclassProfileDal $nameclassModelsDto $nameclassModels
+			$nameFileProfileDalTest = $nameclassProfileDalTest+".cs"
+			echo $contentProfileDalTest > .\$nameTest\$dalTest\$folderMappingsTestDal\$nameFileProfileDalTest
 	}
 
 	#This function is expected to run in the same folder where .sln is
@@ -538,7 +1091,6 @@ cd .\$projectName
 				rm Class1.cs
 				mkdir .\$folderConstants
 				cd .\$folderConstants
-					$nameclassConstants = $folderConstants
 					Write-Host "Creating "$nameclassConstants -ForegroundColor Magenta
 					$contentConstants = ConstantsContent $namespaceConstants $nameclassConstants
 					$nameFileConstants = $nameclassConstants+".cs"
@@ -546,7 +1098,6 @@ cd .\$projectName
 				cd..
 				mkdir .\$folderSettings
 				cd .\$folderSettings
-					$nameclassSettings = $projectName+$folderSettings
 					Write-Host "Creating "$nameclassSettings -ForegroundColor Magenta
 					$settingsContent = SettingsContent $namespaceSettings $nameclassSettings $ProjectName
 					$nameFileSettings = $nameclassSettings+".cs"
@@ -566,7 +1117,6 @@ cd .\$projectName
 				mkdir .\$folderModels
 				mkdir .\$folderContext
 				cd .\$folderContext
-					$nameclassContexts = $projectName+$nameContext
 					Write-Host "Creating "$nameclassContexts -ForegroundColor Magenta
 					$tables = TablesContext $controllers
 					$contentContexts = ContextContent $namespaceModels $namespaceContexts $nameclassContexts $tables
@@ -698,13 +1248,20 @@ cd .\$projectName
 			cd ..
 		cd ..
 
-		#Create a ControllerBllDalCreatePath
-		#ControllerBllDalCreatePath($projectName)
+		#Create a ControllerBllDalAndTestCreatePath
+		#ControllerBllDalAndTestCreatePath($projectName)
 		
-		#Create a others ControllerBllDalCreatePath
+		#Create a others ControllerBllDalAndTestCreatePath
 		For ($i=0; $i -lt $controllers.Length; $i++) {
-			ControllerBllDalCreatePath($controllers[$i])
+			ControllerBllDalAndTestCreatePath($controllers[$i])
 		}
+
+		#HelpersTest
+		Write-Host "Creating "$nameclassHelpersTest -ForegroundColor Magenta
+		$contentHelpersTest = HelpersTestContent $namespaceRequestsApi $namespaceResponseApi $namespaceModelsDto $namespaceModels $namespaceTestHelper $controllers
+		$nameFileHelpersTest = $nameclassHelpersTest+".cs"
+		#echo $contentHelpersTest > .\$nameTest\$datatesthelper\$nameFileHelpersTest
+		Out-File -filepath .\$nameTest\$datatesthelper\$nameFileHelpersTest -inputobject $contentHelpersTest
 
 		#Create a BaseFiles
 		#AddBaseFiles $namespaceConstants $namespaceController $namespaceRepositories
