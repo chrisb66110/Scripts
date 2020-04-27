@@ -13,7 +13,7 @@ namespace NameSpaceVar
 {
     [ExcludeFromCodeCoverage]
     [TestClass]
-    public class DeleteAsyncTest : BaseRepositoryTest<ClassToTest, ContextToUse>
+    public class DeleteAsyncTest : BaseRepositoryTest<ClassToTestVar, ContextToUse>
     {
         [TestMethod]
         public async Task DeleteAsyncHappyPath()

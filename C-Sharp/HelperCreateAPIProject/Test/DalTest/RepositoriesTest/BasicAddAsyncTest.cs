@@ -12,7 +12,7 @@ namespace NameSpaceVar
 {
     [ExcludeFromCodeCoverage]
     [TestClass]
-    public class AddAsyncTest : BaseRepositoryTest<ClassToTest, ContextToUse>
+    public class AddAsyncTest : BaseRepositoryTest<ClassToTestVar, ContextToUse>
     {
         [TestMethod]
         public async Task AddAsyncHappyPath()

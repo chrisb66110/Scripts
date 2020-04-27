@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using APIBaseTest;
 using Autofac.Extras.Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BasicBllsVar;
-using BasicModelsDtosVar;
-using BasicRepositoriesVar;
-using BasicTestHelperVar;
+using NSpaceBllsVar;
+using NSpaceModelsDtosVar;
+using NSpaceRepositoriesVar;
+using NSpaceTestHelperVar;
 
 namespace NameSpaceVar
 {
