@@ -3,7 +3,7 @@
     "ProjectNameLaunchVar": {
       "commandName": "Project",
       "launchBrowser": false,
-      ApplicationUrlLineVar
+      "applicationUrl": "http://localhost:PortVar",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
