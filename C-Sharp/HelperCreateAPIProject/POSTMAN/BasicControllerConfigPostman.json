@@ -45,7 +45,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"Id\",\r\n    \"property\": \"Property\"\r\n}",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -72,7 +72,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"Id\",\r\n    \"property\": \"Property\"\r\n}",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -99,7 +99,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"Id\",\r\n    \"property\": \"Property\"\r\n}",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
