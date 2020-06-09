@@ -53,7 +53,7 @@ $common=$projectName + "." + $nameCommon
 		$nameclassSettings = $projectName+$folderSettings
 	$folderDtos = $nameDto + "s"
 		$folderModelsDtos = $nameModel + "s" + $nameDto + "s"
-			$namespaceModelsDto = $common+"."+$folderDtos+"."+$folderModelsDtos
+			$namespaceModelsDto = $common+"."+$folderDtos#+"."+$folderModelsDtos
 
 $dal=$projectName + "." + $nameDal
 	$folderModels = $nameModel + "s"
@@ -542,10 +542,10 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		$result = Get-Content $pathHelperCreateAPIProject"\Test\TestHelpers\BasicDataTestHelper.cs" -Raw
 		$result = $result -replace "NSpaceRequestsVar", $NSpaceRequestsVar
 		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
-		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
 		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
 		$result = $result -replace "NameSpaceVar", $NameSpaceVar
 
+		$NSpaceModelsDtosEachVar = ""
 		$FunctionsContent = ""
 		For ($i=0; $i -lt $PathName.Length; $i++) {
 			$MoDtoVar = $PathName[$i] + $nameDto
@@ -554,12 +554,16 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$MoModelVar = $PathName[$i]
 			$functionsOnePath = HelpersPerPathContent $MoDtoVar $MoResponseVar $MoRequestVar $MoModelVar
 			$FunctionsContent = $FunctionsContent + $functionsOnePath
+
+			$NSpaceModelsDtosEachVar = $NSpaceModelsDtosEachVar + "using " + $NSpaceModelsDtosVar + "." + $PathName[$i] + $folderDtos + ";`n"
+
 			if($i+1 -ne $PathName.Length){
 				$FunctionsContent = $FunctionsContent + "`n"
 			}
 		}
 
 		$result = $result -replace "FunctionsVar", $FunctionsContent
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosEachVar
 		return $result
 	}
 
@@ -795,12 +799,13 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 	function ControllerBllDalAndTestCreatePath([string] $ModelName){
 		Write-Host "`n`n"
 		#DTO
-			mkdir .\$nameSource\$common\$folderDtos\$ModelName
+			mkdir .\$nameSource\$common\$folderDtos\$ModelName$folderDtos
+			$namespaceTempModelsDto = $namespaceModelsDto + "." + $ModelName + $folderDtos
 			$nameclassModelsDto = $ModelName+$nameDto
 			Write-Host "Creating "$nameclassModelsDto -ForegroundColor Magenta
-			$contentModelsDto = ModelDtoContent $namespaceModelsDto $nameclassModelsDto
+			$contentModelsDto = ModelDtoContent $namespaceTempModelsDto $nameclassModelsDto
 			$nameFileModelsDto = $nameclassModelsDto+".cs"
-			Out-File -InputObject $contentModelsDto -Encoding ascii -FilePath .\$nameSource\$common\$folderDtos\$ModelName\$nameFileModelsDto
+			Out-File -InputObject $contentModelsDto -Encoding ascii -FilePath .\$nameSource\$common\$folderDtos\$ModelName$folderDtos\$nameFileModelsDto
 		#Model
 			$nameclassModels = $ModelName
 			Write-Host "Creating "$nameclassModels -ForegroundColor Magenta
@@ -808,61 +813,67 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$nameFileModels = $nameclassModels+".cs"
 			Out-File -InputObject $contentModels -Encoding ascii -FilePath .\$nameSource\$dal\$folderModels\$nameFileModels
 		#ProfileDal
-			mkdir .\$nameSource\$dal\$folderMappingsDal\$ModelName
+			#mkdir .\$nameSource\$dal\$folderMappingsDal\$ModelName
+			$namespaceTempMappingsDal = $namespaceMappingsDal# + "." + $ModelName
 			$nameclassProfileDal = $ModelName+$nameProfile
 			Write-Host "Creating "$nameclassProfileDal -ForegroundColor Magenta
-			$contentProfileDal = ProfileDalContent $namespaceModelsDto $namespaceModels $namespaceMappingsDal $nameclassProfileDal $nameclassModels $nameclassModelsDto
+			$contentProfileDal = ProfileDalContent $namespaceTempModelsDto $namespaceModels $namespaceTempMappingsDal $nameclassProfileDal $nameclassModels $nameclassModelsDto
 			$nameFileProfileDal = $nameclassProfileDal+".cs"
-			Out-File -InputObject $contentProfileDal -Encoding ascii -FilePath .\$nameSource\$dal\$folderMappingsDal\$ModelName\$nameFileProfileDal
+			Out-File -InputObject $contentProfileDal -Encoding ascii -FilePath .\$nameSource\$dal\$folderMappingsDal\$nameFileProfileDal
 		#Repository
-			mkdir .\$nameSource\$dal\$folderRepositories\$ModelName
+			mkdir .\$nameSource\$dal\$folderRepositories\$ModelName$nameRepository
+			$namespaceTempRepositories = $namespaceRepositories + "." + $ModelName+$nameRepository
 			$nameclassRepository = $ModelName+$nameRepository
 			Write-Host "Creating "$nameclassRepository -ForegroundColor Magenta
 			$nameinterfaceRepositories = "I"+$nameclassRepository
-			$contentRepository = RepositoryContent $namespaceModelsDto $namespaceContexts $namespaceModels $namespaceRepositories $nameclassRepository $nameinterfaceRepositories $nameclassContexts $nameclassModelsDto $nameclassModels
+			$contentRepository = RepositoryContent $namespaceTempModelsDto $namespaceContexts $namespaceModels $namespaceTempRepositories $nameclassRepository $nameinterfaceRepositories $nameclassContexts $nameclassModelsDto $nameclassModels
 			$nameFileClassRepositories = $nameclassRepository+".cs"
-			Out-File -InputObject $contentRepository -Encoding ascii -FilePath .\$nameSource\$dal\$folderRepositories\$ModelName\$nameFileClassRepositories
-			$contentIRepository = IRepositoryContent $namespaceModelsDto $namespaceRepositories $nameinterfaceRepositories $nameclassModelsDto
+			Out-File -InputObject $contentRepository -Encoding ascii -FilePath .\$nameSource\$dal\$folderRepositories\$ModelName$nameRepository\$nameFileClassRepositories
+			$contentIRepository = IRepositoryContent $namespaceTempModelsDto $namespaceTempRepositories $nameinterfaceRepositories $nameclassModelsDto
 			$nameFileInterfaceRepositories = $nameinterfaceRepositories+".cs"
-			Out-File -InputObject $contentIRepository -Encoding ascii -FilePath .\$nameSource\$dal\$folderRepositories\$ModelName\$nameFileInterfaceRepositories
+			Out-File -InputObject $contentIRepository -Encoding ascii -FilePath .\$nameSource\$dal\$folderRepositories\$ModelName$nameRepository\$nameFileInterfaceRepositories
 		#BLL
-			mkdir .\$nameSource\$bll\$folderBLLs\$ModelName
+			mkdir .\$nameSource\$bll\$folderBLLs\$ModelName$nameBll
+			$namespaceTempBLL = $namespaceBLL + "." + $ModelName+$nameBll
 			$nameclassBLL = $ModelName+$nameBll
 			Write-Host "Creating "$nameclassBLL -ForegroundColor Magenta
 			$nameinterfaceBLL = "I"+$ModelName+$nameBll
 			$nameRepositoryProperty = $nameclassRepository.subString(0,1)+$nameclassRepository.subString(1,1).ToLower()+$nameclassRepository.subString(2,$nameclassRepository.Length-2)
-			$contentBLL = BLLContent $namespaceModelsDto $namespaceRepositories $namespaceBLL $nameclassBLL $nameinterfaceBLL $nameinterfaceRepositories $nameclassModelsDto
+			$contentBLL = BLLContent $namespaceTempModelsDto $namespaceTempRepositories $namespaceTempBLL $nameclassBLL $nameinterfaceBLL $nameinterfaceRepositories $nameclassModelsDto
 			$nameFileClassBLL = $nameclassBLL+".cs"
-			Out-File -InputObject $contentBLL -Encoding ascii -FilePath .\$nameSource\$bll\$folderBLLs\$ModelName\$nameFileClassBLL
-			$contentIBLL = IBLLContent $namespaceModelsDto $namespaceBLL $nameinterfaceBLL $nameclassModelsDto
+			Out-File -InputObject $contentBLL -Encoding ascii -FilePath .\$nameSource\$bll\$folderBLLs\$ModelName$nameBll\$nameFileClassBLL
+			$contentIBLL = IBLLContent $namespaceTempModelsDto $namespaceTempBLL $nameinterfaceBLL $nameclassModelsDto
 			$nameFileInterfaceBLL = $nameinterfaceBLL+".cs"
-			Out-File -InputObject $contentIBLL -Encoding ascii -FilePath .\$nameSource\$bll\$folderBLLs\$ModelName\$nameFileInterfaceBLL
+			Out-File -InputObject $contentIBLL -Encoding ascii -FilePath .\$nameSource\$bll\$folderBLLs\$ModelName$nameBll\$nameFileInterfaceBLL
 		#Request
-			mkdir .\$nameSource\$api\$folderRequestsApi\$ModelName
+			#mkdir .\$nameSource\$api\$folderRequestsApi\$ModelName
+			$namespaceTempRequestsApi = $namespaceRequestsApi# + "." + $ModelName
 			$nameclassRequest = $ModelName+$nameRequest
 			Write-Host "Creating "$nameclassRequest -ForegroundColor Magenta
-			$contentRequest = RequestContent $namespaceRequestsApi $nameclassRequest
+			$contentRequest = RequestContent $namespaceTempRequestsApi $nameclassRequest
 			$nameFileRequest = $nameclassRequest+".cs"
-			Out-File -InputObject $contentRequest -Encoding ascii -FilePath .\$nameSource\$api\$folderRequestsApi\$ModelName\$nameFileRequest
+			Out-File -InputObject $contentRequest -Encoding ascii -FilePath .\$nameSource\$api\$folderRequestsApi\$nameFileRequest
 		#Response
-			mkdir .\$nameSource\$api\$folderResponseApi\$ModelName
+			#mkdir .\$nameSource\$api\$folderResponseApi\$ModelName
+			$namespaceTempResponseApi = $namespaceResponseApi# + "." + $ModelName
 			$nameclassResponse = $ModelName+$nameResponse
 			Write-Host "Creating "$nameclassResponse -ForegroundColor Magenta
-			$contentResponse = ResponseContent $namespaceResponseApi $nameclassResponse
+			$contentResponse = ResponseContent $namespaceTempResponseApi $nameclassResponse
 			$nameFileResponse = $nameclassResponse+".cs"
-			Out-File -InputObject $contentResponse -Encoding ascii -FilePath .\$nameSource\$api\$folderResponseApi\$ModelName\$nameFileResponse
+			Out-File -InputObject $contentResponse -Encoding ascii -FilePath .\$nameSource\$api\$folderResponseApi\$nameFileResponse
 		#Controller
 			$nameclassController = $ModelName+$nameController
-			$contentController = ControllerContent $namespaceRequestsApi $namespaceResponseApi $namespaceBLL $namespaceConstants $namespaceModelsDto $namespaceController $nameclassController $nameinterfaceBLL $nameclassModelsDto $nameclassResponse $nameclassRequest
+			$contentController = ControllerContent $namespaceTempRequestsApi $namespaceTempResponseApi $namespaceTempBLL $namespaceConstants $namespaceTempModelsDto $namespaceController $nameclassController $nameinterfaceBLL $nameclassModelsDto $nameclassResponse $nameclassRequest
 			$nameFileClassController = $nameclassController+".cs"
 			Out-File -InputObject $contentController -Encoding ascii -FilePath .\$nameSource\$api\$folderController\$nameFileClassController
 		#ProfileApi
-			mkdir .\$nameSource\$api\$folderMappingsApi\$ModelName
+			#mkdir .\$nameSource\$api\$folderMappingsApi\$ModelName
+			$namespaceTempMappingsApi = $namespaceMappingsApi# + "." + $ModelName
 			$nameclassProfileApi = $ModelName+$nameProfile
 			Write-Host "Creating "$nameclassProfileApi -ForegroundColor Magenta
-			$contentProfileApi = ProfileApiContent $namespaceRequestsApi $namespaceResponseApi $namespaceModelsDto $namespaceMappingsApi $nameclassProfileApi $nameclassRequest $nameclassModelsDto $nameclassResponse
+			$contentProfileApi = ProfileApiContent $namespaceTempRequestsApi $namespaceTempResponseApi $namespaceTempModelsDto $namespaceTempMappingsApi $nameclassProfileApi $nameclassRequest $nameclassModelsDto $nameclassResponse
 			$nameFileProfileApi = $nameclassProfileApi+".cs"
-			Out-File -InputObject $contentProfileApi -Encoding ascii -FilePath .\$nameSource\$api\$folderMappingsApi\$ModelName\$nameFileProfileApi
+			Out-File -InputObject $contentProfileApi -Encoding ascii -FilePath .\$nameSource\$api\$folderMappingsApi\$nameFileProfileApi
 		
 		#ControllerTest
 			$folderOneControllerTest = $nameclassController + $nameTest
@@ -870,42 +881,42 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$nameclassAddAsyncTest = "AddAsyncTest"
 			Write-Host "Creating "$nameclassAddAsyncTest -ForegroundColor Magenta
 			$namespaceControllerTestAddAsync = $namespaceControllerTest + "." + $folderOneControllerTest
-			$contentAddAsyncTest = ControllerAddAsyncTestContent $namespaceController $namespaceResponseApi $namespaceBLL $namespaceModelsDto $namespaceTestHelper $namespaceControllerTestAddAsync $nameclassController $nameclassRequest $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
+			$contentAddAsyncTest = ControllerAddAsyncTestContent $namespaceController $namespaceTempResponseApi $namespaceTempBLL $namespaceTempModelsDto $namespaceTestHelper $namespaceControllerTestAddAsync $nameclassController $nameclassRequest $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
 			$nameFileAddAsyncTest = $nameclassAddAsyncTest+".cs"
 			Out-File -InputObject $contentAddAsyncTest -Encoding ascii -FilePath .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileAddAsyncTest
 			
 			$nameclassDeleteAsync = "DeleteAsync"
 			Write-Host "Creating "$nameclassDeleteAsync -ForegroundColor Magenta
 			$namespaceControllerTestDeleteAsync = $namespaceControllerTest + "." + $folderOneControllerTest
-			$contentDeleteAsync = ControllerDeleteAsyncTestContent $namespaceController $namespaceResponseApi $namespaceBLL $namespaceModelsDto $namespaceTestHelper $namespaceControllerTestDeleteAsync $nameclassController $nameclassRequest $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
+			$contentDeleteAsync = ControllerDeleteAsyncTestContent $namespaceController $namespaceTempResponseApi $namespaceTempBLL $namespaceTempModelsDto $namespaceTestHelper $namespaceControllerTestDeleteAsync $nameclassController $nameclassRequest $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
 			$nameFileDeleteAsync = $nameclassDeleteAsync+".cs"
 			Out-File -InputObject $contentDeleteAsync -Encoding ascii -FilePath .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileDeleteAsync
 			
 			$nameclassGetAllAsyncTest = "GetAllAsyncTest"
 			Write-Host "Creating "$nameclassGetAllAsyncTest -ForegroundColor Magenta
 			$namespaceControllerTestGetAllAsync = $namespaceControllerTest + "." + $folderOneControllerTest
-			$contentGetAllAsyncTest = ControllerGetAllAsyncTestContent $namespaceController $namespaceResponseApi $namespaceBLL $namespaceModelsDto $namespaceTestHelper $namespaceControllerTestGetAllAsync $nameclassController $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
+			$contentGetAllAsyncTest = ControllerGetAllAsyncTestContent $namespaceController $namespaceTempResponseApi $namespaceTempBLL $namespaceTempModelsDto $namespaceTestHelper $namespaceControllerTestGetAllAsync $nameclassController $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
 			$nameFileGetAllAsyncTest = $nameclassGetAllAsyncTest+".cs"
 			Out-File -InputObject $contentGetAllAsyncTest -Encoding ascii -FilePath .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileGetAllAsyncTest
 			
 			$nameclassGetByIdAsyncTest = "GetByIdAsyncTest"
 			Write-Host "Creating "$nameclassGetByIdAsyncTest -ForegroundColor Magenta
 			$namespaceControllerTestGetByIdAsync = $namespaceControllerTest + "." + $folderOneControllerTest
-			$contentGetByIdAsyncTest = ControllerGetByIdAsyncTestContent $namespaceController $namespaceResponseApi $namespaceBLL $namespaceModelsDto $namespaceTestHelper $namespaceControllerTestGetByIdAsync $nameclassController $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
+			$contentGetByIdAsyncTest = ControllerGetByIdAsyncTestContent $namespaceController $namespaceTempResponseApi $namespaceTempBLL $namespaceTempModelsDto $namespaceTestHelper $namespaceControllerTestGetByIdAsync $nameclassController $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
 			$nameFileGetByIdAsyncTest = $nameclassGetByIdAsyncTest+".cs"
 			Out-File -InputObject $contentGetByIdAsyncTest -Encoding ascii -FilePath .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileGetByIdAsyncTest
 			
 			$nameclassUpdateAsyncTest = "UpdateAsyncTest"
 			Write-Host "Creating "$nameclassUpdateAsyncTest -ForegroundColor Magenta
 			$namespaceControllerTestUpdateAsync = $namespaceControllerTest + "." + $folderOneControllerTest
-			$contentUpdateAsyncTest = ControllerUpdateAsyncTestContent $namespaceController $namespaceResponseApi $namespaceBLL $namespaceModelsDto $namespaceTestHelper $namespaceControllerTestUpdateAsync $nameclassController $nameclassRequest $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
+			$contentUpdateAsyncTest = ControllerUpdateAsyncTestContent $namespaceController $namespaceTempResponseApi $namespaceTempBLL $namespaceTempModelsDto $namespaceTestHelper $namespaceControllerTestUpdateAsync $nameclassController $nameclassRequest $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
 			$nameFileUpdateAsyncTest = $nameclassUpdateAsyncTest+".cs"
 			Out-File -InputObject $contentUpdateAsyncTest -Encoding ascii -FilePath .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileUpdateAsyncTest
 
 		#ProfileApiTest
 			$nameclassProfileApiTest = $nameclassProfileApi + $Test
 			Write-Host "Creating "$nameclassProfileApiTest -ForegroundColor Magenta
-			$contentProfileApiTest = MappingProfileApiTestContent $namespaceMappingsApi $namespaceRequestsApi $namespaceResponseApi $namespaceModelsDto $namespaceTestHelper $namespaceMappingsTestApi $nameclassProfileApi $nameclassRequest $nameclassModelsDto $nameclassResponse
+			$contentProfileApiTest = MappingProfileApiTestContent $namespaceTempMappingsApi $namespaceTempRequestsApi $namespaceTempResponseApi $namespaceTempModelsDto $namespaceTestHelper $namespaceMappingsTestApi $nameclassProfileApi $nameclassRequest $nameclassModelsDto $nameclassResponse
 			$nameFileProfileApiTest = $nameclassProfileApiTest+".cs"
 			Out-File -InputObject $contentProfileApiTest -Encoding ascii -FilePath .\$nameTest\$apiTest\$folderMappingsTestApi\$nameFileProfileApiTest
 
@@ -915,35 +926,35 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$nameclassAddAsyncTest = "AddAsyncTest"
 			Write-Host "Creating "$nameclassAddAsyncTest -ForegroundColor Magenta
 			$namespaceBllTestAddAsync = $namespaceBLLTest + "." + $folderOneBllTest
-			$contentAddAsyncTest = BllAddAsyncTestContent $namespaceBLL $namespaceModelsDto $namespaceRepositories $namespaceTestHelper $namespaceBllTestAddAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
+			$contentAddAsyncTest = BllAddAsyncTestContent $namespaceTempBLL $namespaceTempModelsDto $namespaceTempRepositories $namespaceTestHelper $namespaceBllTestAddAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
 			$nameFileAddAsyncTest = $nameclassAddAsyncTest+".cs"
 			Out-File -InputObject $contentAddAsyncTest -Encoding ascii -FilePath .\$nameTest\$bllTest\$folderBllsTest\$folderOneBllTest\$nameFileAddAsyncTest
 			
 			$nameclassDeleteAsync = "DeleteAsync"
 			Write-Host "Creating "$nameclassDeleteAsync -ForegroundColor Magenta
 			$namespaceBllTestDeleteAsync = $namespaceBLLTest + "." + $folderOneBllTest
-			$contentDeleteAsync = BllDeleteAsyncTestContent $namespaceBLL $namespaceModelsDto $namespaceRepositories $namespaceTestHelper $namespaceBllTestDeleteAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
+			$contentDeleteAsync = BllDeleteAsyncTestContent $namespaceTempBLL $namespaceTempModelsDto $namespaceTempRepositories $namespaceTestHelper $namespaceBllTestDeleteAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
 			$nameFileDeleteAsync = $nameclassDeleteAsync+".cs"
 			Out-File -InputObject $contentDeleteAsync -Encoding ascii -FilePath .\$nameTest\$bllTest\$folderBllsTest\$folderOneBllTest\$nameFileDeleteAsync
 			
 			$nameclassGetAllAsyncTest = "GetAllAsyncTest"
 			Write-Host "Creating "$nameclassGetAllAsyncTest -ForegroundColor Magenta
 			$namespaceBllTestGetAllAsync = $namespaceBLLTest + "." + $folderOneBllTest
-			$contentGetAllAsyncTest = BllGetAllTestContent $namespaceBLL $namespaceModelsDto $namespaceRepositories $namespaceTestHelper $namespaceBllTestGetAllAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
+			$contentGetAllAsyncTest = BllGetAllTestContent $namespaceTempBLL $namespaceTempModelsDto $namespaceTempRepositories $namespaceTestHelper $namespaceBllTestGetAllAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
 			$nameFileGetAllAsyncTest = $nameclassGetAllAsyncTest+".cs"
 			Out-File -InputObject $contentGetAllAsyncTest -Encoding ascii -FilePath .\$nameTest\$bllTest\$folderBllsTest\$folderOneBllTest\$nameFileGetAllAsyncTest
 			
 			$nameclassGetByIdAsyncTest = "GetByIdAsyncTest"
 			Write-Host "Creating "$nameclassGetByIdAsyncTest -ForegroundColor Magenta
 			$namespaceBllTestGetByIdAsync = $namespaceBLLTest + "." + $folderOneBllTest
-			$contentGetByIdAsyncTest = BllGetByIdAsyncTestContent $namespaceBLL $namespaceModelsDto $namespaceRepositories $namespaceTestHelper $namespaceBllTestGetByIdAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
+			$contentGetByIdAsyncTest = BllGetByIdAsyncTestContent $namespaceTempBLL $namespaceTempModelsDto $namespaceTempRepositories $namespaceTestHelper $namespaceBllTestGetByIdAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
 			$nameFileGetByIdAsyncTest = $nameclassGetByIdAsyncTest+".cs"
 			Out-File -InputObject $contentGetByIdAsyncTest -Encoding ascii -FilePath .\$nameTest\$bllTest\$folderBllsTest\$folderOneBllTest\$nameFileGetByIdAsyncTest
 			
 			$nameclassUpdateAsyncTest = "UpdateAsyncTest"
 			Write-Host "Creating "$nameclassUpdateAsyncTest -ForegroundColor Magenta
 			$namespaceBllTestUpdateAsync = $namespaceBLLTest + "." + $folderOneBllTest
-			$contentUpdateAsyncTest = BllUpdateAsyncTestContent $namespaceBLL $namespaceModelsDto $namespaceRepositories $namespaceTestHelper $namespaceBllTestUpdateAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
+			$contentUpdateAsyncTest = BllUpdateAsyncTestContent $namespaceTempBLL $namespaceTempModelsDto $namespaceTempRepositories $namespaceTestHelper $namespaceBllTestUpdateAsync $nameclassBLL $nameclassModelsDto $nameinterfaceRepositories
 			$nameFileUpdateAsyncTest = $nameclassUpdateAsyncTest+".cs"
 			Out-File -InputObject $contentUpdateAsyncTest -Encoding ascii -FilePath .\$nameTest\$bllTest\$folderBllsTest\$folderOneBllTest\$nameFileUpdateAsyncTest
 		
@@ -953,42 +964,42 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$nameclassAddAsyncTest = "AddAsyncTest"
 			Write-Host "Creating "$nameclassAddAsyncTest -ForegroundColor Magenta
 			$namespaceRepositoryTestAddAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
-			$contentAddAsyncTest = RepositoryAddAsyncTestContent $namespaceContexts $namespaceModels $namespaceRepositories $namespaceTestHelper $namespaceRepositoryTestAddAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
+			$contentAddAsyncTest = RepositoryAddAsyncTestContent $namespaceContexts $namespaceModels $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestAddAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
 			$nameFileAddAsyncTest = $nameclassAddAsyncTest+".cs"
 			Out-File -InputObject $contentAddAsyncTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileAddAsyncTest
 
 			$nameclassDeleteAsyncTest = "DeleteAsyncTest"
 			Write-Host "Creating "$nameclassDeleteAsyncTest -ForegroundColor Magenta
 			$namespaceRepositoryTestDeleteAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
-			$contentDeleteAsyncTest = RepositoryDeleteAsyncTestContent $namespaceContexts $namespaceModels $namespaceRepositories $namespaceTestHelper $namespaceRepositoryTestDeleteAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
+			$contentDeleteAsyncTest = RepositoryDeleteAsyncTestContent $namespaceContexts $namespaceModels $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestDeleteAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
 			$nameFileDeleteAsyncTest = $nameclassDeleteAsyncTest+".cs"
 			Out-File -InputObject $contentDeleteAsyncTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileDeleteAsyncTest
 
 			$nameclassGetAllAsyncTest = "GetAllAsyncTest"
 			Write-Host "Creating "$nameclassGetAllAsyncTest -ForegroundColor Magenta
 			$namespaceRepositoryTestGetAllAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
-			$contentGetAllAsyncTest = RepositoryGetAllAsyncTestContent $namespaceContexts $namespaceModels $namespaceRepositories $namespaceTestHelper $namespaceRepositoryTestGetAllAsync $nameclassRepository $nameclassContexts $nameclassModels
+			$contentGetAllAsyncTest = RepositoryGetAllAsyncTestContent $namespaceContexts $namespaceModels $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestGetAllAsync $nameclassRepository $nameclassContexts $nameclassModels
 			$nameFileGetAllAsyncTest = $nameclassGetAllAsyncTest+".cs"
 			Out-File -InputObject $contentGetAllAsyncTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileGetAllAsyncTest
 
 			$nameclassGetByIdAsyncTest = "GetByIdAsyncTest"
 			Write-Host "Creating "$nameclassGetByIdAsyncTest -ForegroundColor Magenta
 			$namespaceRepositoryTestGetByIdAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
-			$contentGetByIdAsyncTest = RepositoryGetByIdAsyncTestContent $namespaceContexts $namespaceModels $namespaceRepositories $namespaceTestHelper $namespaceRepositoryTestGetByIdAsync $nameclassRepository $nameclassContexts $nameclassModels
+			$contentGetByIdAsyncTest = RepositoryGetByIdAsyncTestContent $namespaceContexts $namespaceModels $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestGetByIdAsync $nameclassRepository $nameclassContexts $nameclassModels
 			$nameFileGetByIdAsyncTest = $nameclassGetByIdAsyncTest+".cs"
 			Out-File -InputObject $contentGetByIdAsyncTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileGetByIdAsyncTest
 
 			$nameclassUpdateAsyncTest = "UpdateAsyncTest"
 			Write-Host "Creating "$nameclassUpdateAsyncTest -ForegroundColor Magenta
 			$namespaceRepositoryTestUpdateAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
-			$contentUpdateAsyncTest = RepositoryUpdateAsyncTestContent $namespaceContexts $namespaceModels $namespaceRepositories $namespaceTestHelper $namespaceRepositoryTestUpdateAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
+			$contentUpdateAsyncTest = RepositoryUpdateAsyncTestContent $namespaceContexts $namespaceModels $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestUpdateAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
 			$nameFileUpdateAsyncTest = $nameclassUpdateAsyncTest+".cs"
 			Out-File -InputObject $contentUpdateAsyncTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileUpdateAsyncTest
 		
 		#ProfileDalTest
 			$nameclassProfileDalTest = $nameclassProfileDal + $Test
 			Write-Host "Creating "$nameclassProfileDalTest -ForegroundColor Magenta
-			$contentProfileDalTest = MappingProfileDalTestContent $namespaceModelsDto $namespaceMappingsDal $namespaceModels $namespaceTestHelper $namespaceMappingsTestDal $nameclassProfileDal $nameclassModelsDto $nameclassModels
+			$contentProfileDalTest = MappingProfileDalTestContent $namespaceTempModelsDto $namespaceTempMappingsDal $namespaceModels $namespaceTestHelper $namespaceMappingsTestDal $nameclassProfileDal $nameclassModelsDto $nameclassModels
 			$nameFileProfileDalTest = $nameclassProfileDalTest+".cs"
 			Out-File -InputObject $contentProfileDalTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderMappingsTestDal\$nameFileProfileDalTest
 	}
@@ -1167,7 +1178,9 @@ cd .\$projectName
 				Write-Host "Creating Startup" -ForegroundColor Magenta
 				$nameClassBLL = $controllers[0]+$nameBll
 				$nameclassRepositories = $controllers[0]+$nameRepository
-				$startUpContent = StartupContent $namespaceBLL $namespaceSettings $nameSpaceContexts $namespaceRepositories $api $nameclassSettings $nameClassBLL $projectName $nameclassContexts $nameclassRepositories
+				$namespaceTempBLL = $namespaceBLL + "." + $nameClassBLL
+				$namespaceTempRepositories = $namespaceRepositories + "." + $nameclassRepositories
+				$startUpContent = StartupContent $namespaceTempBLL $namespaceSettings $nameSpaceContexts $namespaceTempRepositories $api $nameclassSettings $nameClassBLL $projectName $nameclassContexts $nameclassRepositories
 				rm Startup.cs
 				Out-File -InputObject $startUpContent -Encoding ascii -FilePath Startup.cs
 				Write-Host "Creating Program" -ForegroundColor Magenta

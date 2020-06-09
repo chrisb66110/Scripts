@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NSpaceRequestsVar;
 using NSpaceResponsesVar;
-using NSpaceModelsDtosVar;
+NSpaceModelsDtosVar
 using NSpaceModelsVar;
 
 namespace NameSpaceVar
