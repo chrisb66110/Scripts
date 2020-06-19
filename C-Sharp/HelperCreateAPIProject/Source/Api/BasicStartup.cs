@@ -53,10 +53,10 @@ namespace NameSpaceVar
             services.AddAutoMapper(assemblies);
             
             //Disable Model State Valid Filter
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
+            //services.Configure<ApiBehaviorOptions>(options =>
+            //{
+            //    options.SuppressModelStateInvalidFilter = true;
+            //});
 
             services.AddOptions();
 
@@ -70,6 +70,8 @@ namespace NameSpaceVar
 
             builder.Build();
 
+            //Configure HealthChecks
+            services.AddHealthChecks();
 
             services.AddControllers();
         }
@@ -131,7 +133,10 @@ namespace NameSpaceVar
 
             app.UseRouting();
 
-            app.UseAuthorization();
+			//app.UseAuthentication();
+            //app.UseAuthorization();
+
+            app.UseHealthChecks("/HealthChecks");
 
             app.UseEndpoints(endpoints =>
             {

@@ -33,10 +33,12 @@ $namePostman = "postman"
 $dotnetVersion = "netcoreapp3.1"
 
 $nameAPIBase = "APIBase"
-$versionAPIBase = "0.0.1"
+$versionAPIBase = "0.0.1.7"
 
 $nameAPIBaseTest = "APIBaseTest"
 $versionAPIBaseTest = "0.0.6"
+
+$NugetProvider = "https://localhost:44368/nuget"
 
 ##########################################################Paths And NameSpaces##########################################################
 $pathScript = Convert-Path .\
@@ -1308,7 +1310,7 @@ cd .\$projectName
 	Write-Host "Instalation nugets in "$bll -ForegroundColor Green
 	
 	Write-Host "Instalation nugets in "$common -ForegroundColor Green
-	dotnet add .\$nameSource\$common package $nameAPIBase --version $versionAPIBase
+	dotnet add .\$nameSource\$common package $nameAPIBase --source $NugetProvider --version $versionAPIBase
 	dotnet add .\$nameSource\$common package AutoMapper.Extensions.Microsoft.DependencyInjection
 	
 	Write-Host "Instalation nugets in "$dal -ForegroundColor Green
@@ -1325,7 +1327,7 @@ cd .\$projectName
 	Write-Host "Instalation nugets in "$dalTest -ForegroundColor Green
 
 	Write-Host "Instalation nugets in "$datatesthelper -ForegroundColor Green
-	dotnet add .\$nameTest\$datatesthelper package $nameAPIBaseTest --version $versionAPIBaseTest
+	dotnet add .\$nameTest\$datatesthelper package $nameAPIBaseTest --source $NugetProvider --version $versionAPIBaseTest
 
 
 	##Add migrations file
