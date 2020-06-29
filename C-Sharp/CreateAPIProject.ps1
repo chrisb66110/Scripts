@@ -1,5 +1,8 @@
 ##########################################################ProjectNames##########################################################
 
+#Example to use this script
+#execute in powershell .\CreateAPIProject.ps1 NameProject @("Model1", "Model2")
+
 $projectName=$args[0]
 
 $controllers = $args[1]
@@ -38,7 +41,7 @@ $versionAPIBase = "0.0.1.7"
 $nameAPIBaseTest = "APIBaseTest"
 $versionAPIBaseTest = "0.0.6"
 
-$NugetProvider = "https://localhost:44368/nuget"
+$NugetProvider = "http://localhost:5555/v3/index.json"
 
 ##########################################################Paths And NameSpaces##########################################################
 $pathScript = Convert-Path .\
@@ -1093,7 +1096,22 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		return $result
 	}
 
+	function DeployScriptContent([string] $ApiFolderVar,
+								 [string] $ProjectNameLowerVar,
+								 [string] $PortVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\BasicDeployScript.ps1" -Raw
+		$result = $result -replace "ApiFolderVar", $ApiFolderVar
+		$result = $result -replace "ProjectNameLowerVar", $ProjectNameLowerVar
+		$result = $result -replace "NameNewMigrationVar", "InitialMigration"
+		$result = $result -replace "PortVar", $PortVar
+		return $result
+	}
 
+	function DockerfileContent([string] $ProjectNameVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicDockerfile.txt" -Raw
+		$result = $result -replace "ProjectNameVar", $ProjectNameVar
+		return $result
+	}
 
 #Generate project
 mkdir .\$projectName
@@ -1189,6 +1207,9 @@ cd .\$projectName
 				$programContent = ProgramContent $nameSpaceContexts $api $nameclassContexts
 				rm Program.cs
 				Out-File -InputObject $programContent -Encoding ascii -FilePath Program.cs
+				Write-Host "Creating Dockerfile" -ForegroundColor Magenta
+				$dockerfileContent = DockerfileContent $projectName
+				Out-File -InputObject $dockerfileContent -Encoding ascii -FilePath Dockerfile
 				mkdir .\$folderMappingsApi
 				mkdir .\$folderRequestsApi
 				mkdir .\$folderResponseApi
@@ -1335,6 +1356,14 @@ cd .\$projectName
 	Write-Host "`n`n`n`n`n`nCreating "$nameFileMigration -ForegroundColor Green
 	$migrationsContent = MigrationsScriptContent $projectName $dal $nameclassContexts $api
 	Out-File -InputObject $migrationsContent -Encoding ascii -FilePath .\$nameFileMigration
+	
+	##Add deploy script
+	$nameFileDeploy = $projectName+"DeployScript.ps1"
+	Write-Host "`n`n`n`n`n`nCreating "$nameFileDeploy -ForegroundColor Green
+	$projectNameLower = $projectName.ToLower()
+	$programFolder = ".\" + $nameSource + "\" + $api
+	$DeployFileContent = DeployScriptContent $programFolder $projectNameLower $portValue
+	Out-File -InputObject $DeployFileContent -Encoding ascii -FilePath .\$nameFileDeploy
 
 
 	cd ..
