@@ -41,7 +41,7 @@ $versionAPIBase = "0.0.1.7"
 $nameAPIBaseTest = "APIBaseTest"
 $versionAPIBaseTest = "0.0.6"
 
-$NugetProvider = "http://localhost:5555/v3/index.json"
+$NugetProvider = "http://34.72.42.14:5000/v3/index.json"
 
 ##########################################################Paths And NameSpaces##########################################################
 $pathScript = Convert-Path .\
@@ -1096,14 +1096,33 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		return $result
 	}
 
-	function DeployScriptContent([string] $ApiFolderVar,
-								 [string] $ProjectNameLowerVar,
-								 [string] $PortVar){
-		$result = Get-Content $pathHelperCreateAPIProject"\Source\BasicDeployScript.ps1" -Raw
+	function NugetConfigContent([string] $NugetProviderJsonVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\NuGet.Config" -Raw
+		$result = $result -replace "NugetProviderJsonVar", $NugetProviderJsonVar
+		return $result
+	}
+
+	function WindowsDeployScriptContent([string] $FileNameDeployWindowsVar,
+								        [string] $ApiFolderVar,
+								        [string] $ProjectNameLowerVar,
+								        [string] $PortVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\BasicWindowsDeployScript.ps1" -Raw
+		$result = $result -replace "FileNameDeployWindowsVar", $FileNameDeployWindowsVar
 		$result = $result -replace "ApiFolderVar", $ApiFolderVar
 		$result = $result -replace "ProjectNameLowerVar", $ProjectNameLowerVar
-		$result = $result -replace "NameNewMigrationVar", "InitialMigration"
 		$result = $result -replace "PortVar", $PortVar
+		return $result
+	}
+
+	function LinuxDeployScriptContent([string] $FileNameDeployLinuxVar,
+								      [string] $ProgramFolderVar,
+								      [string] $ProjectNameLowerVar,
+									  [string] $PortDeployVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\BasicLinuxDeployScript.sh" -Raw
+		$result = $result -replace "FileNameDeployLinuxVar", $FileNameDeployLinuxVar
+		$result = $result -replace "ProgramFolderVar", $ProgramFolderVar
+		$result = $result -replace "ProjectNameLowerVar", $ProjectNameLowerVar
+		$result = $result -replace "PortDeployVar", $PortDeployVar
 		return $result
 	}
 
@@ -1320,7 +1339,13 @@ cd .\$projectName
 	dotnet sln add ".\$nameTest\$dalTest\$dalTest.csproj"
 	dotnet sln add ".\$nameTest\$datatesthelper\$datatesthelper.csproj"
 
-	Copy-Item "..\..\HelperCreateAPIProject\NuGet.Config" -Destination ".\"
+	##Add NuGet Config
+	$nameFileNugetConfig = "NuGet.Config"
+	Write-Host "`n`n`n`n`n`nCreating "$nameFileNugetConfig -ForegroundColor Green
+	$NugetConfigContent = NugetConfigContent $NugetProvider
+	Out-File -InputObject $NugetConfigContent -Encoding ascii -FilePath .\$nameFileNugetConfig
+
+	#Copy-Item "..\..\HelperCreateAPIProject\NuGet.Config" -Destination ".\"
 
 	#Instalation nugets
 	Write-Host "Instalation nugets in "$api -ForegroundColor Green
@@ -1357,13 +1382,21 @@ cd .\$projectName
 	$migrationsContent = MigrationsScriptContent $projectName $dal $nameclassContexts $api
 	Out-File -InputObject $migrationsContent -Encoding ascii -FilePath .\$nameFileMigration
 	
-	##Add deploy script
-	$nameFileDeploy = $projectName+"DeployScript.ps1"
-	Write-Host "`n`n`n`n`n`nCreating "$nameFileDeploy -ForegroundColor Green
+	##Add windows deploy script
+	$nameFileDeployWindows = $projectName+"WindowsDeployScript.ps1"
+	Write-Host "`n`n`n`n`n`nCreating "$nameFileDeployWindows -ForegroundColor Green
 	$projectNameLower = $projectName.ToLower()
 	$programFolder = ".\" + $nameSource + "\" + $api
-	$DeployFileContent = DeployScriptContent $programFolder $projectNameLower $portValue
-	Out-File -InputObject $DeployFileContent -Encoding ascii -FilePath .\$nameFileDeploy
+	$DeployFileWindowsContent = WindowsDeployScriptContent $nameFileDeployWindows $programFolder $projectNameLower $portValue
+	Out-File -InputObject $DeployFileWindowsContent -Encoding ascii -FilePath .\$nameFileDeployWindows
+
+	##Add linux deploy script
+	$nameFileDeployLinux = $projectName+"LinuxDeployScript.sh"
+	Write-Host "`n`n`n`n`n`nCreating "$nameFileDeployLinux -ForegroundColor Green
+	$projectNameLower = $projectName.ToLower()
+	$programFolder = $nameSource + "/" + $api + "/"
+	$DeployFileLinuxContent = LinuxDeployScriptContent $nameFileDeployLinux $programFolder $projectNameLower $portValue
+	Out-File -InputObject $DeployFileLinuxContent -Encoding ascii -FilePath .\$nameFileDeployLinux
 
 
 	cd ..
