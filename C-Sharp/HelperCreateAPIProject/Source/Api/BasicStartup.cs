@@ -2,16 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using APIBase.Api.Configurations;
+using APIBase.Common.Constants;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using NSpaceBLLsVar;
 using NSpaceSettingsVar;
@@ -52,12 +51,6 @@ namespace NameSpaceVar
             };
             services.AddAutoMapper(assemblies);
             
-            //Disable Model State Valid Filter
-            //services.Configure<ApiBehaviorOptions>(options =>
-            //{
-            //    options.SuppressModelStateInvalidFilter = true;
-            //});
-
             services.AddOptions();
 
             //Configure settings from appsettings
@@ -66,10 +59,16 @@ namespace NameSpaceVar
             var builder = new ContainerBuilder();
             builder.Populate(services);
 
-            //AddAutoFacRegistration(builder);
+            AddAutoFacRegistration(builder);
 
-            builder.Build();
+            var container = builder.Build();
 
+            //Configure Authentication
+            services.ConfigureAuthentication<NameClassSettingsVar>(container, "tempkey.rsa");
+            
+            //Configure Cors allowed
+            services.ConfigureCors<NameClassSettingsVar>(container, "GET", "POST", "PUT");
+            
             //Configure HealthChecks
             services.AddHealthChecks();
 
@@ -122,21 +121,19 @@ namespace NameSpaceVar
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
-			//app.UseAuthentication();
-            //app.UseAuthorization();
+			app.UseAuthentication();
+            
+            app.UseAuthorization();
 
             app.UseHealthChecks("/HealthChecks");
+
+            app.UseCors(BaseConstants.ALLOWED_CORS_POLICY);
 
             app.UseEndpoints(endpoints =>
             {

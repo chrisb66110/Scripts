@@ -1,9 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
+using APIBase.Common.Settings;
 
 namespace  NameSpaceVar
 {
     [ExcludeFromCodeCoverage]
-    public class NameClassVar
+    public class NameClassVar : BaseSettings
     {
         public ConnectionStrings ConnectionStrings { get; set; }
     }
