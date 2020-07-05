@@ -21,7 +21,7 @@ namespace NameSpaceVar
             return response;
         }
 
-        public async Task<NameModelDtoVar> GetByIdAsync(string id)
+        public async Task<NameModelDtoVar> GetByIdAsync(long id)
         {
             var response = await _nameRepostory.GetByIdAsync(id);
 

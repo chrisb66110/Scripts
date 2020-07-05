@@ -8,7 +8,7 @@ using NSpaceModelsVar;
 
 namespace NameSpaceVar
 {
-    public class NameClassVar : BaseRepository<NameModelVar, string>, NameInterfaceVar
+    public class NameClassVar : BaseRepository<NameModelVar, long>, NameInterfaceVar
     {
         private readonly IMapper _mapper;
 
@@ -25,7 +25,7 @@ namespace NameSpaceVar
             return response;
         }
 
-        public async Task<NameModelDtoVar> GetByIdAsync(string id)
+        public async Task<NameModelDtoVar> GetByIdAsync(long id)
         {
             var nModelVarVar = await _GetByIdAsync(id);
 

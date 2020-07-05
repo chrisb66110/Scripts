@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using APIBase.Api.Controllers;
 using APIBase.Common.Constants;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSpaceRequestsVar;
@@ -14,7 +15,7 @@ using NSpaceModelsDtosVar;
 
 namespace NameSpaceVar
 {
-    [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class NameClassVar : BaseController
     {
@@ -56,26 +57,17 @@ namespace NameSpaceVar
         }
 
         [HttpGet("GetById/{id}")]
-        public async Task<ObjectResult> GetByIdAsync(string id)
+        public async Task<ObjectResult> GetByIdAsync(long id)
         {
             ObjectResult response;
 
             try
             {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var resultBll = await _NameBllProperty.GetByIdAsync(id);
+                var resultBll = await _NameBllProperty.GetByIdAsync(id);
 
-                    var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
+                var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
 
-                    response = CreateOkResponse(resultResponse);
-                }
-                else
-                {
-                    var messageErrors = BaseConstants.INVALID_ID;
-
-                    response = CreateInvalidDataResponse(messageErrors);
-                }
+                response = CreateOkResponse(resultResponse);
             }
             catch (Exception ex)
             {
