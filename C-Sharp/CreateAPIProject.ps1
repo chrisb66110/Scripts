@@ -36,7 +36,7 @@ $namePostman = "postman"
 $dotnetVersion = "netcoreapp3.1"
 
 $nameAPIBase = "APIBase"
-$versionAPIBase = "0.0.1.7"
+$versionAPIBase = "0.0.1.11"
 
 $nameAPIBaseTest = "APIBaseTest"
 $versionAPIBaseTest = "0.0.6"
@@ -1132,6 +1132,11 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		return $result
 	}
 
+	function TempKeyContent(){
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\tempkey.rsa" -Raw
+		return $result
+	}
+
 #Generate project
 mkdir .\$projectName
 cd .\$projectName
@@ -1214,6 +1219,8 @@ cd .\$projectName
 				$appsettingsdevelopmentcontent =  AppSettingsDevelopmentContent $ProjectName
 				rm appsettings.Development.json
 				Out-File -InputObject $appsettingsdevelopmentcontent -Encoding ascii -FilePath appsettings.Development.json
+				Write-Host "Creating appsettings" -ForegroundColor Magenta
+				Out-File -InputObject $appsettingsdevelopmentcontent -Encoding ascii -FilePath appsettings.json
 				Write-Host "Creating Startup" -ForegroundColor Magenta
 				$nameClassBLL = $controllers[0]+$nameBll
 				$nameclassRepositories = $controllers[0]+$nameRepository
@@ -1232,6 +1239,11 @@ cd .\$projectName
 				mkdir .\$folderMappingsApi
 				mkdir .\$folderRequestsApi
 				mkdir .\$folderResponseApi
+				##Add TempKey
+				$nameFileTempKey = "tempkey.rsa"
+				Write-Host "`n`n`n`n`n`nCreating "$nameFileTempKey -ForegroundColor Green
+				$tempKeyContent = TempKeyContent
+				Out-File -InputObject $tempKeyContent -Encoding ascii -FilePath $nameFileTempKey
 			cd ..
 		cd ..
 
@@ -1351,6 +1363,7 @@ cd .\$projectName
 	Write-Host "Instalation nugets in "$api -ForegroundColor Green
 	dotnet add .\$nameSource\$api package Autofac
 	dotnet add .\$nameSource\$api package Autofac.Extensions.DependencyInjection
+	dotnet add .\$nameSource\$api package Microsoft.AspNetCore.Cors
 	dotnet add .\$nameSource\$api package Microsoft.EntityFrameworkCore.Design
 
 	Write-Host "Instalation nugets in "$bll -ForegroundColor Green
@@ -1362,7 +1375,7 @@ cd .\$projectName
 	Write-Host "Instalation nugets in "$dal -ForegroundColor Green
 	dotnet add .\$nameSource\$dal package Microsoft.EntityFrameworkCore
 	dotnet add .\$nameSource\$dal package Npgsql.EntityFrameworkCore.PostgreSQL
-	dotnet add .\$nameSource\$dal package Microsoft.EntityFrameworkCore.Design
+	#dotnet add .\$nameSource\$dal package Microsoft.EntityFrameworkCore.Design
 
 	Write-Host "Instalation nugets in "$apiTest -ForegroundColor Green
 	
