@@ -2,11 +2,7 @@
 #
 #To Use this script:
 #       chmod +x ./FileNameDeployLinuxVar
-#       ./FileNameDeployLinuxVar IpServerDataBase UserDb PasswordDb
-
-DbServer=$1
-DbUser=$2
-DbPassword=$3
+#       ./FileNameDeployLinuxVar
 
 cd ProgramFolderVar/
 
@@ -14,11 +10,10 @@ cd ProgramFolderVar/
 
     cd publishFolder
 
-        value=$(cat ../appsettings.Development.json)
+        tempkey=$(cat ../tempkey.rsa)
+        echo "$tempkey" > tempkey.rsa
 
-        value=${value/localhost/$DbServer}
-        value=${value/1234/$DbPassword}
-        value=${value/postgres/$DbUser}
+        value=$(cat ../appsettings.json)
 
         echo "$value" > appsettings.json
 

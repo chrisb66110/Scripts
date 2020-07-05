@@ -1,24 +1,20 @@
 #Use this script to deploy the MS
 #
 #To Use this script:
-#       ./FileNameDeployWindowsVar IpServerDataBase UserDb PasswordDb
-#Use host.docker.internal lo conect a localhost
-
-$DbServer=$args[0]
-$DbUser=$args[1]
-$DbPassword=$args[2]
+#       ./FileNameDeployWindowsVar IpServerDataBase UserDb PasswordDb AuthAuthority AuthAudience FrontEndOrigin
+#Use host.docker.internal in appsettings to conect a localhost
 
 cd ApiFolderVar
 
 	dotnet publish -c Release -o publishFolder
 
+	$tempKeyContent = Get-Content ".\tempkey.rsa" -Raw
+
 	cd .\publishFolder
 
-		$appSettingsContent = Get-Content ".\appsettings.Development.json" -Raw
+		Out-File -InputObject $tempKeyContent -Encoding ascii -FilePath ".\tempkey.rsa"
 
-		$appSettingsContent = $appSettingsContent -replace "localhost", $DbServer
-		$appSettingsContent = $appSettingsContent -replace "1234", $DbPassword
-		$appSettingsContent = $appSettingsContent -replace "postgres", $DbUser
+		$appSettingsContent = Get-Content ".\appsettings.json" -Raw
 
 		Out-File -InputObject $appSettingsContent -Encoding ascii -FilePath ".\appsettings.json"
 
