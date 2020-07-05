@@ -4,6 +4,16 @@
 				{
 					"name": "GetAll",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -22,6 +32,16 @@
 				{
 					"name": "GetById",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -41,11 +61,21 @@
 				{
 					"name": "Add",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"raw": "{\n\t\"id\" : 1,\n\t\"property\": \"Property\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -68,11 +98,21 @@
 				{
 					"name": "Update",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"raw": "{\n\t\"id\" : 1,\n\t\"property\": \"Property\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -95,11 +135,21 @@
 				{
 					"name": "Delete",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"raw": "{\n\t\"id\" : 1,\n\t\"property\": \"Property\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
