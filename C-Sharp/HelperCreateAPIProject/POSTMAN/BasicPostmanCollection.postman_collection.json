@@ -5,6 +5,62 @@
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
+		{
+			"name": "Auth",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1e0c28d6-774d-429b-a6f7-6dd4b4c628ff",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"pm.globals.set(\"token\", jsonData.token)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"UserName\" : \"UserName\",\r\n    \"Password\" : \"Password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{AuthUrl}}/Authentication",
+					"host": [
+						"{{AuthUrl}}"
+					],
+					"path": [
+						"Authentication"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HealthChecks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{ProjectNameVarUrl}}/HealthChecks",
+					"host": [
+						"{{ProjectNameVarUrl}}"
+					],
+					"path": [
+						"HealthChecks"
+					]
+				}
+			},
+			"response": []
+		},
 ItemsControllerVar
 	],
 	"protocolProfileBehavior": {}
