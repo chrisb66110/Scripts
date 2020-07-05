@@ -1,0 +1,1126 @@
+{
+	"info": {
+		"_postman_id": "967f3b7a-a898-4d26-986d-1a54f53802e2",
+		"name": "Catalogue",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CategoryController",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/Category/GetAll",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Category",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/Category/GetById/1",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Category",
+								"GetById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Category/Add",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Category",
+								"Add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Category/Update",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Category",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Category/Delete",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Category",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "ProductController",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/Product/GetAll",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Product",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/Product/GetById/1",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Product",
+								"GetById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Product/Add",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Product",
+								"Add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Product/Update",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Product",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Product/Delete",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Product",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "ImageController",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/Image/GetAll",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Image",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/Image/GetById/1",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Image",
+								"GetById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Image/Add",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Image",
+								"Add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Image/Update",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Image",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Image/Delete",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Image",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "GenderController",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/Gender/GetAll",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Gender",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/Gender/GetById/1",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Gender",
+								"GetById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Gender/Add",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Gender",
+								"Add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Gender/Update",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Gender",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Gender/Delete",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Gender",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "AgeGroupController",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/AgeGroup/GetAll",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"AgeGroup",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/AgeGroup/GetById/1",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"AgeGroup",
+								"GetById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/AgeGroup/Add",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"AgeGroup",
+								"Add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/AgeGroup/Update",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"AgeGroup",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/AgeGroup/Delete",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"AgeGroup",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "SizeController",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/Size/GetAll",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Size",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/Size/GetById/1",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Size",
+								"GetById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Size/Add",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Size",
+								"Add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Size/Update",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Size",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Size/Delete",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Size",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "ProductSizeController",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/ProductSize/GetAll",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"ProductSize",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/ProductSize/GetById/1",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"ProductSize",
+								"GetById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/ProductSize/Add",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"ProductSize",
+								"Add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/ProductSize/Update",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"ProductSize",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/ProductSize/Delete",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"ProductSize",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "ColorController",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/Color/GetAll",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Color",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/Color/GetById/1",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Color",
+								"GetById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Color/Add",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Color",
+								"Add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Color/Update",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Color",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/Color/Delete",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"Color",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "ProductColorController",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/ProductColor/GetAll",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"ProductColor",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{CatalogueUrl}}/ProductColor/GetById/1",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"ProductColor",
+								"GetById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/ProductColor/Add",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"ProductColor",
+								"Add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/ProductColor/Update",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"ProductColor",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{CatalogueUrl}}/ProductColor/Delete",
+							"host": [
+								"{{CatalogueUrl}}"
+							],
+							"path": [
+								"ProductColor",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

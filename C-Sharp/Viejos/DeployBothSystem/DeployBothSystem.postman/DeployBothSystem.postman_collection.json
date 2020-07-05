@@ -1,0 +1,134 @@
+{
+	"info": {
+		"_postman_id": "4ef23cd0-f6d7-4cd3-8025-c6a19998efe8",
+		"name": "DeployBothSystem",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "BothController",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DeployBothSystemUrl}}/Both/GetAll",
+							"host": [
+								"{{DeployBothSystemUrl}}"
+							],
+							"path": [
+								"Both",
+								"GetAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{DeployBothSystemUrl}}/Both/GetById/1",
+							"host": [
+								"{{DeployBothSystemUrl}}"
+							],
+							"path": [
+								"Both",
+								"GetById",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DeployBothSystemUrl}}/Both/Add",
+							"host": [
+								"{{DeployBothSystemUrl}}"
+							],
+							"path": [
+								"Both",
+								"Add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DeployBothSystemUrl}}/Both/Update",
+							"host": [
+								"{{DeployBothSystemUrl}}"
+							],
+							"path": [
+								"Both",
+								"Update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\" : \"Id\",\n\t\"property\": \"Property\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{DeployBothSystemUrl}}/Both/Delete",
+							"host": [
+								"{{DeployBothSystemUrl}}"
+							],
+							"path": [
+								"Both",
+								"Delete"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

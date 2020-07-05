@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="APIBaseTest" Version="0.0.6" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
+    <PackageReference Include="coverlet.collector" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Source\School.Api\School.Api.csproj" />
+    <ProjectReference Include="..\..\Source\School.Bll\School.Bll.csproj" />
+    <ProjectReference Include="..\..\Source\School.Common\School.Common.csproj" />
+    <ProjectReference Include="..\..\Source\School.Dal\School.Dal.csproj" />
+  </ItemGroup>
+
+</Project>
