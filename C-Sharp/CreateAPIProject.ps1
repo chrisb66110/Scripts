@@ -7,6 +7,9 @@ $projectName=$args[0]
 
 $controllers = $args[1]
 
+echo $controllers
+
+
 $nameSource = "Source"
 	$nameCommon = "Common"
 		$nameDto = "Dto"
@@ -36,10 +39,10 @@ $namePostman = "postman"
 $dotnetVersion = "netcoreapp3.1"
 
 $nameAPIBase = "APIBase"
-$versionAPIBase = "0.0.1.11"
+$versionAPIBase = "0.0.1.19"
 
 $nameAPIBaseTest = "APIBaseTest"
-$versionAPIBaseTest = "0.0.6"
+$versionAPIBaseTest = "0.0.6.1"
 
 $NugetProvider = "http://34.72.42.14:5000/v3/index.json"
 
