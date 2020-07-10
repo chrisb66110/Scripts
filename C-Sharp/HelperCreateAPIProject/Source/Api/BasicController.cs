@@ -41,9 +41,16 @@ namespace NameSpaceVar
             {
                 var resultBll = await _NameBllProperty.GetAllAsync();
 
-                var resultResponse = _mapper.Map<List<NameModelDtoVar>, List<NameResponseVar>>(resultBll);
-                
-                response = CreateOkResponse(resultResponse);
+                if(resultBll.Count != 0)
+                {
+                    var resultResponse = _mapper.Map<List<NameModelDtoVar>, List<NameResponseVar>>(resultBll);
+                    
+                    response = CreateOkResponse(resultResponse);
+                }
+                else
+                {
+                    response = CreateNoContentResponse();
+                }
             }
             catch (Exception ex)
             {
@@ -65,9 +72,16 @@ namespace NameSpaceVar
             {
                 var resultBll = await _NameBllProperty.GetByIdAsync(id);
 
-                var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
+                if (resultBll != null)
+                {
+                    var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
 
-                response = CreateOkResponse(resultResponse);
+                    response = CreateOkResponse(resultResponse);
+                }
+                else
+                {
+                    response = CreateNoContentResponse();
+                }
             }
             catch (Exception ex)
             {
@@ -93,9 +107,16 @@ namespace NameSpaceVar
 
                     var resultBll = await _NameBllProperty.AddAsync(ModelDtoPropertyVar);
 
-                    var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
+                    if(resultBll != null)
+                    {
+                        var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
 
-                    response = CreateOkResponse(resultResponse);
+                        response = CreateOkResponse(resultResponse);
+                    }
+                    else
+                    {
+                        response = CreateConflictResponse(BaseConstants.ERROR_MESSAGE_DUPLICATE);
+                    }
                 }
                 else
                 {
@@ -131,9 +152,16 @@ namespace NameSpaceVar
 
                     var resultBll = await _NameBllProperty.UpdateAsync(ModelDtoPropertyVar);
 
-                    var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
+                    if (resultBll != null)
+                    {
+                        var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
 
-                    response = CreateOkResponse(resultResponse);
+                        response = CreateOkResponse(resultResponse);
+                    }
+                    else
+                    {
+                        response = CreateConflictResponse(BaseConstants.ERROR_MESSAGE_ENTITY_DONT_EXIST);
+                    }
                 }
                 else
                 {
@@ -169,9 +197,16 @@ namespace NameSpaceVar
 
                     var resultBll = await _NameBllProperty.DeleteAsync(ModelDtoPropertyVar);
 
-                    var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
+                    if (resultBll != null)
+                    {
+                        var resultResponse = _mapper.Map<NameModelDtoVar, NameResponseVar>(resultBll);
 
-                    response = CreateOkResponse(resultResponse);
+                        response = CreateOkResponse(resultResponse);
+                    }
+                    else
+                    {
+                        response = CreateConflictResponse(BaseConstants.ERROR_MESSAGE_ENTITY_DONT_EXIST);
+                    }
                 }
                 else
                 {

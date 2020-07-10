@@ -101,7 +101,7 @@ namespace NameSpaceVar
             {
                 var connectionString = ctx.Resolve<NameClassSettingsVar>().ConnectionStrings.DataBaseVarConnectionString;
                 var dbOptions = new DbContextOptionsBuilder<NameClassContextVar>().UseNpgsql(connectionString).Options;
-                return new NameClassContextVar(dbOptions);
+                return dbOptions;
             }).InstancePerDependency();
 
             builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(NameClassRepositoryVar))).AsImplementedInterfaces();

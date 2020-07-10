@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using APIBase.Common.Constants;
+using Microsoft.EntityFrameworkCore;
 using ModelsDtosNSpaceVar;
 using RepositoriesNSpaceVar;
+using Npgsql;
 
 namespace NameSpaceVar
 {
@@ -30,22 +33,70 @@ namespace NameSpaceVar
 
         public async Task<NameModelDtoVar> AddAsync(NameModelDtoVar nameModelDtoParamVar)
         {
-            var response = await _nameRepostory.AddAsync(nameModelDtoParamVar);
+            NameModelDtoVar response;
 
+            try
+            {
+                response = await _nameRepostory.AddAsync(nameModelDtoParamVar);
+            }
+            catch (DbUpdateException ex) when (ex.InnerException is PostgresException inner)
+            {
+                if (inner.SqlState == BaseConstants.PG_DUPLICATE_ERROR)
+                {
+                    response = null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            
             return response;
         }
 
         public async Task<NameModelDtoVar> UpdateAsync(NameModelDtoVar nameModelDtoParamVar)
         {
-            var response = await _nameRepostory.UpdateAsync(nameModelDtoParamVar);
+            NameModelDtoVar response;
 
+            try
+            {
+                response = await _nameRepostory.UpdateAsync(nameModelDtoParamVar);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                if (ex.Message.Contains(BaseConstants.PG_ERROR_DONT_AFFECT_ENTITY))
+                {
+                    response = null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            
             return response;
         }
 
         public async Task<NameModelDtoVar> DeleteAsync(NameModelDtoVar nameModelDtoParamVar)
         {
-            var response = await _nameRepostory.DeleteAsync(nameModelDtoParamVar);
+            NameModelDtoVar response;
 
+            try
+            {
+                response = await _nameRepostory.DeleteAsync(nameModelDtoParamVar);
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                if (ex.Message.Contains(BaseConstants.PG_ERROR_DONT_AFFECT_ENTITY))
+                {
+                    response = null;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            
             return response;
         }
     }
