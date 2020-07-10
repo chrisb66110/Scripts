@@ -28,7 +28,7 @@ namespace NameSpaceVar
             {
                 var responseBll = DataTestHelper.GivenTheDefaultMoDtoVar();
                 var idRequest = responseBll.Id;
-                AndIMockDependencyMethod<IBLLVar, string, MoDtoVar>(autoMock, m => m.GetByIdAsync(It.IsAny<string>()), responseBll, param =>
+                AndIMockDependencyMethod<IBLLVar, long, MoDtoVar>(autoMock, m => m.GetByIdAsync(It.IsAny<long>()), responseBll, param =>
                 {
                     Assert.AreEqual(idRequest, param, "Param is not correct");
                 });
@@ -44,18 +44,21 @@ namespace NameSpaceVar
         }
 
         [TestMethod]
-        public async Task GetByIdAsyncInvalidDataPath()
+        public async Task GetByIdAsyncNoContentPath()
         {
-            using (var autoMock = AutoMock.GetStrict())
+            using (var autoMock = AutoMock.GetStrict(RegisterBasicDependency))
             {
+                var idRequest = 1;
+
+                AndIMockDependencyMethod<IBLLVar, long, MoDtoVar>(autoMock, m => m.GetByIdAsync(It.IsAny<long>()), null, param =>
+                {
+                    Assert.AreEqual(idRequest, param, "Param is not correct");
+                });
+
                 var sut = GivenTheSystemUnderTest(autoMock);
-                
-                var response = await sut.GetByIdAsync(null);
+                var response = await sut.GetByIdAsync(idRequest);
 
-                Assert.AreEqual((int)HttpStatusCode.BadRequest, response.StatusCode, "StatusCode is not correct");
-
-                var responseObject = (string)response.Value;
-                Assert.IsTrue(responseObject.Contains(BaseConstants.INVALID_DATA), "Value is not correct");
+                Assert.AreEqual((int)HttpStatusCode.NoContent, response.StatusCode, "StatusCode is not correct");
             }
         }
 
@@ -66,7 +69,7 @@ namespace NameSpaceVar
             {
                 var idRequest = DataTestHelper.GivenTheDefaultMoDtoVar().Id;
                 var exception = new Exception("BLL throw Exception");
-                AndIMockDependencyMethod<IBLLVar, MoDtoVar>(autoMock, m => m.GetByIdAsync(It.IsAny<string>()), exception);
+                AndIMockDependencyMethod<IBLLVar, MoDtoVar, Exception>(autoMock, m => m.GetByIdAsync(It.IsAny<long>()), exception);
 
                 AndIMockILogger(autoMock);
 

@@ -39,7 +39,7 @@ namespace NameSpaceVar
                 var model = DataTestHelper.GivenTheDefaultMoModelVar();
                 var dto = sut.Map<MoModelVar, MoDtoVar>(model);
 
-                CheckAllProperties(dto, model);
+                CheckAllProperties(model, dto);
             }
         }
     }

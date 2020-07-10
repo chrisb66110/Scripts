@@ -27,9 +27,9 @@ namespace NameSpaceVar
 
                 var updatedProperty = "Property3";
                 var updatedDto = DataTestHelper.GivenTheDefaultListMoDtoVar().First();
-                updatedDto.Property = updatedProperty;
+                updatedDto.Property0 = updatedProperty;
 
-                entities.First(e => e.Id == updatedDto.Id).Property = updatedProperty;
+                entities.First(e => e.Id == updatedDto.Id).Property0 = updatedProperty;
 
                 var sut = GivenTheSystemUnderTest(autoMock);
                 var response = await sut.UpdateAsync(updatedDto);

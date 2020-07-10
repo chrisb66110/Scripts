@@ -25,7 +25,7 @@ namespace NameSpaceVar
             {
                 var responseRepository = DataTestHelper.GivenTheDefaultMoDtoVar();
                 var idRequest = responseRepository.Id;
-                AndIMockDependencyMethod<IRepositoryVar, string, MoDtoVar>(autoMock, m => m.GetByIdAsync(It.IsAny<string>()), responseRepository, param =>
+                AndIMockDependencyMethod<IRepositoryVar, long, MoDtoVar>(autoMock, m => m.GetByIdAsync(It.IsAny<long>()), responseRepository, param =>
                 {
                     Assert.AreEqual(idRequest, param, "Param is not correct");
                 });
@@ -45,7 +45,7 @@ namespace NameSpaceVar
             {
                 var responseRepository = new Exception("Repository throw Exception");
                 var idRequest = DataTestHelper.GivenTheDefaultMoDtoVar().Id;
-                AndIMockDependencyMethod<IRepositoryVar, MoDtoVar>(autoMock, m => m.GetByIdAsync(It.IsAny<string>()), responseRepository);
+                AndIMockDependencyMethod<IRepositoryVar, MoDtoVar, Exception>(autoMock, m => m.GetByIdAsync(It.IsAny<long>()), responseRepository);
 
                 var sut = GivenTheSystemUnderTest(autoMock);
                 await sut.GetByIdAsync(idRequest);

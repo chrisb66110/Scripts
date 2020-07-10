@@ -37,10 +37,10 @@ namespace NameSpaceVar
             {
                 var sut = GivenTheSystemUnderTest(autoMock);
 
-                var request = DataTestHelper.GivenTheDefaultMoDtoVar();
-                var dto = sut.Map<MoDtoVar, MoResponse>(request);
+                var dto = DataTestHelper.GivenTheDefaultMoDtoVar();
+                var response = sut.Map<MoDtoVar, MoResponse>(dto);
 
-                CheckAllProperties(request, dto);
+                CheckAllProperties(dto, response);
             }
         }
     }

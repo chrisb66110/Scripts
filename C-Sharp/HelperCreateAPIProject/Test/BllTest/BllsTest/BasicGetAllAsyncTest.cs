@@ -41,7 +41,7 @@ namespace NameSpaceVar
             using (var autoMock = AutoMock.GetStrict())
             {
                 var responseRepository = new Exception("Repository throw Exception");
-                AndIMockDependencyMethod<IRepositoryVar, List<MoDtoVar>>(autoMock, m => m.GetAllAsync(), responseRepository);
+                AndIMockDependencyMethod<IRepositoryVar, List<MoDtoVar>, Exception>(autoMock, m => m.GetAllAsync(), responseRepository);
 
                 var sut = GivenTheSystemUnderTest(autoMock);
                 await sut.GetAllAsync();

@@ -46,6 +46,27 @@ namespace NameSpaceVar
         }
 
         [TestMethod]
+        public async Task AddAsyncDuplicatePath()
+        {
+            using (var autoMock = AutoMock.GetStrict(RegisterBasicDependency))
+            {
+                var request = DataTestHelper.GivenTheDefaultMoRequestVar();
+
+                AndIMockDependencyMethod<IBLLVar, MoDtoVar, MoDtoVar>(autoMock, m => m.AddAsync(It.IsAny<MoDtoVar>()), null, param =>
+                {
+                    CheckAllProperties(request, param);
+                });
+
+                var sut = GivenTheSystemUnderTest(autoMock);
+
+                var response = await sut.AddAsync(request);
+
+                Assert.AreEqual((int)HttpStatusCode.Conflict, response.StatusCode, "StatusCode is not correct");
+                Assert.AreEqual(BaseConstants.ERROR_MESSAGE_DUPLICATE, (string)response.Value, "Value is not correct");
+            }
+        }
+
+        [TestMethod]
         public async Task AddAsyncInvalidDataPath()
         {
             using (var autoMock = AutoMock.GetStrict())
@@ -72,7 +93,7 @@ namespace NameSpaceVar
                 var request = DataTestHelper.GivenTheDefaultMoRequestVar();
 
                 var exception = new Exception("Bll throw Exception");
-                AndIMockDependencyMethod<IBLLVar, MoDtoVar>(autoMock, m => m.AddAsync(It.IsAny<MoDtoVar>()), exception);
+                AndIMockDependencyMethod<IBLLVar, MoDtoVar, Exception>(autoMock, m => m.AddAsync(It.IsAny<MoDtoVar>()), exception);
 
                 AndIMockILogger(autoMock);
 

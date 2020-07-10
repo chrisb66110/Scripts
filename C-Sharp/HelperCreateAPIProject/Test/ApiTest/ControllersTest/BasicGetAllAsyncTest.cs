@@ -40,12 +40,27 @@ namespace NameSpaceVar
         }
 
         [TestMethod]
+        public async Task GetAllAsyncNoContentPath()
+        {
+            using (var autoMock = AutoMock.GetStrict(RegisterBasicDependency))
+            {
+                var responseBll = new List<MoDtoVar>();
+                AndIMockDependencyMethod<IBLLVar, List<MoDtoVar>>(autoMock, m => m.GetAllAsync(), responseBll);
+
+                var sut = GivenTheSystemUnderTest(autoMock);
+                var response = await sut.GetAllAsync();
+
+                Assert.AreEqual((int)HttpStatusCode.NoContent, response.StatusCode,"StatusCode is not correct");
+            }
+        }
+
+        [TestMethod]
         public async Task GetAllAsyncErrorPath()
         {
             using (var autoMock = AutoMock.GetStrict())
             {
                 var exception = new Exception("BLL throw Exception");
-                AndIMockDependencyMethod<IBLLVar, List<MoDtoVar>>(autoMock, m => m.GetAllAsync(), exception);
+                AndIMockDependencyMethod<IBLLVar, List<MoDtoVar>, Exception>(autoMock, m => m.GetAllAsync(), exception);
 
                 AndIMockILogger(autoMock);
 

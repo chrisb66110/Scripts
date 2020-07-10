@@ -24,7 +24,7 @@ namespace NameSpaceVar
                 var entities = DataTestHelper.GivenTheDefaultListMoModelVar();
                 AndIAddRangeTableData(entities);
 
-                var newId = "Id3";
+                var newId = 3;
                 var newDto = DataTestHelper.GivenTheDefaultMoDtoVar();
                 newDto.Id = newId;
 
