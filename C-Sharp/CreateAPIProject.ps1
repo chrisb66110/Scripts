@@ -5,7 +5,7 @@
 
 $projectName=$args[0]
 
-$controllers = $args[1]
+$controllers = $args[1] | Sort-Object
 
 echo $controllers
 
@@ -34,15 +34,17 @@ $nameBaseConstants = "BaseConstants"
 $nameBaseController = "BaseController"
 $nameBaseRepository = "BaseRepository"
 
+$nameLog = "Log"
+
 $namePostman = "postman"
 
 $dotnetVersion = "netcoreapp3.1"
 
 $nameAPIBase = "APIBase"
-$versionAPIBase = "0.0.1.19"
+$versionAPIBase = "0.0.1.30"
 
 $nameAPIBaseTest = "APIBaseTest"
-$versionAPIBaseTest = "0.0.6.1"
+$versionAPIBaseTest = "0.0.6.9"
 
 $NugetProvider = "http://34.72.42.14:5000/v3/index.json"
 
@@ -139,6 +141,16 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		return $result
 	}
 
+	function ModelDtoLogContent([string] $nameSpace, 
+							    [string] $nameClass, 
+							    [string] $NameClassDtoToLogVar) {
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Common\BasicModelLogDto.cs" -Raw
+		$result = $result -replace "NameSpaceVar", $nameSpace
+		$result = $result -replace "NameClassVar", $nameClass
+		$result = $result -replace "NameClassDtoToLogVar", $NameClassDtoToLogVar
+		return $result
+	}
+
 	function ModelContent([string] $nameSpace, 
 						  [string] $nameClass) {
 		$result = Get-Content $pathHelperCreateAPIProject"\Source\Dal\BasicModel.cs" -Raw
@@ -147,14 +159,28 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		return $result
 	}
 
+	function ModelLogContent([string] $nameSpace, 
+						     [string] $nameClass, 
+						     [string] $NameClassToLogVar) {
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Dal\BasicModelLog.cs" -Raw
+		$result = $result -replace "NameSpaceVar", $nameSpace
+		$result = $result -replace "NameClassVar", $nameClass
+		$result = $result -replace "NameClassToLogVar", $NameClassToLogVar
+		return $result
+	}
+
 	function TablesContext([string[]] $OtherTables){
-		$BaseTable = "        public DbSet<NameModelVar> NameTableVar { get; set; }"
+		$BaseTable = "        public DbSet<NameModelVar> NameTableVar { get; set; }`n        public DbSet<NameModelLogVar> NameTableLogVar { get; set; }"
 		$result = ""
 		For ($i=0; $i -lt $OtherTables.Length; $i++) {
 			$result = $result+$BaseTable
 			$result = $result -replace "NameModelVar", $OtherTables[$i]
 			$nameTable = $OtherTables[$i]+"s"
 			$result = $result -replace "NameTableVar", $nameTable
+			$modelLogTemp = $OtherTables[$i]+"Log"
+			$result = $result -replace "NameModelLogVar", $modelLogTemp
+			$nameTableLog = $OtherTables[$i]+"Logs"
+			$result = $result -replace "NameTableLogVar", $nameTableLog
 			$result = $result+"`n"
 		}
 		return $result
@@ -180,7 +206,9 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 							   [string] $NameInterfaceVar,
 							   [string] $NameContextVar,
 							   [string] $NameModelDtoVar,
-							   [string] $NameModelVar) {
+							   [string] $NameModelVar,
+							   [string] $NameModelLogVar,
+							   [string] $NameModelLogDtoVar) {
 		$result = Get-Content $pathHelperCreateAPIProject"\Source\Dal\BasicRepository.cs" -Raw
 		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
 		$result = $result -replace "NSpaceContextsVar", $NSpaceContextsVar
@@ -191,6 +219,8 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		$result = $result -replace "NameContextVar", $NameContextVar
 		$result = $result -replace "NameModelDtoVar", $NameModelDtoVar
 		$result = $result -replace "NameModelVar", $NameModelVar
+		$result = $result -replace "NameModelLogVar", $NameModelLogVar
+		$result = $result -replace "NameModelLogDtoVar", $NameModelLogDtoVar
 		$nModelVarVar = $NameModelVar.subString(0,1).ToLower()+$NameModelVar.subString(1,$NameModelVar.Length-1)
 		$result = $result -replace "nModelVarVar", $nModelVarVar
 		$nameModelDtoParamVar = $NameModelDtoVar.subString(0,1).ToLower()+$NameModelDtoVar.subString(1,$NameModelDtoVar.Length-1)
@@ -201,12 +231,14 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 	function IRepositoryContent([string] $modelsDtosNSpaceVar, 
 								[string] $nameSpace, 
 								[string] $nameInterfaceVar, 
-								[string] $nameModelDtoVar) {
+								[string] $nameModelDtoVar, 
+								[string] $NameModelLogDtoVar) {
 		$result = Get-Content $pathHelperCreateAPIProject"\Source\Dal\IBasicRepository.cs" -Raw
 		$result = $result -replace "ModelsDtosNSpaceVar", $modelsDtosNSpaceVar
 		$result = $result -replace "NameSpaceVar", $nameSpace
 		$result = $result -replace "NameInterfaceVar", $nameInterfaceVar
 		$result = $result -replace "NameModelDtoVar", $nameModelDtoVar
+		$result = $result -replace "NameModelLogDtoVar", $NameModelLogDtoVar
 		$param = $nameModelDtoVar.subString(0,1).ToLower()+$nameModelDtoVar.subString(1,$nameModelDtoVar.Length-1)
 		$result = $result -replace "nameModelDtoParamVar", $param
 		return $result
@@ -218,7 +250,8 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 						[string] $nameClass, 
 						[string] $nameInterfaceVar, 
 						[string] $interfaceRepository, 
-						[string] $nameModelDtoVar) {
+						[string] $nameModelDtoVar,
+						[string] $NameModelLogDtoVar) {
 		$result = Get-Content $pathHelperCreateAPIProject"\Source\Bll\BasicBLL.cs" -Raw
 		$result = $result -replace "ModelsDtosNSpaceVar", $modelsDtosNSpaceVar
 		$result = $result -replace "RepositoriesNSpaceVar", $repositoriesNSpaceVar
@@ -229,6 +262,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		$namePropertyRepo = $interfaceRepository.subString(1,1).ToLower()+$interfaceRepository.subString(2,$interfaceRepository.Length-2)
 		$result = $result -replace "nameRepostory", $namePropertyRepo
 		$result = $result -replace "NameModelDtoVar", $nameModelDtoVar
+		$result = $result -replace "NameModelLogDtoVar", $NameModelLogDtoVar
 		$param = $nameModelDtoVar.subString(0,1).ToLower()+$nameModelDtoVar.subString(1,$nameModelDtoVar.Length-1)
 		$result = $result -replace "nameModelDtoParamVar", $param
 		return $result
@@ -237,12 +271,14 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 	function IBLLContent([string] $modelsDtosNSpaceVar, 
 						 [string] $nameSpaceVar, 
 						 [string] $nameClassVar, 
-						 [string] $nameModelDtoVar) {
+						 [string] $nameModelDtoVar, 
+						 [string] $NameModelLogDtoVar) {
 		$result = Get-Content $pathHelperCreateAPIProject"\Source\Bll\IBasicBLL.cs" -Raw
 		$result = $result -replace "ModelsDtosNSpaceVar", $modelsDtosNSpaceVar
 		$result = $result -replace "NameSpaceVar", $nameSpaceVar
 		$result = $result -replace "NameClassVar", $nameClassVar
 		$result = $result -replace "NameModelDtoVar", $nameModelDtoVar
+		$result = $result -replace "NameModelLogDtoVar", $NameModelLogDtoVar
 		$param = $nameModelDtoVar.subString(0,1).ToLower()+$nameModelDtoVar.subString(1,$nameModelDtoVar.Length-1)
 		$result = $result -replace "nameModelDtoParamVar", $param
 		return $result
@@ -272,7 +308,9 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 							   [string] $InterfaceBLLVar,
 							   [string] $NameModelDtoVar,
 							   [string] $NameResponseVar,
-							   [string] $NameRequestVar){
+							   [string] $NameRequestVar,
+							   [string] $NameModelLogDtoVar,
+							   [string] $NameResponseLogVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicController.cs" -Raw
 		$result = $result -replace "NSpaceRequestsVar", $NSpaceRequestsVar
 		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
@@ -285,6 +323,8 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		$result = $result -replace "NameModelDtoVar", $NameModelDtoVar
 		$result = $result -replace "NameResponseVar", $NameResponseVar
 		$result = $result -replace "NameRequestVar", $NameRequestVar
+		$result = $result -replace "NameModelLogDtoVar", $NameModelLogDtoVar
+		$result = $result -replace "NameResponseLogVar", $NameResponseLogVar
 		$ModelDtoPropertyVar = $NameModelDtoVar.subString(0,1).ToLower()+$nameModelDtoVar.subString(1,$nameModelDtoVar.Length-1)
 		$result = $result -replace "ModelDtoPropertyVar", $ModelDtoPropertyVar
 		$NameBllProperty = $InterfaceBLLVar.subString(1,1).ToLower()+$InterfaceBLLVar.subString(2,$InterfaceBLLVar.Length-2)
@@ -331,7 +371,9 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 							   [string] $NameSpaceVar, 
 							   [string] $NameClassVar, 
 							   [string] $NameModelVar, 
-							   [string] $NameModelDtoVar){
+							   [string] $NameModelDtoVar,
+							   [string] $NameModelLogVar,
+							   [string] $NameModelDtoLogVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\Source\Dal\BasicProfile.cs" -Raw
 		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
 		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
@@ -339,6 +381,8 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		$result = $result -replace "NameClassVar", $NameClassVar
 		$result = $result -replace "NameModelVar", $NameModelVar
 		$result = $result -replace "NameModelDtoVar", $NameModelDtoVar
+		$result = $result -replace "NameModelLogVar", $NameModelLogVar
+		$result = $result -replace "NameModelDtoLogVar", $NameModelDtoLogVar
 		return $result
 	}
 
@@ -349,7 +393,9 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 							   [string] $NameClassVar, 
 							   [string] $NameRequestVar, 
 							   [string] $NameModelDtoVar, 
-							   [string] $NameResponseVar){
+							   [string] $NameResponseVar, 
+							   [string] $NameModelLogDtoVar, 
+							   [string] $NameResponseLogVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicProfile.cs" -Raw
 		$result = $result -replace "NSpaceRequestsVar", $NSpaceRequestsVar
 		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
@@ -359,6 +405,8 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		$result = $result -replace "NameRequestVar", $NameRequestVar
 		$result = $result -replace "NameModelDtoVar", $NameModelDtoVar
 		$result = $result -replace "NameResponseVar", $NameResponseVar
+		$result = $result -replace "NameModelLogDtoVar", $NameModelLogDtoVar
+		$result = $result -replace "NameResponseLogVar", $NameResponseLogVar
 		return $result
 	}
 
@@ -375,6 +423,16 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicResponse.cs" -Raw
 		$result = $result -replace "NameSpaceVar", $NameSpaceVar
 		$result = $result -replace "NameClassVar", $NameClassVar
+		return $result
+	}
+
+	function ResponseLogContent ([string] $NameSpaceVar, 
+							     [string] $NameClassVar, 
+							     [string] $NameClassResponseToLogVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Source\Api\BasicResponseLog.cs" -Raw
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "NameClassVar", $NameClassVar
+		$result = $result -replace "NameClassResponseToLogVar", $NameClassResponseToLogVar
 		return $result
 	}
 
@@ -454,6 +512,30 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		return $result
 	}
 
+	function ControllerGetLogsAsyncTestContent ([string] $NSpaceControllersVar, 
+											    [string] $NSpaceResponsesVar, 
+											    [string] $NSpaceBllsVar, 
+											    [string] $NSpaceModelsDtosVar, 
+											    [string] $NSpaceTestHelperVar, 
+											    [string] $NameSpaceVar, 
+											    [string] $ClassToTestVar,
+											    [string] $MoLogDtoVar, 
+											    [string] $IBLLVar, 
+											    [string] $MoResponseLog){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\ApiTest\ControllersTest\BasicGetLogsAsyncTest.cs" -Raw
+		$result = $result -replace "NSpaceControllersVar", $NSpaceControllersVar
+		$result = $result -replace "NSpaceResponsesVar", $NSpaceResponsesVar
+		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoLogDtoVar", $MoLogDtoVar
+		$result = $result -replace "IBLLVar", $IBLLVar
+		$result = $result -replace "MoResponseLog", $MoResponseLog
+		return $result
+	}
+
 	function ControllerGetByIdAsyncTestContent ([string] $NSpaceControllersVar, 
 											   [string] $NSpaceResponsesVar, 
 											   [string] $NSpaceBllsVar, 
@@ -513,7 +595,9 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 					  				       [string] $ClassToTestVar, 
 					  				       [string] $MoRequestVar, 
 					  				       [string] $MoDtoVar, 
-					  				       [string] $MoResponse){
+					  				       [string] $MoResponse, 
+					  				       [string] $NameModelLogDtoVar, 
+					  				       [string] $NameResponseLogVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\Test\ApiTest\MappingsTest\BasicProfileTest.cs" -Raw
 		$result = $result -replace "NSpaceMappingsVar", $NSpaceMappingsVar
 		$result = $result -replace "NSpaceRequestsVar", $NSpaceRequestsVar
@@ -525,17 +609,23 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		$result = $result -replace "MoRequestVar", $MoRequestVar
 		$result = $result -replace "MoDtoVar", $MoDtoVar
 		$result = $result -replace "MoResponse", $MoResponse
+		$result = $result -replace "NameModelLogDtoVar", $NameModelLogDtoVar
+		$result = $result -replace "NameResponseLogVar", $NameResponseLogVar
 		return $result
 	}
 
 	function HelpersPerPathContent ([string] $MoDtoVar, 
 					  			    [string] $MoResponseVar, 
 					  			    [string] $MoRequestVar,
-								    [string] $MoModelVar){
+								    [string] $MoModelVar,
+								    [string] $MoModelLogVar,
+								    [string] $MoModelLogDtoVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\Test\TestHelpers\BasicFunctionsTestHelpers.cs" -Raw
 		$result = $result -replace "MoDtoVar", $MoDtoVar
 		$result = $result -replace "MoResponseVar", $MoResponseVar
 		$result = $result -replace "MoRequestVar", $MoRequestVar
+		$result = $result -replace "MoModelLogVar", $MoModelLogVar
+		$result = $result -replace "MoModelLogDtoVar", $MoModelLogDtoVar
 		$result = $result -replace "MoModelVar", $MoModelVar
 		#$result = $result -replace "`n", "`r`n"
 		return $result
@@ -560,7 +650,9 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$MoResponseVar = $PathName[$i] + $nameResponse
 			$MoRequestVar = $PathName[$i] + $nameRequest
 			$MoModelVar = $PathName[$i]
-			$functionsOnePath = HelpersPerPathContent $MoDtoVar $MoResponseVar $MoRequestVar $MoModelVar
+			$MoModelLogVar = $PathName[$i] + $nameLog
+			$MoModelLogDtoVar = $PathName[$i] + $nameLog + $nameDto
+			$functionsOnePath = HelpersPerPathContent $MoDtoVar $MoResponseVar $MoRequestVar $MoModelVar $MoModelLogVar $MoModelLogDtoVar
 			$FunctionsContent = $FunctionsContent + $functionsOnePath
 
 			$NSpaceModelsDtosEachVar = $NSpaceModelsDtosEachVar + "using " + $NSpaceModelsDtosVar + "." + $PathName[$i] + $folderDtos + ";`n"
@@ -624,6 +716,26 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 								   [string] $MoDtoVar, 
 								   [string] $IRepositoryVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\Test\BllTest\BllsTest\BasicGetAllAsyncTest.cs" -Raw
+		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
+		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
+		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "MoDtoVar", $MoDtoVar
+		$result = $result -replace "IRepositoryVar", $IRepositoryVar
+		return $result
+	}
+
+	function BllGetLogsTestContent ([string] $NSpaceBllsVar, 
+								    [string] $NSpaceModelsDtosVar, 
+								    [string] $NSpaceRepositoriesVar,
+								    [string] $NSpaceTestHelperVar, 
+								    [string] $NameSpaceVar, 
+								    [string] $ClassToTestVar,
+								    [string] $MoDtoVar, 
+								    [string] $IRepositoryVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\BllTest\BllsTest\BasicGetLogsAsyncTest.cs" -Raw
 		$result = $result -replace "NSpaceBllsVar", $NSpaceBllsVar
 		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
 		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
@@ -739,6 +851,30 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		return $result
 	}
 
+	function RepositoryGetLogsAsyncTestContent ([string] $NSpaceModelsDtoVar, 
+									 		    [string] $NSpaceContextsVar, 
+									 		    [string] $NSpaceModelsVar,
+									 		    [string] $NSpaceRepositoriesVar, 
+									 		    [string] $NSpaceTestHelperVar, 
+									 		    [string] $NameSpaceVar,
+									 		    [string] $ClassToTestVar,
+									 		    [string] $ContextToUse,
+									 		    [string] $MoModelLogVar,
+									 		    [string] $MoModelToLogDtoVar){
+		$result = Get-Content $pathHelperCreateAPIProject"\Test\DalTest\RepositoriesTest\BasicGetLogsAsyncTest.cs" -Raw
+		$result = $result -replace "NSpaceModelsDtoVar", $NSpaceModelsDtoVar
+		$result = $result -replace "NSpaceContextsVar", $NSpaceContextsVar
+		$result = $result -replace "NSpaceModelsVar", $NSpaceModelsVar
+		$result = $result -replace "NSpaceRepositoriesVar", $NSpaceRepositoriesVar
+		$result = $result -replace "NSpaceTestHelperVar", $NSpaceTestHelperVar
+		$result = $result -replace "NameSpaceVar", $NameSpaceVar
+		$result = $result -replace "ClassToTestVar", $ClassToTestVar
+		$result = $result -replace "ContextToUse", $ContextToUse
+		$result = $result -replace "MoModelLogVar", $MoModelLogVar
+		$result = $result -replace "MoModelToLogDtoVar", $MoModelToLogDtoVar
+		return $result
+	}
+
 	function RepositoryGetByIdAsyncTestContent ([string] $NSpaceContextsVar, 
 									 			[string] $NSpaceModelsVar, 
 									 			[string] $NSpaceRepositoriesVar,
@@ -790,7 +926,9 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 					  				       [string] $NameSpaceVar, 
 					  				       [string] $ClassToTestVar, 
 					  				       [string] $MoDtoVar, 
-					  				       [string] $MoModelVar){
+					  				       [string] $MoModelVar, 
+					  				       [string] $MoLogModelVar, 
+					  				       [string] $MoLogDtoVar){
 		$result = Get-Content $pathHelperCreateAPIProject"\Test\DalTest\MappingsTest\BasicProfileTest.cs" -Raw
 		$result = $result -replace "NSpaceModelsDtosVar", $NSpaceModelsDtosVar
 		$result = $result -replace "NSpaceMappingsVar", $NSpaceMappingsVar
@@ -800,32 +938,50 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 		$result = $result -replace "ClassToTestVar", $ClassToTestVar
 		$result = $result -replace "MoDtoVar", $MoDtoVar
 		$result = $result -replace "MoModelVar", $MoModelVar
+		$result = $result -replace "MoLogModelVar", $MoLogModelVar
+		$result = $result -replace "MoLogDtoVar", $MoLogDtoVar
 		return $result
 	}
 
 	#This function is expected to run in the same folder where .sln is
 	function ControllerBllDalAndTestCreatePath([string] $ModelName){
 		Write-Host "`n`n"
-		#DTO
+		#DTO and DTOLog
 			mkdir .\$nameSource\$common\$folderDtos\$ModelName$folderDtos
 			$namespaceTempModelsDto = $namespaceModelsDto + "." + $ModelName + $folderDtos
+			
 			$nameclassModelsDto = $ModelName+$nameDto
 			Write-Host "Creating "$nameclassModelsDto -ForegroundColor Magenta
 			$contentModelsDto = ModelDtoContent $namespaceTempModelsDto $nameclassModelsDto
 			$nameFileModelsDto = $nameclassModelsDto+".cs"
 			Out-File -InputObject $contentModelsDto -Encoding ascii -FilePath .\$nameSource\$common\$folderDtos\$ModelName$folderDtos\$nameFileModelsDto
-		#Model
+
+			$nameclassModelsDtoLog = $ModelName + $nameLog + $nameDto
+			Write-Host "Creating "$nameclassModelsDtoLog -ForegroundColor Magenta
+			$contentModelsDtoLog = ModelDtoLogContent $namespaceTempModelsDto $nameclassModelsDtoLog $nameclassModelsDto
+			$nameFileModelsDtoLog = $nameclassModelsDtoLog+".cs"
+			Out-File -InputObject $contentModelsDtoLog -Encoding ascii -FilePath .\$nameSource\$common\$folderDtos\$ModelName$folderDtos\$nameFileModelsDtoLog
+		#Model and ModelLog
+			#mkdir .\$nameSource\$dal\$folderModels\$ModelName$folderModels
+			$nameSpaceModelSpecific = $namespaceModels #+ "." + $ModelName + $folderModels
+
 			$nameclassModels = $ModelName
 			Write-Host "Creating "$nameclassModels -ForegroundColor Magenta
-			$contentModels = ModelContent $namespaceModels $nameclassModels
+			$contentModels = ModelContent $nameSpaceModelSpecific $nameclassModels
 			$nameFileModels = $nameclassModels+".cs"
 			Out-File -InputObject $contentModels -Encoding ascii -FilePath .\$nameSource\$dal\$folderModels\$nameFileModels
+
+			$nameclassModelsLog = $ModelName + $nameLog
+			Write-Host "Creating "$nameclassModelsLog -ForegroundColor Magenta
+			$contentModelsLog = ModelLogContent $nameSpaceModelSpecific $nameclassModelsLog $nameclassModels
+			$nameFileModelsLog = $nameclassModelsLog+".cs"
+			Out-File -InputObject $contentModelsLog -Encoding ascii -FilePath .\$nameSource\$dal\$folderModels\$nameFileModelsLog
 		#ProfileDal
 			#mkdir .\$nameSource\$dal\$folderMappingsDal\$ModelName
 			$namespaceTempMappingsDal = $namespaceMappingsDal# + "." + $ModelName
 			$nameclassProfileDal = $ModelName+$nameProfile
 			Write-Host "Creating "$nameclassProfileDal -ForegroundColor Magenta
-			$contentProfileDal = ProfileDalContent $namespaceTempModelsDto $namespaceModels $namespaceTempMappingsDal $nameclassProfileDal $nameclassModels $nameclassModelsDto
+			$contentProfileDal = ProfileDalContent $namespaceTempModelsDto $nameSpaceModelSpecific $namespaceTempMappingsDal $nameclassProfileDal $nameclassModels $nameclassModelsDto $nameclassModelsLog $nameclassModelsDtoLog
 			$nameFileProfileDal = $nameclassProfileDal+".cs"
 			Out-File -InputObject $contentProfileDal -Encoding ascii -FilePath .\$nameSource\$dal\$folderMappingsDal\$nameFileProfileDal
 		#Repository
@@ -834,10 +990,10 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$nameclassRepository = $ModelName+$nameRepository
 			Write-Host "Creating "$nameclassRepository -ForegroundColor Magenta
 			$nameinterfaceRepositories = "I"+$nameclassRepository
-			$contentRepository = RepositoryContent $namespaceTempModelsDto $namespaceContexts $namespaceModels $namespaceTempRepositories $nameclassRepository $nameinterfaceRepositories $nameclassContexts $nameclassModelsDto $nameclassModels
+			$contentRepository = RepositoryContent $namespaceTempModelsDto $namespaceContexts $nameSpaceModelSpecific $namespaceTempRepositories $nameclassRepository $nameinterfaceRepositories $nameclassContexts $nameclassModelsDto $nameclassModels $nameclassModelsLog $nameclassModelsDtoLog
 			$nameFileClassRepositories = $nameclassRepository+".cs"
 			Out-File -InputObject $contentRepository -Encoding ascii -FilePath .\$nameSource\$dal\$folderRepositories\$ModelName$nameRepository\$nameFileClassRepositories
-			$contentIRepository = IRepositoryContent $namespaceTempModelsDto $namespaceTempRepositories $nameinterfaceRepositories $nameclassModelsDto
+			$contentIRepository = IRepositoryContent $namespaceTempModelsDto $namespaceTempRepositories $nameinterfaceRepositories $nameclassModelsDto $nameclassModelsDtoLog
 			$nameFileInterfaceRepositories = $nameinterfaceRepositories+".cs"
 			Out-File -InputObject $contentIRepository -Encoding ascii -FilePath .\$nameSource\$dal\$folderRepositories\$ModelName$nameRepository\$nameFileInterfaceRepositories
 		#BLL
@@ -847,10 +1003,10 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			Write-Host "Creating "$nameclassBLL -ForegroundColor Magenta
 			$nameinterfaceBLL = "I"+$ModelName+$nameBll
 			$nameRepositoryProperty = $nameclassRepository.subString(0,1)+$nameclassRepository.subString(1,1).ToLower()+$nameclassRepository.subString(2,$nameclassRepository.Length-2)
-			$contentBLL = BLLContent $namespaceTempModelsDto $namespaceTempRepositories $namespaceTempBLL $nameclassBLL $nameinterfaceBLL $nameinterfaceRepositories $nameclassModelsDto
+			$contentBLL = BLLContent $namespaceTempModelsDto $namespaceTempRepositories $namespaceTempBLL $nameclassBLL $nameinterfaceBLL $nameinterfaceRepositories $nameclassModelsDto $nameclassModelsDtoLog
 			$nameFileClassBLL = $nameclassBLL+".cs"
 			Out-File -InputObject $contentBLL -Encoding ascii -FilePath .\$nameSource\$bll\$folderBLLs\$ModelName$nameBll\$nameFileClassBLL
-			$contentIBLL = IBLLContent $namespaceTempModelsDto $namespaceTempBLL $nameinterfaceBLL $nameclassModelsDto
+			$contentIBLL = IBLLContent $namespaceTempModelsDto $namespaceTempBLL $nameinterfaceBLL $nameclassModelsDto $nameclassModelsDtoLog
 			$nameFileInterfaceBLL = $nameinterfaceBLL+".cs"
 			Out-File -InputObject $contentIBLL -Encoding ascii -FilePath .\$nameSource\$bll\$folderBLLs\$ModelName$nameBll\$nameFileInterfaceBLL
 		#Request
@@ -861,17 +1017,24 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$contentRequest = RequestContent $namespaceTempRequestsApi $nameclassRequest
 			$nameFileRequest = $nameclassRequest+".cs"
 			Out-File -InputObject $contentRequest -Encoding ascii -FilePath .\$nameSource\$api\$folderRequestsApi\$nameFileRequest
-		#Response
-			#mkdir .\$nameSource\$api\$folderResponseApi\$ModelName
-			$namespaceTempResponseApi = $namespaceResponseApi# + "." + $ModelName
+		#Response and ResponseLog
+			#mkdir .\$nameSource\$api\$folderResponseApi\$ModelName$folderResponseApi
+			$namespaceTempResponseApi = $namespaceResponseApi #+ "." + $ModelName + $folderResponseApi
+			
 			$nameclassResponse = $ModelName+$nameResponse
 			Write-Host "Creating "$nameclassResponse -ForegroundColor Magenta
 			$contentResponse = ResponseContent $namespaceTempResponseApi $nameclassResponse
 			$nameFileResponse = $nameclassResponse+".cs"
 			Out-File -InputObject $contentResponse -Encoding ascii -FilePath .\$nameSource\$api\$folderResponseApi\$nameFileResponse
+
+			$nameclassResponseLog = $ModelName+$nameLog+$nameResponse
+			Write-Host "Creating "$nameclassResponseLog -ForegroundColor Magenta
+			$contentResponseLog = ResponseLogContent $namespaceTempResponseApi $nameclassResponseLog $nameclassResponse
+			$nameFileResponseLog = $nameclassResponseLog+".cs"
+			Out-File -InputObject $contentResponseLog -Encoding ascii -FilePath .\$nameSource\$api\$folderResponseApi\$nameFileResponseLog
 		#Controller
 			$nameclassController = $ModelName+$nameController
-			$contentController = ControllerContent $namespaceTempRequestsApi $namespaceTempResponseApi $namespaceTempBLL $namespaceConstants $namespaceTempModelsDto $namespaceController $nameclassController $nameinterfaceBLL $nameclassModelsDto $nameclassResponse $nameclassRequest
+			$contentController = ControllerContent $namespaceTempRequestsApi $namespaceTempResponseApi $namespaceTempBLL $namespaceConstants $namespaceTempModelsDto $namespaceController $nameclassController $nameinterfaceBLL $nameclassModelsDto $nameclassResponse $nameclassRequest $nameclassModelsDtoLog $nameclassResponseLog
 			$nameFileClassController = $nameclassController+".cs"
 			Out-File -InputObject $contentController -Encoding ascii -FilePath .\$nameSource\$api\$folderController\$nameFileClassController
 		#ProfileApi
@@ -879,7 +1042,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$namespaceTempMappingsApi = $namespaceMappingsApi# + "." + $ModelName
 			$nameclassProfileApi = $ModelName+$nameProfile
 			Write-Host "Creating "$nameclassProfileApi -ForegroundColor Magenta
-			$contentProfileApi = ProfileApiContent $namespaceTempRequestsApi $namespaceTempResponseApi $namespaceTempModelsDto $namespaceTempMappingsApi $nameclassProfileApi $nameclassRequest $nameclassModelsDto $nameclassResponse
+			$contentProfileApi = ProfileApiContent $namespaceTempRequestsApi $namespaceTempResponseApi $namespaceTempModelsDto $namespaceTempMappingsApi $nameclassProfileApi $nameclassRequest $nameclassModelsDto $nameclassResponse  $nameclassModelsDtoLog $nameclassResponseLog
 			$nameFileProfileApi = $nameclassProfileApi+".cs"
 			Out-File -InputObject $contentProfileApi -Encoding ascii -FilePath .\$nameSource\$api\$folderMappingsApi\$nameFileProfileApi
 		
@@ -893,7 +1056,7 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$nameFileAddAsyncTest = $nameclassAddAsyncTest+".cs"
 			Out-File -InputObject $contentAddAsyncTest -Encoding ascii -FilePath .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileAddAsyncTest
 			
-			$nameclassDeleteAsync = "DeleteAsync"
+			$nameclassDeleteAsync = "DeleteAsyncTest"
 			Write-Host "Creating "$nameclassDeleteAsync -ForegroundColor Magenta
 			$namespaceControllerTestDeleteAsync = $namespaceControllerTest + "." + $folderOneControllerTest
 			$contentDeleteAsync = ControllerDeleteAsyncTestContent $namespaceController $namespaceTempResponseApi $namespaceTempBLL $namespaceTempModelsDto $namespaceTestHelper $namespaceControllerTestDeleteAsync $nameclassController $nameclassRequest $nameclassModelsDto $nameinterfaceBLL $nameclassResponse
@@ -921,10 +1084,17 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$nameFileUpdateAsyncTest = $nameclassUpdateAsyncTest+".cs"
 			Out-File -InputObject $contentUpdateAsyncTest -Encoding ascii -FilePath .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileUpdateAsyncTest
 
+			$nameclassGetLogsAsyncTest = "GetLogsAsyncTest"
+			Write-Host "Creating "$nameclassGetLogsAsyncTest -ForegroundColor Magenta
+			$namespaceControllerTestGetLogsAsync = $namespaceControllerTest + "." + $folderOneControllerTest
+			$contentGetLogsAsyncTest = ControllerGetLogsAsyncTestContent $namespaceController $namespaceTempResponseApi $namespaceTempBLL $namespaceTempModelsDto $namespaceTestHelper $namespaceControllerTestGetLogsAsync $nameclassController $nameclassModelsDtoLog $nameinterfaceBLL $nameclassResponseLog
+			$nameFileGetLogsAsyncTest = $nameclassGetLogsAsyncTest+".cs"
+			Out-File -InputObject $contentGetLogsAsyncTest -Encoding ascii -FilePath .\$nameTest\$apiTest\$folderControllersTest\$folderOneControllerTest\$nameFileGetLogsAsyncTest
+			
 		#ProfileApiTest
-			$nameclassProfileApiTest = $nameclassProfileApi + $Test
+			$nameclassProfileApiTest = $nameclassProfileApi + $nameTest
 			Write-Host "Creating "$nameclassProfileApiTest -ForegroundColor Magenta
-			$contentProfileApiTest = MappingProfileApiTestContent $namespaceTempMappingsApi $namespaceTempRequestsApi $namespaceTempResponseApi $namespaceTempModelsDto $namespaceTestHelper $namespaceMappingsTestApi $nameclassProfileApi $nameclassRequest $nameclassModelsDto $nameclassResponse
+			$contentProfileApiTest = MappingProfileApiTestContent $namespaceTempMappingsApi $namespaceTempRequestsApi $namespaceTempResponseApi $namespaceTempModelsDto $namespaceTestHelper $namespaceMappingsTestApi $nameclassProfileApi $nameclassRequest $nameclassModelsDto $nameclassResponse $nameclassModelsDtoLog $nameclassResponseLog
 			$nameFileProfileApiTest = $nameclassProfileApiTest+".cs"
 			Out-File -InputObject $contentProfileApiTest -Encoding ascii -FilePath .\$nameTest\$apiTest\$folderMappingsTestApi\$nameFileProfileApiTest
 
@@ -966,48 +1136,62 @@ $folderPostmanFiles = $projectName + "." + $namePostman
 			$nameFileUpdateAsyncTest = $nameclassUpdateAsyncTest+".cs"
 			Out-File -InputObject $contentUpdateAsyncTest -Encoding ascii -FilePath .\$nameTest\$bllTest\$folderBllsTest\$folderOneBllTest\$nameFileUpdateAsyncTest
 		
+			$nameclassGetLogsAsyncTest = "GetLogsAsyncTest"
+			Write-Host "Creating "$nameclassGetLogsAsyncTest -ForegroundColor Magenta
+			$namespaceBllTestGetLogsAsync = $namespaceBLLTest + "." + $folderOneBllTest
+			$contentGetLogsAsyncTest = BllGetLogsTestContent $namespaceTempBLL $namespaceTempModelsDto $namespaceTempRepositories $namespaceTestHelper $namespaceBllTestGetLogsAsync $nameclassBLL $nameclassModelsDtoLog $nameinterfaceRepositories
+			$nameFileGetLogsAsyncTest = $nameclassGetLogsAsyncTest+".cs"
+			Out-File -InputObject $contentGetLogsAsyncTest -Encoding ascii -FilePath .\$nameTest\$bllTest\$folderBllsTest\$folderOneBllTest\$nameFileGetLogsAsyncTest
+			
 		#RepositoryTest
 			$folderOneRepositoryTest = $nameclassRepository + $nameTest
 
 			$nameclassAddAsyncTest = "AddAsyncTest"
 			Write-Host "Creating "$nameclassAddAsyncTest -ForegroundColor Magenta
 			$namespaceRepositoryTestAddAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
-			$contentAddAsyncTest = RepositoryAddAsyncTestContent $namespaceContexts $namespaceModels $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestAddAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
+			$contentAddAsyncTest = RepositoryAddAsyncTestContent $namespaceContexts $nameSpaceModelSpecific $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestAddAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
 			$nameFileAddAsyncTest = $nameclassAddAsyncTest+".cs"
 			Out-File -InputObject $contentAddAsyncTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileAddAsyncTest
 
 			$nameclassDeleteAsyncTest = "DeleteAsyncTest"
 			Write-Host "Creating "$nameclassDeleteAsyncTest -ForegroundColor Magenta
 			$namespaceRepositoryTestDeleteAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
-			$contentDeleteAsyncTest = RepositoryDeleteAsyncTestContent $namespaceContexts $namespaceModels $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestDeleteAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
+			$contentDeleteAsyncTest = RepositoryDeleteAsyncTestContent $namespaceContexts $nameSpaceModelSpecific $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestDeleteAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
 			$nameFileDeleteAsyncTest = $nameclassDeleteAsyncTest+".cs"
 			Out-File -InputObject $contentDeleteAsyncTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileDeleteAsyncTest
 
 			$nameclassGetAllAsyncTest = "GetAllAsyncTest"
 			Write-Host "Creating "$nameclassGetAllAsyncTest -ForegroundColor Magenta
 			$namespaceRepositoryTestGetAllAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
-			$contentGetAllAsyncTest = RepositoryGetAllAsyncTestContent $namespaceContexts $namespaceModels $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestGetAllAsync $nameclassRepository $nameclassContexts $nameclassModels
+			$contentGetAllAsyncTest = RepositoryGetAllAsyncTestContent $namespaceContexts $nameSpaceModelSpecific $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestGetAllAsync $nameclassRepository $nameclassContexts $nameclassModels
 			$nameFileGetAllAsyncTest = $nameclassGetAllAsyncTest+".cs"
 			Out-File -InputObject $contentGetAllAsyncTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileGetAllAsyncTest
 
 			$nameclassGetByIdAsyncTest = "GetByIdAsyncTest"
 			Write-Host "Creating "$nameclassGetByIdAsyncTest -ForegroundColor Magenta
 			$namespaceRepositoryTestGetByIdAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
-			$contentGetByIdAsyncTest = RepositoryGetByIdAsyncTestContent $namespaceContexts $namespaceModels $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestGetByIdAsync $nameclassRepository $nameclassContexts $nameclassModels
+			$contentGetByIdAsyncTest = RepositoryGetByIdAsyncTestContent $namespaceContexts $nameSpaceModelSpecific $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestGetByIdAsync $nameclassRepository $nameclassContexts $nameclassModels
 			$nameFileGetByIdAsyncTest = $nameclassGetByIdAsyncTest+".cs"
 			Out-File -InputObject $contentGetByIdAsyncTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileGetByIdAsyncTest
 
 			$nameclassUpdateAsyncTest = "UpdateAsyncTest"
 			Write-Host "Creating "$nameclassUpdateAsyncTest -ForegroundColor Magenta
 			$namespaceRepositoryTestUpdateAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
-			$contentUpdateAsyncTest = RepositoryUpdateAsyncTestContent $namespaceContexts $namespaceModels $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestUpdateAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
+			$contentUpdateAsyncTest = RepositoryUpdateAsyncTestContent $namespaceContexts $nameSpaceModelSpecific $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestUpdateAsync $nameclassRepository $nameclassContexts $nameclassModels $nameclassModelsDto
 			$nameFileUpdateAsyncTest = $nameclassUpdateAsyncTest+".cs"
 			Out-File -InputObject $contentUpdateAsyncTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileUpdateAsyncTest
-		
+			
+			$nameclassGetLogsAsyncTest = "GetLogsAsyncTest"
+			Write-Host "Creating "$nameclassGetLogsAsyncTest -ForegroundColor Magenta
+			$namespaceRepositoryTestGetLogsAsync = $namespaceRepositoriesTest + "." + $folderOneRepositoryTest
+			$contentGetLogsAsyncTest = RepositoryGetLogsAsyncTestContent $namespaceTempModelsDto $namespaceContexts $nameSpaceModelSpecific $namespaceTempRepositories $namespaceTestHelper $namespaceRepositoryTestGetLogsAsync $nameclassRepository $nameclassContexts $nameclassModelsLog $nameclassModelsDto
+			$nameFileGetLogsAsyncTest = $nameclassGetLogsAsyncTest+".cs"
+			Out-File -InputObject $contentGetLogsAsyncTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderRepositoriesTest\$folderOneRepositoryTest\$nameFileGetLogsAsyncTest
+
 		#ProfileDalTest
-			$nameclassProfileDalTest = $nameclassProfileDal + $Test
+			$nameclassProfileDalTest = $nameclassProfileDal + $nameTest
 			Write-Host "Creating "$nameclassProfileDalTest -ForegroundColor Magenta
-			$contentProfileDalTest = MappingProfileDalTestContent $namespaceTempModelsDto $namespaceTempMappingsDal $namespaceModels $namespaceTestHelper $namespaceMappingsTestDal $nameclassProfileDal $nameclassModelsDto $nameclassModels
+			$contentProfileDalTest = MappingProfileDalTestContent $namespaceTempModelsDto $namespaceTempMappingsDal $nameSpaceModelSpecific $namespaceTestHelper $namespaceMappingsTestDal $nameclassProfileDal $nameclassModelsDto $nameclassModels $nameclassModelsLog $nameclassModelsDtoLog
 			$nameFileProfileDalTest = $nameclassProfileDalTest+".cs"
 			Out-File -InputObject $contentProfileDalTest -Encoding ascii -FilePath .\$nameTest\$dalTest\$folderMappingsTestDal\$nameFileProfileDalTest
 	}
@@ -1368,6 +1552,7 @@ cd .\$projectName
 	dotnet add .\$nameSource\$api package Autofac.Extensions.DependencyInjection
 	dotnet add .\$nameSource\$api package Microsoft.AspNetCore.Cors
 	dotnet add .\$nameSource\$api package Microsoft.EntityFrameworkCore.Design
+	dotnet add .\$nameSource\$api package Microsoft.AspNetCore.Mvc.NewtonsoftJson
 
 	Write-Host "Instalation nugets in "$bll -ForegroundColor Green
 	
