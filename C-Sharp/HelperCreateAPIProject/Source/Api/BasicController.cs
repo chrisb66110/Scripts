@@ -44,7 +44,7 @@ namespace NameSpaceVar
                 if(resultBll.Count != 0)
                 {
                     var resultResponse = _mapper.Map<List<NameModelDtoVar>, List<NameResponseVar>>(resultBll);
-                    
+
                     response = CreateOkResponse(resultResponse);
                 }
                 else
@@ -216,6 +216,37 @@ namespace NameSpaceVar
                     var messageErrors = string.Join("\n", errors);
 
                     response = CreateInvalidDataResponse(messageErrors);
+                }
+            }
+            catch (Exception ex)
+            {
+                var errorMessage = $"{BaseConstants.ERROR_MESSAGE} Exception = {ex}";
+                _logger.LogError(errorMessage);
+
+                response = CreateInternalServerErrorResponse(BaseConstants.ERROR_MESSAGE);
+            }
+
+            return response;
+        }
+
+        [HttpGet("GetLogsAsync")]
+        public async Task<ObjectResult> GetLogsAsync()
+        {
+            ObjectResult response;
+
+            try
+            {
+                var resultBll = await _NameBllProperty.GetLogsAsync();
+
+                if (resultBll.Count != 0)
+                {
+                    var resultResponse = _mapper.Map<List<NameModelLogDtoVar>, List<NameResponseLogVar>>(resultBll);
+
+                    response = CreateOkResponse(resultResponse);
+                }
+                else
+                {
+                    response = CreateNoContentResponse();
                 }
             }
             catch (Exception ex)

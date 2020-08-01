@@ -11,6 +11,8 @@ namespace NameSpaceVar
             CreateMap<NameModelVar, NameModelDtoVar>();
 
             CreateMap<NameModelDtoVar, NameModelVar>();
+
+            CreateMap<NameModelLogVar, NameModelDtoLogVar>();
         }
     }
 }

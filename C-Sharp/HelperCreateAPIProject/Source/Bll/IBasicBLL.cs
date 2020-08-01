@@ -11,5 +11,6 @@ namespace NameSpaceVar
         Task<NameModelDtoVar> AddAsync(NameModelDtoVar nameModelDtoParamVar);
         Task<NameModelDtoVar> UpdateAsync(NameModelDtoVar nameModelDtoParamVar);
         Task<NameModelDtoVar> DeleteAsync(NameModelDtoVar nameModelDtoParamVar);
+        Task<List<NameModelLogDtoVar>> GetLogsAsync();
     }
 }

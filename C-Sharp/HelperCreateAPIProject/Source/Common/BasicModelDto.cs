@@ -5,8 +5,8 @@ namespace NameSpaceVar
     [ExcludeFromCodeCoverage]
     public class NameClassVar
     {
-    	public long Id { get; set; }
-    	public string Property0 { get; set; }
+        public long Id { get; set; }
+        public string Property0 { get; set; }
         public string Property1 { get; set; }
         public string Property2 { get; set; }
         public string Property3 { get; set; }

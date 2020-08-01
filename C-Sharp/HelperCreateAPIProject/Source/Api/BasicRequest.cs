@@ -7,8 +7,8 @@ namespace NameSpaceVar
     public class NameClassVar
     {
         [Required] public long Id { get; set; }
-    	[Required] public string Property0 { get; set; }
-    	[Required] public string Property1 { get; set; }
+        [Required] public string Property0 { get; set; }
+        [Required] public string Property1 { get; set; }
         [Required] public string Property2 { get; set; }
         [Required] public string Property3 { get; set; }
         [Required] public string Property4 { get; set; }

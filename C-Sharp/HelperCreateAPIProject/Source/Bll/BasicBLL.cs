@@ -50,7 +50,7 @@ namespace NameSpaceVar
                     throw;
                 }
             }
-            
+
             return response;
         }
 
@@ -73,7 +73,7 @@ namespace NameSpaceVar
                     throw;
                 }
             }
-            
+
             return response;
         }
 
@@ -96,7 +96,14 @@ namespace NameSpaceVar
                     throw;
                 }
             }
-            
+
+            return response;
+        }
+
+        public async Task<List<NameModelLogDtoVar>> GetLogsAsync()
+        {
+            var response = await _nameRepostory.GetLogsAsync();
+
             return response;
         }
     }

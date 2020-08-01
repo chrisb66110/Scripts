@@ -43,5 +43,19 @@ namespace NameSpaceVar
                 CheckAllProperties(dto, response);
             }
         }
+
+        [TestMethod]
+        public void MappingNameModelLogDtoVarToNameResponseLogVar()
+        {
+            using (var autoMock = AutoMock.GetStrict())
+            {
+                var sut = GivenTheSystemUnderTest(autoMock);
+
+                var dto = DataTestHelper.GivenTheDefaultNameModelLogDtoVar();
+                var response = sut.Map<NameModelLogDtoVar, NameResponseLogVar>(dto);
+
+                CheckAllProperties(dto, response);
+            }
+        }
     }
 }

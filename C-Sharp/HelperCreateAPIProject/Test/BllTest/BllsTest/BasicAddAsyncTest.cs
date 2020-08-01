@@ -71,7 +71,7 @@ namespace NameSpaceVar
                 AndIMockDependencyMethod<IRepositoryVar, MoDtoVar, DbUpdateException>(autoMock, m => m.AddAsync(It.IsAny<MoDtoVar>()), responseRepository);
 
                 var sut = GivenTheSystemUnderTest(autoMock);
-                
+
                 var response = await sut.AddAsync(request);
 
                 Assert.AreEqual(null, response, "response should be null");
@@ -91,7 +91,7 @@ namespace NameSpaceVar
                 AndIMockDependencyMethod<IRepositoryVar, MoDtoVar, DbUpdateException>(autoMock, m => m.AddAsync(It.IsAny<MoDtoVar>()), responseRepository);
 
                 var sut = GivenTheSystemUnderTest(autoMock);
-                
+
                 await sut.AddAsync(request);
 
                 Assert.Fail("Test must have failed");

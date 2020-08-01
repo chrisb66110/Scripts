@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using APIBase.Api.Configurations;
+using APIBase.Common.AuthFunctions;
 using APIBase.Common.Constants;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using NSpaceBLLsVar;
 using NSpaceSettingsVar;
 using NSpaceContextsVar;
@@ -45,9 +48,9 @@ namespace NameSpaceVar
             //Configure Auto mapper
             var assemblies = new List<Assembly>
             {
-                Assembly.GetAssembly(typeof(NameClassRepositoryVar)),
-                Assembly.GetAssembly(typeof(NameClassBLLVar)),
-                Assembly.GetAssembly(typeof(Startup))
+                typeof(NameClassRepositoryVar).Module.Assembly,
+                typeof(NameClassBLLVar).Module.Assembly,
+                typeof(Startup).Module.Assembly
             };
             services.AddAutoMapper(assemblies);
             
@@ -72,7 +75,10 @@ namespace NameSpaceVar
             //Configure HealthChecks
             services.AddHealthChecks();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -90,7 +96,7 @@ namespace NameSpaceVar
             
             #region Bll
 
-            builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(NameClassBLLVar))).AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(typeof(NameClassBLLVar).Module.Assembly).AsImplementedInterfaces();
 
             #endregion
 
@@ -104,7 +110,7 @@ namespace NameSpaceVar
                 return dbOptions;
             }).InstancePerDependency();
 
-            builder.RegisterAssemblyTypes(Assembly.GetAssembly(typeof(NameClassRepositoryVar))).AsImplementedInterfaces();
+            builder.RegisterAssemblyTypes(typeof(NameClassRepositoryVar).Module.Assembly).AsImplementedInterfaces();
 
             #endregion
 
@@ -117,6 +123,10 @@ namespace NameSpaceVar
                 return options.Value;
             }).InstancePerLifetimeScope();
 
+            //Register TokenFunctions
+            builder.RegisterType<TokenFunctions>().AsImplementedInterfaces().InstancePerDependency();
+            builder.RegisterType<HttpContextAccessor>().AsImplementedInterfaces().InstancePerDependency();
+
             #endregion
         }
 
@@ -127,13 +137,13 @@ namespace NameSpaceVar
 
             app.UseRouting();
 
+            app.UseCors(BaseConstants.ALLOWED_CORS_POLICY);
+
 			app.UseAuthentication();
             
             app.UseAuthorization();
 
             app.UseHealthChecks("/HealthChecks");
-
-            app.UseCors(BaseConstants.ALLOWED_CORS_POLICY);
 
             app.UseEndpoints(endpoints =>
             {

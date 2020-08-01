@@ -42,5 +42,19 @@ namespace NameSpaceVar
                 CheckAllProperties(model, dto);
             }
         }
+
+        [TestMethod]
+        public void MappingMoLogModelVarToMoLogDtoVar()
+        {
+            using (var autoMock = AutoMock.GetStrict())
+            {
+                var sut = GivenTheSystemUnderTest(autoMock);
+
+                var model = DataTestHelper.GivenTheDefaultMoLogModelVar();
+                var dto = sut.Map<MoLogModelVar, MoLogDtoVar>(model);
+
+                CheckAllProperties(model, dto);
+            }
+        }
     }
 }

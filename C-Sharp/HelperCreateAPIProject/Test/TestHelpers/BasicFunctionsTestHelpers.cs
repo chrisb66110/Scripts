@@ -24,7 +24,7 @@
             dto1.Id = 1;
 
             var dto2 = GivenTheDefaultMoDtoVar();
-            dto1.Id = 2;
+            dto2.Id = 2;
 
             var response = new List<MoDtoVar>()
             {
@@ -61,7 +61,7 @@
             response1.Id = 1;
 
             var response2 = GivenTheDefaultMoResponseVar();
-            response1.Id = 2;
+            response2.Id = 2;
 
             var response = new List<MoResponseVar>()
             {
@@ -118,9 +118,85 @@
             model1.Id = 1;
 
             var model2 = GivenTheDefaultMoModelVar();
-            model1.Id = 2;
+            model2.Id = 2;
 
             var response = new List<MoModelVar>()
+            {
+                model1,
+                model2
+            };
+
+            return response;
+        }
+
+        public static MoModelLogVar GivenTheDefaultMoModelLogVar()
+        {
+            var response = new MoModelLogVar()
+            {
+                Id = 1,
+                Username = "Username",
+                DateTime = DateTime,
+                PreviousValue = "PreviousValue",
+                NewValue = "NewValue",
+                PreviousEntity = default,
+                NewEntity = default,
+            };
+
+            return response;
+        }
+
+        public static List<MoModelLogVar> GivenTheDefaultListMoModelLogVar()
+        {
+            var entity = GivenTheDefaultMoModelVar();
+
+            var model1 = GivenTheDefaultMoModelLogVar();
+            model1.Id = 1;
+            model1.PreviousValue = "null";
+            model1.NewValue = JsonConvert.SerializeObject(entity);
+
+            var model2 = GivenTheDefaultMoModelLogVar();
+            model2.Id = 2;
+            model2.PreviousValue = JsonConvert.SerializeObject(entity);
+            model2.NewValue = "null";
+
+            var response = new List<MoModelLogVar>()
+            {
+                model1,
+                model2
+            };
+
+            return response;
+        }
+
+        public static MoModelLogDtoVar GivenTheDefaultMoModelLogDtoVar()
+        {
+            var response = new MoModelLogDtoVar()
+            {
+                Id = 1,
+                Username = "Username",
+                DateTime = DateTime,
+                PreviousEntity = default,
+                NewEntity = default,
+            };
+
+            return response;
+        }
+
+        public static List<MoModelLogDtoVar> GivenTheDefaultListMoModelLogDtoVar()
+        {
+            var dto = GivenTheDefaultMoDtoVar();
+
+            var model1 = GivenTheDefaultMoModelLogDtoVar();
+            model1.Id = 1;
+            model1.PreviousEntity = null;
+            model1.NewEntity = dto;
+
+            var model2 = GivenTheDefaultMoModelLogDtoVar();
+            model2.Id = 2;
+            model2.PreviousEntity = dto;
+            model2.NewEntity = null;
+
+            var response = new List<MoModelLogDtoVar>()
             {
                 model1,
                 model2

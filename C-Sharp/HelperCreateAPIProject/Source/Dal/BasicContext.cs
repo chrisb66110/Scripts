@@ -10,9 +10,9 @@ namespace NameSpaceVar
     public class NameClassVar : DbContext
     {
 TablesPropertyVar
-    	public NameClassVar(DbContextOptions<NameClassVar> options) : base(options) { }
+        public NameClassVar(DbContextOptions<NameClassVar> options) : base(options) { }
 
-    	protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.UseSerialColumns();

@@ -2,6 +2,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using APIBase.Common.AuthFunctions;
 using APIBaseTest;
 using Autofac.Extras.Moq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,6 +22,8 @@ namespace NameSpaceVar
         {
             using (var autoMock = AutoMock.GetStrict(RegisterBasicDependency))
             {
+                AndIMockDependencyMethod<ITokenFunctions, string>(autoMock, t => t.GetUsername(), "Username");
+
                 var entities = DataTestHelper.GivenTheDefaultListMoModelVar();
                 AndIAddRangeTableData(entities);
 

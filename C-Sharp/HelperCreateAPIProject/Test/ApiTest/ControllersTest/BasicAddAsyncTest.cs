@@ -72,7 +72,7 @@ namespace NameSpaceVar
             using (var autoMock = AutoMock.GetStrict())
             {
                 var request = DataTestHelper.GivenTheDefaultMoRequestVar();
-                
+
                 var sut = GivenTheSystemUnderTest(autoMock);
                 sut.ModelState.AddModelError("Id", "The Id field is required.");
 
